@@ -1,0 +1,1 @@
+GUI.Panel.ThongKe.ThongKeTongQuan
