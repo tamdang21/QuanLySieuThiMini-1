@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2023 at 06:03 AM
+-- Generation Time: Oct 27, 2023 at 02:28 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -29,7 +29,6 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `calamviec` (
   `MaCa` int(11) NOT NULL,
-  `MaNV` int(11) NOT NULL,
   `TenCa` varchar(100) NOT NULL,
   `GioBatDau` time NOT NULL,
   `GioKetThuc` time NOT NULL,
@@ -75,10 +74,64 @@ CREATE TABLE `chitietphieunhap` (
 
 CREATE TABLE `chitietquyen` (
   `MaQuyen` int(11) NOT NULL,
-  `MaCN` int(11) NOT NULL,
+  `MaCN` varchar(100) NOT NULL,
   `HanhDong` varchar(255) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitietquyen`
+--
+
+INSERT INTO `chitietquyen` (`MaQuyen`, `MaCN`, `HanhDong`, `TrangThai`) VALUES
+(1, 'banhang', 'create', 1),
+(1, 'banhang', 'delete', 1),
+(1, 'banhang', 'update', 1),
+(1, 'banhang', 'view', 1),
+(1, 'khachhang', 'create', 1),
+(1, 'khachhang', 'delete', 1),
+(1, 'khachhang', 'update', 1),
+(1, 'khachhang', 'view', 1),
+(1, 'khuyenmai', 'create', 1),
+(1, 'khuyenmai', 'delete', 1),
+(1, 'khuyenmai', 'update', 1),
+(1, 'khuyenmai', 'view', 1),
+(1, 'nhacungcap', 'create', 1),
+(1, 'nhacungcap', 'delete', 1),
+(1, 'nhacungcap', 'update', 1),
+(1, 'nhacungcap', 'view', 1),
+(1, 'nhanvien', 'create', 1),
+(1, 'nhanvien', 'delete', 1),
+(1, 'nhanvien', 'update', 1),
+(1, 'nhanvien', 'view', 1),
+(1, 'nhaphang', 'create', 1),
+(1, 'nhaphang', 'delete', 1),
+(1, 'nhaphang', 'update', 1),
+(1, 'nhaphang', 'view', 1),
+(1, 'phancongca', 'create', 1),
+(1, 'phancongca', 'delete', 1),
+(1, 'phancongca', 'update', 1),
+(1, 'phancongca', 'view', 1),
+(1, 'phanquyen', 'create', 1),
+(1, 'phanquyen', 'delete', 1),
+(1, 'phanquyen', 'update', 1),
+(1, 'phanquyen', 'view', 1),
+(1, 'sanpham', 'create', 1),
+(1, 'sanpham', 'delete', 1),
+(1, 'sanpham', 'update', 1),
+(1, 'sanpham', 'view', 1),
+(1, 'taikhoan', 'create', 1),
+(1, 'taikhoan', 'delete', 1),
+(1, 'taikhoan', 'update', 1),
+(1, 'taikhoan', 'view', 1),
+(1, 'thanhphan', 'create', 1),
+(1, 'thanhphan', 'delete', 1),
+(1, 'thanhphan', 'update', 1),
+(1, 'thanhphan', 'view', 1),
+(1, 'thongke', 'create', 1),
+(1, 'thongke', 'delete', 1),
+(1, 'thongke', 'update', 1),
+(1, 'thongke', 'view', 1);
 
 -- --------------------------------------------------------
 
@@ -90,7 +143,7 @@ CREATE TABLE `chitietthanhtoan` (
   `MaHD` int(11) NOT NULL,
   `MaHTTT` int(11) NOT NULL,
   `SoTien` decimal(10,2) NOT NULL,
-  `NgayThanhToan` datetime NOT NULL DEFAULT current_timestamp(),
+  `NgayThanhToan` timestamp NOT NULL DEFAULT current_timestamp(),
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -101,10 +154,28 @@ CREATE TABLE `chitietthanhtoan` (
 --
 
 CREATE TABLE `chucnang` (
-  `MaCN` int(11) NOT NULL,
+  `MaCN` varchar(100) NOT NULL,
   `TenCN` varchar(255) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chucnang`
+--
+
+INSERT INTO `chucnang` (`MaCN`, `TenCN`, `TrangThai`) VALUES
+('banhang', 'Bán hàng', 1),
+('khachhang', 'Quản lý khách hàng', 1),
+('khuyenmai', 'Quản lý khuyến mãi', 1),
+('nhacungcap', 'Quản lý nhà cung cấp', 1),
+('nhanvien', 'Quản lý nhân viên', 1),
+('nhaphang', 'Nhập hàng', 1),
+('phancongca', 'Phân công ca', 1),
+('phanquyen', 'Phân quyền người dùng', 1),
+('sanpham', 'Quản lý sản phẩm', 1),
+('taikhoan', 'Quản lý tài khoản', 1),
+('thanhphan', 'Quản lý thành phần sản phẩm', 1),
+('thongke', 'Báo cáo thống kê', 1);
 
 -- --------------------------------------------------------
 
@@ -154,7 +225,7 @@ CREATE TABLE `hoadon` (
   `MaKH` int(11) NOT NULL,
   `MaKM` int(11) NOT NULL,
   `MaNV` int(11) NOT NULL,
-  `NgayLap` date NOT NULL DEFAULT current_timestamp(),
+  `NgayLap` timestamp NOT NULL DEFAULT current_timestamp(),
   `TongTien` decimal(10,2) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -232,8 +303,51 @@ CREATE TABLE `nhanvien` (
   `NgaySinh` date NOT NULL,
   `GioiTinh` tinyint(1) NOT NULL,
   `Email` varchar(255) NOT NULL,
-  `Luong` decimal(10,2) NOT NULL,
-  `HinhAnh` varchar(255) NOT NULL,
+  `Luong` decimal(10,2) DEFAULT NULL,
+  `HinhAnh` varchar(255) DEFAULT NULL,
+  `TrangThai` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nhanvien`
+--
+
+INSERT INTO `nhanvien` (`MaNV`, `TenNV`, `DiaChi`, `SDT`, `NgaySinh`, `GioiTinh`, `Email`, `Luong`, `HinhAnh`, `TrangThai`) VALUES
+(1, 'Đỗ Minh Quân', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(2, 'Koong Chấn Phong', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(3, 'Lê Ngọc Giàu', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(4, 'Nguyễn Khánh Nam', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(5, 'Nguyễn Nhật Khải', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(6, 'Trần Tiến Phát', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phancongca`
+--
+
+CREATE TABLE `phancongca` (
+  `MaCa` int(11) NOT NULL,
+  `MaNV` int(11) NOT NULL,
+  `Thu` varchar(50) NOT NULL,
+  `TrangThai` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phieuchi`
+--
+
+CREATE TABLE `phieuchi` (
+  `MaPC` int(11) NOT NULL,
+  `MaPN` int(11) NOT NULL,
+  `MaNV` int(11) NOT NULL,
+  `TenNguoiChi` varchar(255) NOT NULL,
+  `NgayChi` timestamp NOT NULL DEFAULT current_timestamp(),
+  `LyDoChi` varchar(255) NOT NULL,
+  `SoTienChi` decimal(10,2) NOT NULL,
+  `GhiChu` varchar(255) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -247,7 +361,7 @@ CREATE TABLE `phieunhap` (
   `MaPN` int(11) NOT NULL,
   `MaNV` int(11) NOT NULL,
   `MaNCC` int(11) NOT NULL,
-  `NgayNhap` date NOT NULL DEFAULT current_timestamp(),
+  `NgayNhap` timestamp NOT NULL DEFAULT current_timestamp(),
   `TongTien` decimal(10,2) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -264,6 +378,15 @@ CREATE TABLE `quyen` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `quyen`
+--
+
+INSERT INTO `quyen` (`MaQuyen`, `TenQuyen`, `TrangThai`) VALUES
+(1, 'Quản lý', 1),
+(2, 'Nhân viên bán hàng', 1),
+(3, 'Nhân viên nhập hàng', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -275,6 +398,7 @@ CREATE TABLE `sanpham` (
   `MaLoai` int(11) NOT NULL,
   `MaHang` int(11) NOT NULL,
   `MaDV` int(11) NOT NULL,
+  `MaVach` varchar(255) NOT NULL,
   `TenSP` varchar(255) NOT NULL,
   `DonGia` decimal(10,2) NOT NULL,
   `SoLuong` int(11) NOT NULL,
@@ -301,6 +425,13 @@ CREATE TABLE `taikhoan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `taikhoan`
+--
+
+INSERT INTO `taikhoan` (`MaNV`, `MaQuyen`, `TenTK`, `MatKhau`, `OTP`, `TrangThai`) VALUES
+(1, 1, 'admin', 'admin', 'null', 1);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -308,8 +439,7 @@ CREATE TABLE `taikhoan` (
 -- Indexes for table `calamviec`
 --
 ALTER TABLE `calamviec`
-  ADD PRIMARY KEY (`MaCa`),
-  ADD KEY `calamviec_ibfk_1` (`MaNV`);
+  ADD PRIMARY KEY (`MaCa`);
 
 --
 -- Indexes for table `chitiethoadon`
@@ -333,7 +463,9 @@ ALTER TABLE `chitietphieunhap`
 -- Indexes for table `chitietquyen`
 --
 ALTER TABLE `chitietquyen`
-  ADD PRIMARY KEY (`MaQuyen`,`MaCN`,`HanhDong`);
+  ADD PRIMARY KEY (`MaQuyen`,`MaCN`,`HanhDong`),
+  ADD KEY `MaQuyen` (`MaQuyen`,`MaCN`),
+  ADD KEY `chitietquyen_ibfk_2` (`MaCN`);
 
 --
 -- Indexes for table `chitietthanhtoan`
@@ -405,6 +537,22 @@ ALTER TABLE `nhacungcap`
 --
 ALTER TABLE `nhanvien`
   ADD PRIMARY KEY (`MaNV`);
+
+--
+-- Indexes for table `phancongca`
+--
+ALTER TABLE `phancongca`
+  ADD PRIMARY KEY (`MaCa`,`MaNV`,`Thu`),
+  ADD KEY `phancongca_ibfk_2` (`MaNV`),
+  ADD KEY `MaCa` (`MaCa`);
+
+--
+-- Indexes for table `phieuchi`
+--
+ALTER TABLE `phieuchi`
+  ADD PRIMARY KEY (`MaPC`),
+  ADD KEY `MaPN` (`MaPN`,`MaNV`),
+  ADD KEY `phieuchi_ibfk_1` (`MaNV`);
 
 --
 -- Indexes for table `phieunhap`
@@ -498,7 +646,13 @@ ALTER TABLE `nhacungcap`
 -- AUTO_INCREMENT for table `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `MaNV` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaNV` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `phieuchi`
+--
+ALTER TABLE `phieuchi`
+  MODIFY `MaPC` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `phieunhap`
@@ -510,7 +664,7 @@ ALTER TABLE `phieunhap`
 -- AUTO_INCREMENT for table `quyen`
 --
 ALTER TABLE `quyen`
-  MODIFY `MaQuyen` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaQuyen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sanpham`
@@ -521,12 +675,6 @@ ALTER TABLE `sanpham`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `calamviec`
---
-ALTER TABLE `calamviec`
-  ADD CONSTRAINT `calamviec_ibfk_1` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `chitiethoadon`
@@ -546,7 +694,8 @@ ALTER TABLE `chitietphieunhap`
 -- Constraints for table `chitietquyen`
 --
 ALTER TABLE `chitietquyen`
-  ADD CONSTRAINT `chitietquyen_ibfk_1` FOREIGN KEY (`MaQuyen`) REFERENCES `quyen` (`MaQuyen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `chitietquyen_ibfk_1` FOREIGN KEY (`MaQuyen`) REFERENCES `quyen` (`MaQuyen`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `chitietquyen_ibfk_2` FOREIGN KEY (`MaCN`) REFERENCES `chucnang` (`MaCN`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `chitietthanhtoan`
@@ -562,6 +711,20 @@ ALTER TABLE `hoadon`
   ADD CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`MaKM`) REFERENCES `khuyenmai` (`MaKM`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `hoadon_ibfk_3` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `phancongca`
+--
+ALTER TABLE `phancongca`
+  ADD CONSTRAINT `phancongca_ibfk_1` FOREIGN KEY (`MaCa`) REFERENCES `calamviec` (`MaCa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `phancongca_ibfk_2` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `phieuchi`
+--
+ALTER TABLE `phieuchi`
+  ADD CONSTRAINT `phieuchi_ibfk_1` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `phieuchi_ibfk_2` FOREIGN KEY (`MaPN`) REFERENCES `phieunhap` (`MaPN`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `phieunhap`

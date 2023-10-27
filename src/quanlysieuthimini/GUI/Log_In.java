@@ -79,6 +79,7 @@ public class Log_In extends JFrame implements KeyListener {
         label02 = new JLabel("ĐĂNG NHẬP");
         label02.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 16));
         label02.setForeground(Color.white);
+        label02.setBackground(new Color(96, 125, 139));
 
         pnlLogIn = new JPanel();
         pnlLogIn.putClientProperty( FlatClientProperties.STYLE, "arc: 99" );
@@ -139,7 +140,8 @@ public class Log_In extends JFrame implements KeyListener {
                 if (tk.getTrangThai() == 0) {
                     JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    if (BCrypt.checkpw(passwordCheck, tk.getMatKhau())) {
+                    //BCrypt.checkpw(passwordCheck, tk.getMatKhau())
+                    if (tk.getMatKhau().equals(passwordCheck)) {
                         try {
                             this.dispose();
                             Main main = new Main(tk);

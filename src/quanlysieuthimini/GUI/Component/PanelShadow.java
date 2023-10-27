@@ -39,7 +39,7 @@ public class PanelShadow extends JPanel {
         iconBackground.setLayout(new FlowLayout(1,20,10));
 
         lblIcon = new JLabel();
-        lblIcon.setIcon(new FlatSVGIcon("./icon/" + linkIcon));
+        lblIcon.setIcon(new FlatSVGIcon("./images/icon/" + linkIcon));
         iconBackground.add(lblIcon);
 
         this.add(iconBackground);
@@ -56,30 +56,4 @@ public class PanelShadow extends JPanel {
         
     }
 
-//    @Override
-//    protected void paintComponent(Graphics grphcs) {
-////        createShadow(grphcs);
-//    }
-//
-//    private void createShadow(Graphics grphcs) {
-//        Graphics2D g2 = (Graphics2D) grphcs;
-//        int size = shadowSize * 2;
-//        int x = 0;
-//        int y = 0;
-//        int width = getWidth() - size;
-//        int height = getHeight() - size;
-//        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-//        Graphics2D g = img.createGraphics();
-//        g2.setBackground(HowerBackgroundColor);
-//
-//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        g.fillRoundRect(0, 0, width, height, 30, 30);
-//
-//        //Create Shadow
-//        ShadowRenderer render = new ShadowRenderer(size, shadowOpacity, shadowColor);
-//        g2.drawImage(render.createShadow(img), 0, 0, null);
-//        g2.setPaint(shadowColor);
-//
-//        g2.drawImage(img, x, y, null);
-//    }
 }

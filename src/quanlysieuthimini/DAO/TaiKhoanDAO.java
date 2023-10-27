@@ -212,7 +212,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
         TaiKhoanDTO result = null;
         try {
             Connection con = ConnectionDB.openConnection();
-            String sql = "SELECT * FROM taikhoan WHERE tendangnhap=?";
+            String sql = "SELECT * FROM taikhoan WHERE TenTK=?";
             PreparedStatement pst = con.prepareStatement(sql);
             
             pst.setString(1, t);

@@ -1,6 +1,6 @@
 package quanlysieuthimini.GUI;
 
-import quanlysieuthimini.GUI.Panel.TrangChu;
+import quanlysieuthimini.GUI.Panel.BeginForm;
 import java.awt.*;
 import javax.swing.*;
 import quanlysieuthimini.GUI.Component.MenuTaskbar;
@@ -12,6 +12,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.border.EmptyBorder;
+import quanlysieuthimini.DAO.NhanVienDAO;
 import quanlysieuthimini.DTO.TaiKhoanDTO;
 
 public class Main extends JFrame {
@@ -21,15 +22,15 @@ public class Main extends JFrame {
     Color MainColor = new Color(250, 250, 250);
 
     private MenuTaskbar menuTaskbar;
-    private TrangChu trangChu;
+    private BeginForm trangChu;
 
     private void initComponent() {
         this.setSize(new Dimension(1400, 800));
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
-        this.setTitle("Hệ thống quản lý kho hàng ");
+        this.setTitle("Hệ thống quản lý siêu thị");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        
         if (user != null) {
             menuTaskbar = new MenuTaskbar(this, user);
         } else {
@@ -46,7 +47,7 @@ public class Main extends JFrame {
 
         this.add(MainContent, BorderLayout.CENTER);
 
-        trangChu = new TrangChu();
+        trangChu = new BeginForm(NhanVienDAO.getInstance().getById(user.getMaNV()).getTenNV());
         MainContent.add(trangChu).setVisible(true);
     }
 

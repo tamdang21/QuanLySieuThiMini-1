@@ -37,7 +37,7 @@ public class IntegratedSearch extends JPanel {
 
         btnReset = new JButton("Làm mới");
         btnReset.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 0, 14));
-        btnReset.setIcon(new FlatSVGIcon(".images/icon/refresh.svg"));
+        btnReset.setIcon(new FlatSVGIcon("./images/icon/refresh.svg"));
         btnReset.setPreferredSize(new Dimension(125, 0));
         btnReset.addActionListener(this::btnResetActionPerformed);
         jpSearch.add(btnReset,BorderLayout.EAST);

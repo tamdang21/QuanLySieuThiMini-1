@@ -200,7 +200,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO>{
                 Double Luong = rs.getDouble("Luong");
                 String HinhAnh = rs.getString("HinhAnh");
                 
-                NhanVienDTO nv = new NhanVienDTO(MaNV, TenNV, DiaChi, SDT, Email, NgaySinh, GioiTinh, Luong, HinhAnh, TrangThai);
+                result = new NhanVienDTO(MaNV, TenNV, DiaChi, SDT, Email, NgaySinh, GioiTinh, Luong, HinhAnh, TrangThai);
             }
             ConnectionDB.closeConnection(con);
         } catch (Exception e) {
@@ -228,7 +228,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO>{
                 Double Luong = rs.getDouble("Luong");
                 String HinhAnh = rs.getString("HinhAnh");
                 
-                NhanVienDTO nv = new NhanVienDTO(MaNV, TenNV, DiaChi, SDT, Email, NgaySinh, GioiTinh, Luong, HinhAnh, TrangThai);
+                result = new NhanVienDTO(MaNV, TenNV, DiaChi, SDT, Email, NgaySinh, GioiTinh, Luong, HinhAnh, TrangThai);
             }
             ConnectionDB.closeConnection(con);
         } catch (Exception e) {
