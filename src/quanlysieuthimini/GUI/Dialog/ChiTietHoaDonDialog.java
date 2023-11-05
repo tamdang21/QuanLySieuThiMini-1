@@ -33,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import quanlysieuthimini.BUS.DonViBUS;
+import quanlysieuthimini.BUS.KhuyenMaiBUS;
+import quanlysieuthimini.BUS.KhachHangThanThietBUS;
 import quanlysieuthimini.DAO.KhuyenMaiDAO;
 import quanlysieuthimini.DTO.SanPhamDTO;
 
@@ -44,12 +46,13 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
     DefaultTableModel tblModel;
     JTable table;
     JScrollPane scrollTable;
-
     HoaDonDTO hoadon;
     HoaDonBUS hoadonBus;
+    KhachHangThanThietBUS khachhangBUS = new KhachHangThanThietBUS();
+    KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
     SanPhamBUS sanPhamBUS = new SanPhamBUS();
     DonViBUS donviBUS = new DonViBUS();
-
+    double tienGiam;
     ButtonCustom btnPdf, btnHuyBo;
 
     ArrayList<ChiTietHoaDonDTO> ctHoaDon;
@@ -58,7 +61,9 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         super(owner, title, modal);
         this.hoadon = hoadonDTO;
         hoadonBus = new HoaDonBUS();
-        ctHoaDon = hoadonBus.selectCTP(hoadonDTO.getMaHD());
+        ctHoaDon = hoadonBus.selectCTP(hoadon.getMaHD());
+        tienGiam = hoadonBus.getTongThanhTien(hoadon.getMaHD()) * khuyenmaiBUS.selectKM(hoadon.getMaHD()).getPhanTramKM();
+        
         initComponent(title);
         initHoaDon();
         loadDataTableChiTietHoaDon(ctHoaDon);
@@ -68,9 +73,10 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
     public void initHoaDon() {
         txtMaHD.setText("HD-" + Integer.toString(this.hoadon.getMaHD()));
         txtKhachHang.setTitle("Khách hàng");
-        txtKhachHang.setText(KhachHangThanThietDAO.getInstance().getById(hoadon.getMaKH()).getTenKH());
+        txtKhachHang.setText(khachhangBUS.getTenKhachHang(hoadon.getMaKH()));
         txtNhanVien.setText(NhanVienDAO.getInstance().getById(hoadon.getMaNV()).getTenNV());
-        txtKhuyenMai.setText(KhuyenMaiDAO.getInstance().getById(hoadon.getMaKM()).getTenKM());
+        txtKhuyenMai.setText(khuyenmaiBUS.getTenKhuyenMai(hoadon.getMaKM()));
+        System.out.println(hoadon.toString());
         txtNgayLap.setText(Formater.FormatTime(hoadon.getNgayLap()));
     }
 
@@ -189,7 +195,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         if (source == btnPdf) {
             writePDF w = new writePDF();
             if (this.hoadon != null) {
-                w.writeHoaDon(hoadon.getMaHD());
+                w.writeHoaDon(hoadon.getMaHD(),tienGiam);
             }
         }
     }

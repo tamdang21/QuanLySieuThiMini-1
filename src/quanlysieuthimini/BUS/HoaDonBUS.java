@@ -41,6 +41,14 @@ public class HoaDonBUS {
         chiTietHoaDonDAO.insert(ct);
     }
 
+    public double getTongThanhTien(int maHD){
+        double tong = 0;
+        for(ChiTietHoaDonDTO cthd: selectCTP(maHD)){
+            tong += cthd.getThanhTien();
+        }
+        return tong;
+    }
+    
     public ArrayList<ChiTietHoaDonDTO> selectCTP(int maphieu) {
         return chiTietHoaDonDAO.getAll(maphieu);
     }
