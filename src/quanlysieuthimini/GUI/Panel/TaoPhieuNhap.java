@@ -19,8 +19,8 @@
 //import quanlysieuthimini.GUI.Main;
 //import com.formdev.flatlaf.extras.FlatSVGIcon;
 //import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-//import helper.Formater;
-//import helper.Validation;
+//import quanlysieuthimini.helper.Formater;
+//import quanlysieuthimini.helper.Validation;
 //import java.awt.event.ActionEvent;
 //import java.awt.event.ActionListener;
 //import java.awt.event.ItemEvent;
@@ -44,6 +44,9 @@
 //import org.apache.poi.xssf.usermodel.XSSFRow;
 //import org.apache.poi.xssf.usermodel.XSSFSheet;
 //import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+//import quanlysieuthimini.BUS.DonViBUS;
+//import quanlysieuthimini.BUS.HangSanXuatBUS;
+//import quanlysieuthimini.BUS.LoaiSanPhamBUS;
 //
 //public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionListener {
 //
@@ -65,12 +68,13 @@
 //    SanPhamBUS spBUS = new SanPhamBUS();
 //    NhaCungCapBUS nccBus = new NhaCungCapBUS();
 //    PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
+//    HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
+//    DonViBUS donviBUS = new DonViBUS();
+//    LoaiSanPhamBUS loaispBUS = new LoaiSanPhamBUS();
 //    NhanVienDTO nvDto;
 //
 //    ArrayList<SanPhamDTO> listSP = spBUS.getAll();
-//    ArrayList<PhienBanSanPhamDTO> ch = new ArrayList<>();
-//    ArrayList<ChiTietPhieuNhapDTO> chitietphieu;
-//    HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> chitietsanpham = new HashMap<>();
+//    ArrayList<ChiTietPhieuNhapDTO> chitietphieunhap;
 //    ArrayList<String> listmaimei = new ArrayList<>();
 //    int maphieunhap;
 //    int rowPhieuSelect = -1;
@@ -80,7 +84,7 @@
 //        this.nvDto = nv;
 //        this.m = m;
 //        maphieunhap = phieunhapBus.phieunhapDAO.getAutoIncrement();
-//        chitietphieu = new ArrayList<>();
+//        chitietphieunhap = new ArrayList<>();
 //        initComponent(type);
 //        loadDataTalbeSanPham(listSP);
 //    }
@@ -138,7 +142,7 @@
 //            public void mousePressed(MouseEvent e) {
 //                int index = tablePhieuNhap.getSelectedRow();
 //                if (index != -1) {
-//                    setFormChiTietPhieu(chitietphieu.get(index));
+//                    setFormChiTietPhieu(chitietphieunhap.get(index));
 //                    rowPhieuSelect = index;
 //                    actionbtn("update");
 //                }
@@ -348,7 +352,7 @@
 //        txtMaphieu.setText("PN" + maphieunhap);
 //        txtMaphieu.setEditable(false);
 //        txtNhanVien = new InputForm("Nhân viên nhập");
-//        txtNhanVien.setText(nvDto.getHoten());
+//        txtNhanVien.setText(nvDto.getTenNV());
 //        txtNhanVien.setEditable(false);
 //        cbxNhaCungCap = new SelectForm("Nhà cung cấp", nccBus.getArrTenNhaCungCap());
 //        right_top.add(txtMaphieu);
@@ -388,10 +392,10 @@
 //        contentCenter.add(right, BorderLayout.EAST);
 //    }
 //
-//    public void loadDataTalbeSanPham(ArrayList<DTO.SanPhamDTO> result) {
+//    public void loadDataTalbeSanPham(ArrayList<SanPhamDTO> result) {
 //        tblModelSP.setRowCount(0);
-//        for (DTO.SanPhamDTO sp : result) {
-//            tblModelSP.addRow(new Object[]{sp.getMasp(), sp.getTensp(), sp.getSoluongton()});
+//        for (SanPhamDTO sp : result) {
+//            tblModelSP.addRow(new Object[]{sp.getMaSP(), sp.getTenSP(), sp.getSoLuong()});
 //        }
 //    }
 //
@@ -399,21 +403,26 @@
 //        tblModel.setRowCount(0);
 //        int size = ctPhieu.size();
 //        for (int i = 0; i < size; i++) {
-//            PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(ctPhieu.get(i).getMaphienbansp());
+//            SanPhamDTO sanpham = spBUS.getByMaSP(ctPhieu.get(i).getMaSP());
 //            tblModel.addRow(new Object[]{
-//                i + 1, pb.getMasp(), spBUS.getByMaSP(pb.getMasp()).getTensp(), ramBus.getKichThuocById(pb.getRam()) + "GB",
-//                romBus.getKichThuocById(pb.getRom()) + "GB", mausacBus.getTenMau(pb.getMausac()),
-//                Formater.FormatVND(ctPhieu.get(i).getDongia()), ctPhieu.get(i).getSoluong()
+//                i + 1, 
+//                sanpham.getMaSP(), 
+//                loaispBUS.getTenLoai(sanpham.getMaLoai()),
+//                hangsxBUS.getTenHang(sanpham.getMaHang()),
+//                sanpham.getDungTich() + " " + donviBUS.getTenDonVi(sanpham.getMaDV()),
+//                Formater.FormatVND(ctPhieu.get(i).getDonGia()),
+//                ctPhieu.get(i).getSoLuong(),
+//                Formater.FormatVND(ctPhieu.get(i).getThanhTien())
 //            });
 //        }
 //        lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTongTien(ctPhieu)));
 //    }
 //
 //    public void setInfoSanPham(SanPhamDTO sp) {
-//        this.txtMaSp.setText(Integer.toString(sp.getMasp()));
-//        this.txtTenSp.setText(sp.getTensp());
-//        ch = phienbanBus.getAll(sp.getMasp());
-//        cbxCauhinh.setArr(getCauHinhPhienBan(sp.getMasp()));
+//        this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
+//        this.txtTenSp.setText(sp.getTenSP());
+//        ch = phienbanBus.getAll(sp.getMaSP());
+//        cbxCauhinh.setArr(getCauHinhPhienBan(sp.getMaSP()));
 //        this.txtDongia.setText(Integer.toString(ch.get(0).getGianhap()));
 //    }
 //
@@ -528,10 +537,10 @@
 //
 //    public void addCtPhieu() {
 //        ChiTietPhieuNhapDTO ctphieu = getInfoChiTietPhieu();
-//        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, ctphieu.getMaphienbansp());
+//        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieunhap, ctphieu.getMaphienbansp());
 //        if (p == null) {
-//            chitietphieu.add(ctphieu);
-//            loadDataTableChiTietPhieu(chitietphieu);
+//            chitietphieunhap.add(ctphieu);
+//            loadDataTableChiTietPhieu(chitietphieunhap);
 //            resetForm();
 //        } else {
 //            int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -543,7 +552,7 @@
 //
 //    public ChiTietPhieuNhapDTO checkTonTai() {
 //        int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
-//        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, mapb);
+//        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieunhap, mapb);
 //        return p;
 //    }
 //
@@ -573,9 +582,9 @@
 //
 //    public void setFormChiTietPhieu(ChiTietPhieuNhapDTO phieu) {
 //        PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(phieu.getMaphienbansp());
-//        this.txtMaSp.setText(Integer.toString(pb.getMasp()));
-//        this.txtTenSp.setText(spBUS.getByMaSP(pb.getMasp()).getTensp());
-//        this.cbxCauhinh.setArr(getCauHinhPhienBan(pb.getMasp()));
+//        this.txtMaSp.setText(Integer.toString(pb.getMaSP()));
+//        this.txtTenSp.setText(spBUS.getByMaSP(pb.getMaSP()).getTensp());
+//        this.cbxCauhinh.setArr(getCauHinhPhienBan(pb.getMaSP()));
 //        this.cbxCauhinh.setSelectedIndex(phienbanBus.getIndexByMaPhienBan(ch, phieu.getMaphienbansp()));
 //        this.txtDongia.setText(Integer.toString(phieu.getDongia()));
 //        setImei(phieu);
@@ -625,9 +634,9 @@
 //            
 //        } else if (source == btnDelete) {
 //            int index = tablePhieuNhap.getSelectedRow();
-//            chitietphieu.remove(index);
+//            chitietphieunhap.remove(index);
 //            actionbtn("add");
-//            loadDataTableChiTietPhieu(chitietphieu);
+//            loadDataTableChiTietPhieu(chitietphieunhap);
 //            resetForm();
 //        } else if (source == btnEditSP) {
 //            int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
@@ -635,9 +644,9 @@
 //            ArrayList<ChiTietSanPhamDTO> ctsp = getChiTietSanPham();
 //            chitietsanpham.put(mapb, ctsp);
 //            int ptnhap = cbxPtNhap.getSelectedIndex();
-//            chitietphieu.get(rowPhieuSelect).setPhuongthucnnhap(ptnhap);
-//            chitietphieu.get(rowPhieuSelect).setSoluong(ctsp.size());
-//            loadDataTableChiTietPhieu(chitietphieu);
+//            chitietphieunhap.get(rowPhieuSelect).setPhuongthucnnhap(ptnhap);
+//            chitietphieunhap.get(rowPhieuSelect).setSoluong(ctsp.size());
+//            loadDataTableChiTietPhieu(chitietphieunhap);
 //        } else if (source == btnNhapHang) {
 //            eventBtnNhapHang();
 //        } else if (source == scanImei) {
@@ -657,7 +666,7 @@
 //    }
 //
 //    public void eventBtnNhapHang() {
-//        if (chitietphieu.isEmpty()) {
+//        if (chitietphieunhap.isEmpty()) {
 //            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
 //        } else {
 //            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -665,8 +674,8 @@
 //                int mancc = nccBus.getByIndex(cbxNhaCungCap.getSelectedIndex()).getMancc();
 //                long now = System.currentTimeMillis();
 //                Timestamp currenTime = new Timestamp(now);
-//                PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getManv(), currenTime, phieunhapBus.getTongTien(chitietphieu), 1);
-//                boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
+//                PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getManv(), currenTime, phieunhapBus.getTongTien(chitietphieunhap), 1);
+//                boolean result = phieunhapBus.add(pn, chitietphieunhap, chitietsanpham);
 //                if (result) {
 //                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
 //                    PhieuNhap pnlPhieu = new PhieuNhap(m, nvDto);

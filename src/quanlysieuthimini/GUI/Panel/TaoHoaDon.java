@@ -646,7 +646,6 @@ public final class TaoHoaDon extends JPanel {
         int size = arrCTHD.size();
         sum = 0;
         for (int i = 0; i < size; i++) {
-            //PhienBanSanPhamDTO phienban = sanphamBUS.getByMaPhienBan(arrCTHD.get(i).getMaphienbansp());
             SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrCTHD.get(i).getMaSP());
             sum += arrCTHD.get(i).getThanhTien();
             tblModel.addRow(new Object[]{
