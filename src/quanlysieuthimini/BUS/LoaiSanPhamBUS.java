@@ -7,43 +7,48 @@ package quanlysieuthimini.BUS;
 import java.util.ArrayList;
 import quanlysieuthimini.DTO.LoaiSanPhamDTO;
 import quanlysieuthimini.DAO.LoaiSanPhamDAO;
-    
+import quanlysieuthimini.DTO.HangSanXuatDTO;
+        
+/**
+ *
+ * @author Admin
+ */
 public class LoaiSanPhamBUS {
-    private final LoaiSanPhamDAO NccDAO = new LoaiSanPhamDAO();
-    private ArrayList<LoaiSanPhamDTO> listNcc = new ArrayList<>();
+    private final LoaiSanPhamDAO loaispDAO = new LoaiSanPhamDAO();
+    private ArrayList<LoaiSanPhamDTO> listLoaiSP = new ArrayList<>();
     
     public LoaiSanPhamBUS() {
-        this.listNcc = NccDAO.getAll();
+        this.listLoaiSP = loaispDAO.getAll();
     }
 
     public ArrayList<LoaiSanPhamDTO> getAll() {
-        return this.listNcc;
+        return this.listLoaiSP;
     }
 
     public LoaiSanPhamDTO getByIndex(int index) {
-        return this.listNcc.get(index);
+        return this.listLoaiSP.get(index);
     }
 
     public boolean add(LoaiSanPhamDTO ncc) {
-        boolean check = NccDAO.insert(ncc);
+        boolean check = loaispDAO.insert(ncc);
         if (check) {
-            this.listNcc.add(ncc);
+            this.listLoaiSP.add(ncc);
         }
         return check;
     }
     
     public boolean delete(LoaiSanPhamDTO ncc, int index) {
-        boolean check = NccDAO.delete(ncc.getMaLoai());
+        boolean check = loaispDAO.delete(ncc.getMaLoai());
         if (check) {
-            this.listNcc.remove(index);
+            this.listLoaiSP.remove(index);
         }
         return check;
     }
 
     public boolean update(LoaiSanPhamDTO ncc) {
-        boolean check = NccDAO.update(ncc);
+        boolean check = loaispDAO.update(ncc);
         if (check) {
-            this.listNcc.set(getIndexByMaNCC(ncc.getMaLoai()), ncc);
+            this.listLoaiSP.set(getIndexByMaNCC(ncc.getMaLoai()), ncc);
         }
         return check;
     }
@@ -51,8 +56,8 @@ public class LoaiSanPhamBUS {
     public int getIndexByMaNCC(int maTL) {
         int i = 0;
         int vitri = -1;
-        while (i < this.listNcc.size() && vitri == -1) {
-            if (listNcc.get(i).getMaLoai() == maTL) {
+        while (i < this.listLoaiSP.size() && vitri == -1) {
+            if (listLoaiSP.get(i).getMaLoai() == maTL) {
                 vitri = i;
             } else {
                 i++;
@@ -61,17 +66,17 @@ public class LoaiSanPhamBUS {
         return vitri;
     }
     
-    public String[] getArrTenNhaCungCap() {
-        int size = listNcc.size();
+    public String[] getArrTenLoai() {
+        int size = listLoaiSP.size();
         String[] result = new String[size];
         for (int i = 0; i < size; i++) {
-            result[i] = listNcc.get(i).getTenLoai();
+            result[i] = listLoaiSP.get(i).getTenLoai();
         }
         return result;
     }
 
-    public String getTenNhaCungCap(int mancc) {
-        return this.listNcc.get(getIndexByMaNCC(mancc)).getTenLoai();
+    public String getTenLoai(int mancc) {
+        return this.listLoaiSP.get(getIndexByMaNCC(mancc)).getTenLoai();
     }
     
     public LoaiSanPhamDTO findCT(ArrayList<LoaiSanPhamDTO> ncc, String tenTL) {
@@ -92,28 +97,28 @@ public class LoaiSanPhamBUS {
         txt = txt.toLowerCase();
         switch (type) {
             case "Tất cả" -> {
-                for (LoaiSanPhamDTO i : listNcc) {
+                for (LoaiSanPhamDTO i : listLoaiSP) {
                     if (Integer.toString(i.getMaLoai()).contains(txt) || i.getTenLoai().contains(txt) || i.getCachBaoQuan().contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Mã Loại" -> {
-                for (LoaiSanPhamDTO i : listNcc) {
+                for (LoaiSanPhamDTO i : listLoaiSP) {
                     if (Integer.toString(i.getMaLoai()).contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Tên Loại" -> {
-                for (LoaiSanPhamDTO i : listNcc) {
+                for (LoaiSanPhamDTO i : listLoaiSP) {
                     if (i.getTenLoai().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Cách Bảo Quản" -> {
-                for (LoaiSanPhamDTO i : listNcc) {
+                for (LoaiSanPhamDTO i : listLoaiSP) {
                     if (i.getCachBaoQuan().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
@@ -121,5 +126,28 @@ public class LoaiSanPhamBUS {
             }
         }
         return result;
+    }
+    
+//    public boolean checkDup(String name) {
+//        boolean check = true;
+//        int i = 0;
+//        while (i <= this.listLoaiSP.size() && check == true) {
+//            if (this.listLoaiSP.get(i).getTenLoai().toLowerCase().contains(name.toLowerCase())) {
+//                check = false;
+//            } else {
+//                i++;
+//            }
+//        }
+//        return check;
+//    }
+    
+        public boolean checkDup(String name) {
+//        boolean check = false;
+        for (LoaiSanPhamDTO mau : listLoaiSP) {
+        if (mau.getTenLoai().equalsIgnoreCase(name)) {
+            return true; // Trùng tên màu
+        }
+    }
+        return false;
     }
 }

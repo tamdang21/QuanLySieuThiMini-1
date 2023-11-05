@@ -13,7 +13,7 @@ import quanlysieuthimini.DAO.DAOInterface.ChiTietInterface;
 import quanlysieuthimini.DAO.DAOInterface.DAOInterface;
 import quanlysieuthimini.DTO.ChiTietHoaDonDTO;
 import quanlysieuthimini.DTO.HoaDonDTO;
-import quanlysieuthimini.DTO.KhachHangDTO;
+import quanlysieuthimini.DTO.KhachHangThanThietDTO;
 
 public class ChiTietHoaDonDAO implements ChiTietInterface<ChiTietHoaDonDTO> {
 

@@ -1,4 +1,4 @@
-package helper;
+package quanlysieuthimini.helper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

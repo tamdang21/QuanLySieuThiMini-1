@@ -4,55 +4,55 @@
  */
 package quanlysieuthimini.BUS;
 
+import java.util.ArrayList;
 import quanlysieuthimini.DAO.DonViDAO;
 import quanlysieuthimini.DTO.DonViDTO;
-import java.util.ArrayList;
 
 public class DonViBUS {
-    private final DonViDAO NccDAO = new DonViDAO();
-    private ArrayList<DonViDTO> listNcc = new ArrayList<>();
+    private final DonViDAO donviDAO = new DonViDAO();
+    private ArrayList<DonViDTO> listDonVi = new ArrayList<>();
     
     public DonViBUS() {
-        this.listNcc = NccDAO.getAll();
+        this.listDonVi = donviDAO.getAll();
     }
 
     public ArrayList<DonViDTO> getAll() {
-        return this.listNcc;
+        return this.listDonVi;
     }
 
     public DonViDTO getByIndex(int index) {
-        return this.listNcc.get(index);
+        return this.listDonVi.get(index);
     }
 
-    public boolean add(DonViDTO ncc) {
-        boolean check = NccDAO.insert(ncc);
+    public boolean add(DonViDTO DonVi) {
+        boolean check = donviDAO.insert(DonVi);
         if (check) {
-            this.listNcc.add(ncc);
+            this.listDonVi.add(DonVi);
         }
         return check;
     }
     
-    public boolean delete(DonViDTO ncc, int index) {
-        boolean check = NccDAO.delete(ncc.getMaDV());
+    public boolean delete(DonViDTO DonVi, int index) {
+        boolean check = donviDAO.delete(DonVi.getMaDV());
         if (check) {
-            this.listNcc.remove(index);
+            this.listDonVi.remove(index);
         }
         return check;
     }
 
-    public boolean update(DonViDTO ncc) {
-        boolean check = NccDAO.update(ncc);
+    public boolean update(DonViDTO DonVi) {
+        boolean check = donviDAO.update(DonVi);
         if (check) {
-            this.listNcc.set(getIndexByMaNCC(ncc.getMaDV()), ncc);
+            this.listDonVi.set(getIndexByMaDonVi(DonVi.getMaDV()), DonVi);
         }
         return check;
     }
     
-    public int getIndexByMaNCC(int maTL) {
+    public int getIndexByMaDonVi(int maTL) {
         int i = 0;
         int vitri = -1;
-        while (i < this.listNcc.size() && vitri == -1) {
-            if (listNcc.get(i).getMaDV() == maTL) {
+        while (i < this.listDonVi.size() && vitri == -1) {
+            if (listDonVi.get(i).getMaDV() == maTL) {
                 vitri = i;
             } else {
                 i++;
@@ -61,25 +61,25 @@ public class DonViBUS {
         return vitri;
     }
     
-    public String[] getArrTenNhaCungCap() {
-        int size = listNcc.size();
+    public String[] getArrTenDonVi() {
+        int size = listDonVi.size();
         String[] result = new String[size];
         for (int i = 0; i < size; i++) {
-            result[i] = listNcc.get(i).getTenDV();
+            result[i] = listDonVi.get(i).getTenDV();
         }
         return result;
     }
 
-    public String getTenNhaCungCap(int mancc) {
-        return this.listNcc.get(getIndexByMaNCC(mancc)).getTenDV();
+    public String getTenDonVi(int maDonVi) {
+        return this.listDonVi.get(getIndexByMaDonVi(maDonVi)).getTenDV();
     }
     
-    public DonViDTO findCT(ArrayList<DonViDTO> ncc, String tenTL) {
+    public DonViDTO findCT(ArrayList<DonViDTO> DonVi, String tenTL) {
         DonViDTO p = null;
         int i = 0;
-        while (i < ncc.size() && p == null) {
-            if (ncc.get(i).getTenDV().equals(tenTL)) {
-                p = ncc.get(i);
+        while (i < DonVi.size() && p == null) {
+            if (DonVi.get(i).getTenDV().equals(tenTL)) {
+                p = DonVi.get(i);
             } else {
                 i++;
             }
@@ -92,21 +92,21 @@ public class DonViBUS {
         txt = txt.toLowerCase();
         switch (type) {
             case "Tất cả" -> {
-                for (DonViDTO i : listNcc) {
+                for (DonViDTO i : listDonVi) {
                     if (Integer.toString(i.getMaDV()).contains(txt) || i.getTenDV().contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Mã Đơn Vị" -> {
-                for (DonViDTO i : listNcc) {
+                for (DonViDTO i : listDonVi) {
                     if (Integer.toString(i.getMaDV()).contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Tên Đơn Vị" -> {
-                for (DonViDTO i : listNcc) {
+                for (DonViDTO i : listDonVi) {
                     if (i.getTenDV().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
@@ -115,4 +115,28 @@ public class DonViBUS {
         }
         return result;
     }
+    
+//    public boolean checkDup(String name) {
+//        boolean check = true;
+//        int i = 0;
+//        while (i <= this.listDonVi.size() && check == true) {
+//            if (this.listDonVi.get(i).getTenDV().toLowerCase().contains(name.toLowerCase())) {
+//                check = false;
+//            } else {
+//                i++;
+//            }
+//        }
+//        return check;
+//    }
+    
+        public boolean checkDup(String name) {
+//        boolean check = false;
+        for (DonViDTO mau : listDonVi) {
+        if (mau.getTenDV().equalsIgnoreCase(name)) {
+            return true; // Trùng tên màu
+        }
+    }
+        return false;
+    }
+    
 }

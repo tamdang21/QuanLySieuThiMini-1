@@ -47,8 +47,11 @@ public class HangSanXuatDAO implements DAOInterface<HangSanXuatDTO>{
             Connection con = ConnectionDB.openConnection();
             String sql = "UPDATE `hangsanxuat` SET `TenHang`=?, `TruSo`=? WHERE `MaHang`= ?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            
             pst.setString(1, t.getTenHang());
-            pst.setInt(5, t.getMaHang());
+            pst.setString(2, t.getTruSo());
+            pst.setInt(3, t.getMaHang());
+            
             result = pst.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {

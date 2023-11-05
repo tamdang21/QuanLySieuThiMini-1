@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import quanlysieuthimini.DAO.DAOInterface.DAOInterface;
-import quanlysieuthimini.DTO.KhachHangDTO;
+import quanlysieuthimini.DTO.KhachHangThanThietDTO;
 import quanlysieuthimini.DTO.SanPhamDTO;
 
 public class SanPhamDAO implements DAOInterface<SanPhamDTO> {

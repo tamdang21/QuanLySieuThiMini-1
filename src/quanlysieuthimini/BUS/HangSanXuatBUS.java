@@ -4,46 +4,46 @@
  */
 package quanlysieuthimini.BUS;
 
+import java.util.ArrayList;
 import quanlysieuthimini.DAO.HangSanXuatDAO;
 import quanlysieuthimini.DTO.HangSanXuatDTO;
-import java.util.ArrayList;
 
 public class HangSanXuatBUS {
-    private final HangSanXuatDAO NccDAO = new HangSanXuatDAO();
-    private ArrayList<HangSanXuatDTO> listNcc = new ArrayList<>();
+    private final HangSanXuatDAO hangsxDAO = new HangSanXuatDAO();
+    private ArrayList<HangSanXuatDTO> listHangSX = new ArrayList<>();
     
     public HangSanXuatBUS() {
-        this.listNcc = NccDAO.getAll();
+        this.listHangSX = hangsxDAO.getAll();
     }
 
     public ArrayList<HangSanXuatDTO> getAll() {
-        return this.listNcc;
+        return this.listHangSX;
     }
 
     public HangSanXuatDTO getByIndex(int index) {
-        return this.listNcc.get(index);
+        return this.listHangSX.get(index);
     }
 
     public boolean add(HangSanXuatDTO ncc) {
-        boolean check = NccDAO.insert(ncc);
+        boolean check = hangsxDAO.insert(ncc);
         if (check) {
-            this.listNcc.add(ncc);
+            this.listHangSX.add(ncc);
         }
         return check;
     }
     
     public boolean delete(HangSanXuatDTO ncc, int index) {
-        boolean check = NccDAO.delete(ncc.getMaHang());
+        boolean check = hangsxDAO.delete(ncc.getMaHang());
         if (check) {
-            this.listNcc.remove(index);
+            this.listHangSX.remove(index);
         }
         return check;
     }
 
     public boolean update(HangSanXuatDTO ncc) {
-        boolean check = NccDAO.update(ncc);
+        boolean check = hangsxDAO.update(ncc);
         if (check) {
-            this.listNcc.set(getIndexByMaNCC(ncc.getMaHang()), ncc);
+            this.listHangSX.set(getIndexByMaNCC(ncc.getMaHang()), ncc);
         }
         return check;
     }
@@ -51,8 +51,8 @@ public class HangSanXuatBUS {
     public int getIndexByMaNCC(int maTL) {
         int i = 0;
         int vitri = -1;
-        while (i < this.listNcc.size() && vitri == -1) {
-            if (listNcc.get(i).getMaHang() == maTL) {
+        while (i < this.listHangSX.size() && vitri == -1) {
+            if (listHangSX.get(i).getMaHang() == maTL) {
                 vitri = i;
             } else {
                 i++;
@@ -61,17 +61,17 @@ public class HangSanXuatBUS {
         return vitri;
     }
     
-    public String[] getArrTenNhaCungCap() {
-        int size = listNcc.size();
+    public String[] getArrTenHang() {
+        int size = listHangSX.size();
         String[] result = new String[size];
         for (int i = 0; i < size; i++) {
-            result[i] = listNcc.get(i).getTenHang();
+            result[i] = listHangSX.get(i).getTenHang();
         }
         return result;
     }
 
-    public String getTenNhaCungCap(int mancc) {
-        return this.listNcc.get(getIndexByMaNCC(mancc)).getTenHang();
+    public String getTenHang(int mancc) {
+        return this.listHangSX.get(getIndexByMaNCC(mancc)).getTenHang();
     }
     
     public HangSanXuatDTO findCT(ArrayList<HangSanXuatDTO> ncc, String tenTL) {
@@ -92,21 +92,21 @@ public class HangSanXuatBUS {
         txt = txt.toLowerCase();
         switch (type) {
             case "Tất cả" -> {
-                for (HangSanXuatDTO i : listNcc) {
+                for (HangSanXuatDTO i : listHangSX) {
                     if (Integer.toString(i.getMaHang()).contains(txt) || i.getTenHang().contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Mã Hãng" -> {
-                for (HangSanXuatDTO i : listNcc) {
+                for (HangSanXuatDTO i : listHangSX) {
                     if (Integer.toString(i.getMaHang()).contains(txt)) {
                         result.add(i);
                     }
                 }
             }
             case "Tên Hãng" -> {
-                for (HangSanXuatDTO i : listNcc) {
+                for (HangSanXuatDTO i : listHangSX) {
                     if (i.getTenHang().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
@@ -114,5 +114,29 @@ public class HangSanXuatBUS {
             }
         }
         return result;
+    }
+    
+//    public boolean checkDup(String name) {
+//        boolean check = true;
+//        int i = 0;
+//        while (i <= this.listHangSX.size() && check == true) {
+//            if (this.listHangSX.get(i).getTenHang().toLowerCase().contains(name.toLowerCase())) {
+//                check = false;
+//            } else {
+//                i++;
+//            }
+//        }
+//        return check;
+//    }
+    
+        
+    public boolean checkDup(String name) {
+//        boolean check = false;
+        for (HangSanXuatDTO mau : listHangSX) {
+        if (mau.getTenHang().equalsIgnoreCase(name)) {
+            return true; // Trùng tên màu
+        }
+    }
+        return false;
     }
 }

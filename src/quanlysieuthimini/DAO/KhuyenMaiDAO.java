@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import quanlysieuthimini.DAO.DAOInterface.DAOInterface;
-import quanlysieuthimini.DTO.KhachHangDTO;
+import quanlysieuthimini.DTO.KhachHangThanThietDTO;
 import quanlysieuthimini.DTO.KhuyenMaiDTO;
 
 public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {

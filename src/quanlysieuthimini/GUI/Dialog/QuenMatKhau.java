@@ -1,6 +1,6 @@
 package quanlysieuthimini.GUI.Dialog;
 
-import helper.SendEmailSMTP;
+import quanlysieuthimini.helper.SendEmailSMTP;
 import com.formdev.flatlaf.FlatLightLaf;
 import quanlysieuthimini.helper.BCrypt;
 import java.awt.BorderLayout;

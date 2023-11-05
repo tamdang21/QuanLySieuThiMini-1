@@ -48,7 +48,7 @@ public class DonViDAO implements DAOInterface<DonViDTO>{
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             
             pst.setString(1, t.getTenDV());
-            pst.setInt(5, t.getMaDV());
+            pst.setInt(2, t.getMaDV());
             
             result = pst.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);

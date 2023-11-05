@@ -1,1 +1,0 @@
-GUI.Panel.ThongKe.ThongKeDoanhThuTungThang

@@ -39,6 +39,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class QRCode_Dialog extends JDialog {
 
@@ -47,13 +48,13 @@ public class QRCode_Dialog extends JDialog {
     private final Webcam wCam = Webcam.getWebcams().get(0);
     private final WebcamPanel wCamPanel = new WebcamPanel(wCam, ds, false);
     private JPanel panelCam;
-    private JTextArea textArea;
+    private JTextField textfield;
     private ButtonCustom btnExit;
     private Thread t;
 
-    public QRCode_Dialog(JFrame owner, String title, boolean modal, JTextArea textArea) {
+    public QRCode_Dialog(JFrame owner, String title, boolean modal, JTextField textfield) {
         super(owner, title, modal);
-        this.textArea = textArea;
+        this.textfield = textfield;
         init();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -103,9 +104,9 @@ public class QRCode_Dialog extends JDialog {
                     }
 
                     if (result != null) {
-                        if(!textArea.getText().contains(result.getText())){
+                        if(!textfield.getText().contains(result.getText())){
                             soundScan();
-                            textArea.append(result.getText() + "\n");
+                            textfield.setText(result.getText() + "\n");
                         } else {
                             System.out.println("Mã đã được quét!");
                         }

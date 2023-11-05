@@ -52,7 +52,7 @@ public class ChiTietHoaDonDTO {
     }
 
     public double getThanhTien() {
-        return ThanhTien;
+        return DonGia * SoLuong;
     }
 
     public void setThanhTien(double ThanhTien) {

@@ -2,10 +2,6 @@ package quanlysieuthimini.helper;
 
 import java.util.regex.Pattern;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
 public class Validation {
 
     public static Boolean isEmpty(String input) {

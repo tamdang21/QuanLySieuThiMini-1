@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class SanPhamDTO {
     private int MaSP, MaLoai, MaHang, MaDV, TrangThai;
-    private String TenSP, HinhAnh;
+    private String TenSP, MaVach, HinhAnh;
     private int SoLuong, DungTich;
     private double DonGia;
     private Date NgaySanXuat, HanSuDung;
@@ -17,12 +17,13 @@ public class SanPhamDTO {
     public SanPhamDTO() {
     }
 
-    public SanPhamDTO(int MaSP, int MaLoai, int MaHang, int MaDV, String TenSP, int SoLuong, int DungTich, double DonGia, Date NgaySanXuat, Date HanSuDung, String HinhAnh, int TrangThai) {
+    public SanPhamDTO(int MaSP, int MaLoai, int MaHang, int MaDV, String TenSP, String MaVach, int SoLuong, int DungTich, double DonGia, Date NgaySanXuat, Date HanSuDung, String HinhAnh, int TrangThai) {
         this.MaSP = MaSP;
         this.MaLoai = MaLoai;
         this.MaHang = MaHang;
         this.MaDV = MaDV;
         this.TenSP = TenSP;
+        this.MaVach = MaVach;
         this.SoLuong = SoLuong;
         this.DungTich = DungTich;
         this.DonGia = DonGia;
@@ -127,4 +128,13 @@ public class SanPhamDTO {
     public void setTrangThai(int TrangThai) {
         this.TrangThai = TrangThai;
     }
+
+    public String getMaVach() {
+        return MaVach;
+    }
+
+    public void setMaVach(String MaVach) {
+        this.MaVach = MaVach;
+    }
+
 }

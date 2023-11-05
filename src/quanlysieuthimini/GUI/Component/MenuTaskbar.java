@@ -7,8 +7,8 @@ package quanlysieuthimini.GUI.Component;
 import quanlysieuthimini.GUI.Panel.NhanVien;
 import quanlysieuthimini.GUI.Panel.PhanQuyen;
 //import quanlysieuthimini.GUI.Panel.PhieuNhap;
-//import quanlysieuthimini.GUI.Panel.PhieuXuat;
-//import quanlysieuthimini.GUI.Panel.QuanLyThuocTinhSP;
+import quanlysieuthimini.GUI.Panel.HoaDon;
+import quanlysieuthimini.GUI.Panel.QuanLyThanhPhanSP;
 //import quanlysieuthimini.GUI.Panel.SanPham;
 import quanlysieuthimini.GUI.Panel.TaiKhoan;
 import quanlysieuthimini.GUI.Panel.BeginForm;
@@ -35,10 +35,10 @@ public class MenuTaskbar extends JPanel {
 
     BeginForm trangChu;
 //    SanPham sanPham;
-//    QuanLyThuocTinhSP quanLyThuocTinhSP;
+    QuanLyThanhPhanSP quanLyThuocTinhSP;
 //    KhuVucKho quanLyKho;
 //    PhieuNhap phieuNhap;
-//    PhieuXuat phieuXuat;
+    HoaDon hoaDon;
 //    KhachHang khachHang;
     NhaCungCap nhacungcap;
     NhanVien nhanVien;
@@ -184,7 +184,8 @@ public class MenuTaskbar extends JPanel {
         listitem[0].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("BanHang");
+                hoaDon = new HoaDon(main, user);
+                main.setPanel(hoaDon);
             }
         });
         
@@ -208,7 +209,9 @@ public class MenuTaskbar extends JPanel {
         listitem[3].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("ThanhPhan");
+                //System.out.println("ThanhPhan");
+                quanLyThuocTinhSP = new QuanLyThanhPhanSP(main);
+                main.setPanel(quanLyThuocTinhSP);
             }
         });
 
