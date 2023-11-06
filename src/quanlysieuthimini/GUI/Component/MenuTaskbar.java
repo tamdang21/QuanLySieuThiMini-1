@@ -6,7 +6,7 @@ package quanlysieuthimini.GUI.Component;
 //import quanlysieuthimini.GUI.Panel.NhaCungCap;
 import quanlysieuthimini.GUI.Panel.NhanVien;
 import quanlysieuthimini.GUI.Panel.PhanQuyen;
-//import quanlysieuthimini.GUI.Panel.PhieuNhap;
+import quanlysieuthimini.GUI.Panel.PhieuNhap;
 import quanlysieuthimini.GUI.Panel.HoaDon;
 import quanlysieuthimini.GUI.Panel.QuanLyThanhPhanSP;
 import quanlysieuthimini.GUI.Panel.SanPham;
@@ -37,7 +37,7 @@ public class MenuTaskbar extends JPanel {
     SanPham sanPham;
     QuanLyThanhPhanSP quanLyThuocTinhSP;
 //    KhuVucKho quanLyKho;
-//    PhieuNhap phieuNhap;
+    PhieuNhap phieuNhap;
     HoaDon hoaDon;
 //    KhachHang khachHang;
     NhaCungCap nhacungcap;
@@ -193,7 +193,8 @@ public class MenuTaskbar extends JPanel {
         listitem[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("NhapHang");
+                phieuNhap = new PhieuNhap(main, nhanVienDTO);
+                main.setPanel(phieuNhap);
             }
         });
         

@@ -112,4 +112,13 @@ public class SanPhamBUS{
         }
         return n;
     }
+    
+    public boolean checkMaVachExists(String MaVach) {
+        for(SanPhamDTO i : this.listSP) {
+            if (i.getMaVach().equals(MaVach)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

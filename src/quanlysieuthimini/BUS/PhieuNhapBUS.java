@@ -127,5 +127,14 @@ public class PhieuNhapBUS {
 
         return result;
     }
-
+    
+    public boolean checkHuyPhieuNhap(int maphieu) {
+        if(maphieu == 1)
+            return true;
+        return false;
+    }
+    
+    public int cancelPhieuNhap(int maphieu) {
+        return phieunhapDAO.delete(maphieu) ? 1 : 0;
+    }
 }
