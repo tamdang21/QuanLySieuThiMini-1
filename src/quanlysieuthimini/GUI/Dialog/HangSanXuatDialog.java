@@ -93,12 +93,12 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
 
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms = new InputForm("Tên Hãng Sản Xuất");
+        ms = new InputForm("Tên Hãng");
         ms.setPreferredSize(new Dimension(250, 70));
         
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms1 = new InputForm("Trụ Sở Hãng Sản Xuất");
+        ms1 = new InputForm("Trụ Sở");
         ms1.setPreferredSize(new Dimension(250, 70));
         
         table = new JTable();
@@ -107,7 +107,7 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         scrollTable = new JScrollPane(table);
         scrollTable.setBackground(Color.WHITE);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã Hãng Sản Xuất", "Tên Hãng Sản xuất", "Trụ Sở"};
+        String[] header = new String[]{"Mã Hãng", "Tên Hãng", "Trụ Sở"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         table.setFocusable(false);

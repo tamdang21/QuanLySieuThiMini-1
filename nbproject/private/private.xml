@@ -3,12 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoPhieuNhap.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/QuanLyThanhPhanSP.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/PhieuChiBUS.java</file>
             <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/HoaDon.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListKhachHang.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/PhieuNhap.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoHoaDon.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/QRCode_Dialog.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Component/SelectForm.java</file>
             <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/PhieuNhapBUS.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoPhieuNhap.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/PhieuChiDialog.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Component/MainFunction.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Log_In.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoHoaDon.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Component/InputImage.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DTO/PhieuChiDTO.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Main.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/PhanQuyen.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/SanPhamDialog.java</file>
         </group>
     </open-files>
 </project-private>

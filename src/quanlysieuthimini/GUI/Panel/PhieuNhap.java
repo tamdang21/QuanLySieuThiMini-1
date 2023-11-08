@@ -41,6 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.text.PlainDocument;
+import quanlysieuthimini.DAO.TaiKhoanDAO;
+import quanlysieuthimini.GUI.Dialog.PhieuChiDialog;
 
 public final class PhieuNhap extends JPanel implements ActionListener, KeyListener, PropertyChangeListener, ItemListener {
 
@@ -104,7 +106,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         tablePhieuNhap = new JTable();
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã phiếu nhập", "Nhà cung cấp", "Nhân viên nhập", "Thời gian", "Tổng tiền"};
+        String[] header = new String[]{"STT", "Mã phiếu", "Nhà cung cấp", "Nhân viên nhập", "Ngày nhập", "Tổng tiền", "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tablePhieuNhap.setModel(tblModel);
         tablePhieuNhap.setDefaultEditor(Object.class, null);
@@ -212,11 +214,13 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         int size = listphieunhap.size();
         for (int i = 0; i < size; i++) {
             tblModel.addRow(new Object[]{
-                i + 1, (int) listphieunhap.get(i).getMaPN(),
+                i + 1, 
+                (int) listphieunhap.get(i).getMaPN(),
                 nccBUS.getTenNhaCungCap(listphieunhap.get(i).getMaNCC()),
                 nvBUS.getNameById(listphieunhap.get(i).getMaNV()),
                 Formater.FormatTime(listphieunhap.get(i).getNgayNhap()),
-                Formater.FormatVND(listphieunhap.get(i).getTongTien())
+                Formater.FormatVND(listphieunhap.get(i).getTongTien()),
+                listphieunhap.get(i).getTrangThai() == 2 ? "Đã phê duyệt" : (listphieunhap.get(i).getTrangThai() == 1 ? "Chờ phê duyệt" : "Đã hủy")
             });
         }
     }
@@ -302,7 +306,8 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
                     System.out.println(pn);
                     if (!phieunhapBUS.checkHuyPhieuNhap(pn.getMaPN())) {
                         JOptionPane.showMessageDialog(null, "Sản phẩm đã được nhập vào nên không thể hủy!!");
-                    } else {
+                    } 
+                    else {
                         int c = phieunhapBUS.cancelPhieuNhap(pn.getMaPN());
                         if (c == 0) {
                             JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
@@ -328,7 +333,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
             int index = getRowSelected();
             if (index != -1) {
                 //ChiTietPhieuNhapDialog ctsp = new ChiTietPhieuNhapDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
-                System.out.println("Phiếu chi");
+                new PhieuChiDialog(m, "Thông tin phiếu chi", true, this, TaiKhoanDAO.getInstance().getById(nv.getMaNV()).getMaQuyen(), listPhieu.get(index).getMaPN());
             }
         }
     }

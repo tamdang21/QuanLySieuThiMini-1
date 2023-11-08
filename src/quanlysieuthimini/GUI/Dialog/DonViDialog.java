@@ -81,7 +81,7 @@ public class DonViDialog extends JDialog implements MouseListener {
 
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms = new InputForm("Đơn Vị Sản Phẩm");
+        ms = new InputForm("Đơn Vị Tính");
         ms.setPreferredSize(new Dimension(250, 70));
         table = new JTable();
         table.setBackground(Color.WHITE);

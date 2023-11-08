@@ -35,6 +35,10 @@ public class PhieuNhapBUS {
     public ArrayList<ChiTietPhieuNhapDTO> getChiTietPhieu(int maphieunhap) {
         return ctPhieuNhapDAO.getAll(maphieunhap);
     }
+    
+    public PhieuNhapDTO getByIndex(int index) {
+        return this.listPhieuNhap.get(index);
+    }
 
     public ArrayList<ChiTietPhieuNhapDTO> getChiTietPhieu_Type(int maphieunhap) {
         ArrayList<ChiTietPhieuNhapDTO> arr = ctPhieuNhapDAO.getAll(maphieunhap);

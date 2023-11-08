@@ -201,13 +201,8 @@ public final class SanPham extends JPanel implements ActionListener{
             if (index != -1) {
                 SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listsp.get(index));
             }
-        } else if (e.getSource() == mainFunction.btn.get("phone")) {
-            int index = getRowSelected();
-            if (index != -1) {
-//                ChiTietSanPhamDialog ct = new ChiTietSanPhamDialog(owner, "Tất cả sản phẩm", true, listSP.get(index));
-                  System.out.println("phone");
-            }
-        } else if (e.getSource() == mainFunction.btn.get("export")) {
+        }
+        else if (e.getSource() == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableSanPham);
             } catch (IOException ex) {

@@ -167,9 +167,9 @@ public class MenuTaskbar extends JPanel {
             }
         }
 
-        listitem[0].setBackground(HowerBackgroundColor);
-        listitem[0].setForeground(HowerFontColor);
-        listitem[0].isSelected = true;
+//        listitem[0].setBackground(HowerBackgroundColor);
+//        listitem[0].setForeground(HowerFontColor);
+//        listitem[0].isSelected = true;
 
         for (int i = 0; i < getSt.length; i++) {
             listitem[i].addMouseListener(new MouseAdapter() {

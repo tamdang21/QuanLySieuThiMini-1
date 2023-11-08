@@ -54,27 +54,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.PlainDocument;
 
-/**
-*
-* @author Tran Nhat Sinh
-*/
 public final class SanPhamDialog extends JDialog implements ActionListener {
 
    SanPhamDTO sp;
    private HeaderTitle titlePage;
-   private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain, pncard2;
-   private ButtonCustom btnThemCHMS, btnHuyBo, btnAddCauHinh, btnEditCTCauHinh, btnDeleteCauHinh, btnResetCauHinh, btnAddSanPham, btnBack, btnViewCauHinh;
-   InputForm tenSP, dongia, soluong, dungtich, ngaySX, hanSD;
-   InputForm txtgianhap, txtgiaxuat;
+   private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
+   private ButtonCustom btnThemCHMS, btnHuyBo, btnAddSanPham, btnViewCauHinh, btnQuetMa;
+   InputForm tenSP, dongia, soluong, dungtich, ngaySX, hanSD, mavach;
    SelectForm hangsx, loaisp, donvi;
-   SelectForm thuonghieu, khuvuc;
    InputImage hinhanh;
-   JTable tblcauhinh;
-   JScrollPane scrolltblcauhinh;
-   DefaultTableModel tblModelch;
    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
    quanlysieuthimini.GUI.Panel.SanPham jpSP;
-   HangSanXuatDAO hangsxDAO;
    LoaiSanPhamDAO loaiSPDAO;
    DonViDAO       donviDAO;
 
@@ -120,7 +110,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
    public void initCardOne(String type) {
        pnCenter = new JPanel(new BorderLayout());
-       pninfosanpham = new JPanel(new GridLayout(3, 3, 0, 0));
+       pninfosanpham = new JPanel(new GridLayout(4, 3, 0, 0));
        pninfosanpham.setBackground(Color.WHITE);
        pnCenter.add(pninfosanpham, BorderLayout.CENTER);
 
@@ -136,6 +126,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
        donvi =  new SelectForm("Đơn vị",arrDonVi);
        dongia = new InputForm("Đơn giá");
        soluong = new InputForm("Số lượng");
+       mavach = new InputForm("Mã vạch");
        dungtich = new InputForm("Dung Tích");
        ngaySX = new InputForm("Ngày Sản Xuất");
        hanSD =  new InputForm("Hạn sử dụng");
@@ -150,31 +141,26 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
        pninfosanpham.add(ngaySX);
        pninfosanpham.add(hanSD);
        pninfosanphamright.add(hinhanh);
+       pninfosanpham.add(mavach);
        
        pnbottom = new JPanel (new  FlowLayout());
        pnbottom.setBorder (new EmptyBorder(20,0,10,0));
        pnbottom.setBackground(Color.white);
        switch (type){
-//            case "view" -> {
-//                btnViewCauHinh = new ButtonCustom("Xem cấu hình", "warning", 14);
-//                btnViewCauHinh.addActionListener(this);
-//                pnbottom.add(btnViewCauHinh);
-//            }
             case "update" -> {
                 btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
-//                btnEditCT = new ButtonCustom("Sửa cấu hình", "warning", 14);
                 btnSaveCH.addActionListener(this);
-//                btnEditCT.addActionListener(this);
                 pnbottom.add(btnSaveCH);
-//                pnbottom.add(btnEditCT);
             }
             case "create" -> {
-//                btnThemCHMS = new ButtonCustom("Tạo cấu hình", "success", 14);
-//                btnThemCHMS.addActionListener(this);
-//                pnbottom.add(btnThemCHMS);
-                  btnAddSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
+                btnAddSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
                 btnAddSanPham.addActionListener(this);
-                  pnbottom.add(btnAddSanPham);
+                
+                btnQuetMa = new ButtonCustom("Quét mã", "excel", 14);
+                btnQuetMa.addActionListener(this);
+                
+                pnbottom.add(btnAddSanPham);
+                pnbottom.add(btnQuetMa);
             }
         }
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
@@ -221,6 +207,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         donvi.setSelectedItem(donviDAO.getInstance().getById(sp.getMaDV()).getTenDV());
         dongia.setText(String.valueOf(sp.getDonGia()));
         soluong.setText(String.valueOf(sp.getSoLuong()));
+        mavach.setText(String.valueOf(sp.getMaVach()));
         dungtich.setText(String.valueOf(sp.getDungTich()));
         ngaySX.setText(Formater.FormatDate(sp.getNgaySanXuat()));
         hanSD.setText(Formater.FormatDate(sp.getHanSuDung()));
@@ -247,29 +234,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if (source == btnThemCHMS && validateCardOne()) {
             CardLayout c = (CardLayout) pnmain.getLayout();
             c.next(pnmain);
-        } 
-//        else if (source == btnBack) {
-//            CardLayout c = (CardLayout) pnmain.getLayout();
-//            c.previous(pnmain);
-//        } 
-//        else if (source == btnAddCauHinh) {
-//            if (validateCardTwo() && checkTonTai()) {
-//                listch.add(getCauHinh());
-//                loadDataToTableCauHinh(this.listch);
-//                resetFormCauHinh();
-//            }
-//        }else if (source == btnResetCauHinh) {
-//            resetFormCauHinh();
-//            loadDataToTableCauHinh(this.listch);
-//        } else if (source == btnDeleteCauHinh) {
-//            int index = getRowCauHinh();
-//            this.listch.remove(index);
-//            loadDataToTableCauHinh(this.listch);
-//            resetFormCauHinh();
-//        } else if (source == btnEditCTCauHinh) {
-//            eventEditCauHinh();
-//           loadDataToTableCauHinh(this.listch);
-//        }
+        }
         else if (source == btnAddSanPham) {
             try{
                 eventAddSanPham();
@@ -277,7 +242,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             }catch(Exception ex){
                 System.out.print(ex);
             }
-        } 
+        }
+        else if(source == btnQuetMa) {
+            System.out.println("Quét mã");
+        }
         else if (source == btnViewCauHinh) {
             CardLayout c = (CardLayout) pnmain.getLayout();
             c.next(pnmain);
@@ -311,8 +279,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty(hanSD.getText())
                 || Validation.isEmpty(hangsx.getValue()) || Validation.isEmpty(loaisp.getValue())
                 || Validation.isEmpty(donvi.getValue()) || Validation.isEmpty(soluong.getText())
-                || Validation.isEmpty(dongia.getText()) || Validation.isEmpty(dungtich.getText())
-                || Validation.isEmpty(ngaySX.getText())) {
+                || Validation.isEmpty(mavach.getText()) || Validation.isEmpty(dongia.getText()) 
+                || Validation.isEmpty(dungtich.getText()) || Validation.isEmpty(ngaySX.getText())) {
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
         } else {
@@ -338,12 +306,12 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         int madonvi  = donviBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaDV();
         double vdongia = Double.parseDouble(dongia.getText());
         int vsoluong = Integer.parseInt(soluong.getText());
+        String vmavach = mavach.getText();
         int vdungtich = Integer.parseInt(dungtich.getText());
         Date vngaySX = sp.getNgaySanXuat();
         Date vhanSD = sp.getHanSuDung();
-        String mavach = "";
         
-        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,mavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,hinhanh,1);
+        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,hinhanh,1);
         return result;
     }
 }

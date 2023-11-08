@@ -54,7 +54,6 @@
 //    DefaultTableModel tblModel;
 //    SelectForm cbxTenKM, cbxTrangThai, cbxGiamGia;
 //    InputDate dateStart, dateEnd;
-//    InputForm moneyMin, moneyMax;
 //
 //    Main m;
 //
@@ -63,15 +62,13 @@
 //    ArrayList<KhuyenMaiDTO> listKhuyenMai;
 //
 //    NhanVienBUS nvBUS = new NhanVienBUS();
-//    KhuyenMaiBUS pxBUS = new KhuyenMaiBUS();
-//    KhachHangThanThietBUS khachHangBUS = new KhachHangThanThietBUS();
+//    //KhachHangThanThietBUS khachHangBUS = new KhachHangThanThietBUS();
 //    KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
 //
 //    public KhuyenMai(Main m) {
 //        this.m = m;
-//        this.tk = tk;
 //        initComponent();
-//        this.listKhuyenMai = pxBUS.getAll();
+//        this.listKhuyenMai = khuyenmaiBUS.getAll();
 //        loadDataTalbe(this.listKhuyenMai);
 //    }
 //
@@ -94,8 +91,8 @@
 //        functionBar.setLayout(new GridLayout(1, 2, 50, 0));
 //        functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 //
-//        String[] action = {"create", "detail", "cancel", "export"};
-//        mainFunction = new MainFunction(m.user.getMaQuyen(), "banhang", action);
+//        String[] action = {"create", "cancel", "export"};
+//        mainFunction = new MainFunction(m.user.getMaQuyen(), "khuyenmai", action);
 //        functionBar.add(mainFunction);
 //
 //        //Add Event MouseListener
@@ -103,7 +100,7 @@
 //            mainFunction.btn.get(ac).addActionListener(this);
 //        }
 //
-//        search = new IntegratedSearch(new String[]{"Tất cả", "Mã hóa đơn", "Khuyến mãi", "Khách hàng", "Nhân viên bán"});
+//        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khuyến mãi", "Tên khuyến mãi", "% Khuyến mãi"});
 //        search.cbxChoose.addItemListener(this);
 //        search.txtSearchForm.addKeyListener(this);
 //        search.btnReset.addActionListener(this);
@@ -120,7 +117,7 @@
 //        tableKhuyenMai = new JTable();
 //        scrollTableKhuyenMai = new JScrollPane();
 //        tblModel = new DefaultTableModel();
-//        String[] header = new String[]{"STT", "Mã hóa đơn", "Khách hàng", "Khuyến mãi", "Nhân viên bán", "Ngày lập", "Tổng tiền"};
+//        String[] header = new String[]{"STT", "Mã khuyến mãi", "Tên khuyến mãi", "Điều kiện", "Giảm giá", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"};
 //        tblModel.setColumnIdentifiers(header);
 //        tableKhuyenMai.setModel(tblModel);
 //        tableKhuyenMai.setFocusable(false);
@@ -133,8 +130,11 @@
 //        tableKhuyenMai.setFocusable(false);
 //        TableSorter.configureTableColumnSorter(tableKhuyenMai, 0, TableSorter.INTEGER_COMPARATOR);
 //        TableSorter.configureTableColumnSorter(tableKhuyenMai, 1, TableSorter.INTEGER_COMPARATOR);
-//        TableSorter.configureTableColumnSorter(tableKhuyenMai, 6, TableSorter.VND_CURRENCY_COMPARATOR);
-//
+//        TableSorter.configureTableColumnSorter(tableKhuyenMai, 3, TableSorter.DOUBLE_COMPARATOR);
+//        TableSorter.configureTableColumnSorter(tableKhuyenMai, 4, TableSorter.DOUBLE_COMPARATOR);
+//        TableSorter.configureTableColumnSorter(tableKhuyenMai, 5, TableSorter.DATE_COMPARATOR);
+//        TableSorter.configureTableColumnSorter(tableKhuyenMai, 6, TableSorter.DATE_COMPARATOR);
+//        
 //        main.add(scrollTableKhuyenMai);
 //
 //    }
@@ -169,27 +169,19 @@
 //        contentCenter.add(box, BorderLayout.WEST);
 //
 //        // Handel
-//        String[] listKh = khachHangBUS.getArrTenKhachHang();
-//        listKh = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listKh)).toArray(String[]::new);
-//        String[] listKM = khuyenmaiBUS.getArrTenKhuyenMai();
-//        listKM = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listKM)).toArray(String[]::new);
-//        String[] listNv = nvBUS.getArrTenNhanVien();
-//        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
+//        String[] listTenKM = khuyenmaiBUS.getArrTenKhuyenMai();
+//        listTenKM = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listTenKM)).toArray(String[]::new);
+//        String[] listGiamGia = khuyenmaiBUS.getArrTenKhuyenMai();
+//        listGiamGia = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listGiamGia)).toArray(String[]::new);
+//        String[] listTrangThai = nvBUS.getArrTenNhanVien();
+//        listTrangThai = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listTrangThai)).toArray(String[]::new);
 //
 //        // init
-//        cbxTenKM = new SelectForm("Khách hàng", listKh);
-//        cbxGiamGia = new SelectForm("Khuyến mãi", listKM);
-//        cbxTrangThai = new SelectForm("Nhân viên bán hàng", listNv);
+//        cbxTenKM = new SelectForm("Tên khuyến mãi", listTenKM);
+//        cbxGiamGia = new SelectForm("Giảm giá", listGiamGia);
+//        cbxTrangThai = new SelectForm("Trạng thái", listTrangThai);
 //        dateStart = new InputDate("Từ ngày");
 //        dateEnd = new InputDate("Đến ngày");
-//        moneyMin = new InputForm("Từ số tiền (VND)");
-//        moneyMax = new InputForm("Đến số tiền (VND)");
-//
-//        PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
-//        doc_min.setDocumentFilter(new NumericDocumentFilter());
-//
-//        PlainDocument doc_max = (PlainDocument) moneyMax.getTxtForm().getDocument();
-//        doc_max.setDocumentFilter(new NumericDocumentFilter());
 //
 //        // add listener
 //        cbxTenKM.getCbb().addItemListener(this);
@@ -197,50 +189,41 @@
 //        cbxTrangThai.getCbb().addItemListener(this);
 //        dateStart.getDateChooser().addPropertyChangeListener(this);
 //        dateEnd.getDateChooser().addPropertyChangeListener(this);
-//        moneyMin.getTxtForm().addKeyListener(this);
-//        moneyMax.getTxtForm().addKeyListener(this);
 //
 //        box.add(cbxTenKM);
 //        box.add(cbxGiamGia);
 //        box.add(cbxTrangThai);
 //        box.add(dateStart);
 //        box.add(dateEnd);
-//        box.add(moneyMin);
-//        box.add(moneyMax);
 //    }
 //
 //    @Override
 //    public void actionPerformed(ActionEvent e) {
 //        Object source = e.getSource();
 //        if (source == mainFunction.btn.get("create")) {
-//            taoKhuyenMai = new TaoKhuyenMai(m, tk, "create");
-//            m.setPanel(taoKhuyenMai);
-//        } 
-//        else if (source == mainFunction.btn.get("detail")) {
-//            if (getRow() < 0) {
-//                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu cần xem!");
-//            } else {
-//                ChiTietKhuyenMaiDialog cthd = new ChiTietKhuyenMaiDialog(m, "Thông tin hóa đơn", true, pxBUS.getSelect(getRow()));
-//            }
-//        } 
+////            taoKhuyenMai = new TaoKhuyenMai(m, tk, "create");
+////            m.setPanel(taoKhuyenMai);
+//        }
 //        else if (source == mainFunction.btn.get("cancel")) {
-////            if (tableKhuyenMai.getSelectedRow() < 0) {
-////                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu!");
-////            } else {
-////                int n = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa phiếu này?", "Xóa phiếu", JOptionPane.YES_NO_OPTION);
-////                if (n == JOptionPane.YES_OPTION) {
-////                    KhuyenMaiDTO px = pxBUS.getSelect(tableKhuyenMai.getSelectedRow());
-////                    pxBUS.cancel(px.getMaphieu());
-////                    pxBUS.remove(tableKhuyenMai.getSelectedRow());
-////                    loadDataTalbe(pxBUS.getAll());
-////                    Notification notification = new Notification(m, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Hủy phiếu thành công");
-////                    notification.showNotification();
-////                }
-////            }
+//            if (tableKhuyenMai.getSelectedRow() < 0) {
+//                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu!");
+//            }
+//            else {
+//                int n = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa khuyến mãi này không?", "Xóa phiếu", JOptionPane.YES_NO_OPTION);
+//                if (n == JOptionPane.YES_OPTION) {
+//                    KhuyenMaiDTO px = khuyenmaiBUS.getSelect(tableKhuyenMai.getSelectedRow());
+//                    khuyenmaiBUS.cancel(px.getMaKM());
+//                    khuyenmaiBUS.remove(tableKhuyenMai.getSelectedRow());
+//                    loadDataTalbe(khuyenmaiBUS.getAll());
+//                    Notification notification = new Notification(m, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Hủy phiếu thành công");
+//                    notification.showNotification();
+//                }
+//            }
 //        } 
 //        else if (source == search.btnReset) {
 //            resetForm();
-//        } else if (source == mainFunction.btn.get("export")) {
+//        } 
+//        else if (source == mainFunction.btn.get("export")) {
 //            try {
 //                JTableExporter.exportJTableToExcel(tableKhuyenMai);
 //            } catch (IOException ex) {
@@ -249,18 +232,19 @@
 //        }
 //    }
 //
-//    public void loadDataTalbe(ArrayList<KhuyenMaiDTO> listHD) {
+//    public void loadDataTalbe(ArrayList<KhuyenMaiDTO> listKM) {
 //        tblModel.setRowCount(0);
-//        int size = listHD.size();
+//        int size = listKM.size();
 //        for (int i = 0; i < size; i++) {
 //            tblModel.addRow(new Object[]{
 //                i + 1,
-//                listHD.get(i).getMaHD(),
-//                khachHangBUS.getTenKhachHang(listHD.get(i).getMaKH()),
-//                khuyenmaiBUS.getTenKhuyenMai(listHD.get(i).getMaKM()),
-//                nvBUS.getNameById(listHD.get(i).getMaNV()),
-//                Formater.FormatTime(listHD.get(i).getNgayLap()),
-//                Formater.FormatVND(listHD.get(i).getTongTien())});
+//                listKM.get(i).getMaKM(),
+//                listKM.get(i).getTenKM(),
+//                listKM.get(i).getDieuKienKM(),
+//                listKM.get(i).getPhanTramKM(),
+//                listKM.get(i).getNgayBatDau(),
+//                listKM.get(i).getNgayKetThuc(),
+//                listKM.get(i).getTrangThai()});
 //        }
 //    }
 //
@@ -277,9 +261,7 @@
 //            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
 //            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
 //            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-//            String min_price = moneyMin.getText();
-//            String max_price = moneyMax.getText();
-//            this.listKhuyenMai = pxBUS.fillerKhuyenMai(type, input, makh, manv, makm, time_start, time_end, min_price, max_price);
+//            this.listKhuyenMai = khuyenmaiBUS.fillerKhuyenMai(type, input, makh, manv, makm, time_start, time_end);
 //            loadDataTalbe(listKhuyenMai);
 //        }
 //    }
@@ -290,11 +272,9 @@
 //        cbxTrangThai.setSelectedIndex(0);
 //        search.cbxChoose.setSelectedIndex(0);
 //        search.txtSearchForm.setText("");
-//        moneyMin.setText("");
-//        moneyMax.setText("");
 //        dateStart.getDateChooser().setCalendar(null);
 //        dateEnd.getDateChooser().setCalendar(null);
-//        this.listKhuyenMai = pxBUS.getAll();
+//        this.listKhuyenMai = khuyenmaiBUS.getAll();
 //        loadDataTalbe(listKhuyenMai);
 //    }
 //
