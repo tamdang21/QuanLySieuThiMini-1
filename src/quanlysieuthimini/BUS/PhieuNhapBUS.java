@@ -35,6 +35,14 @@ public class PhieuNhapBUS {
     public ArrayList<ChiTietPhieuNhapDTO> getChiTietPhieu(int maphieunhap) {
         return ctPhieuNhapDAO.getAll(maphieunhap);
     }
+    
+    public PhieuNhapDTO getByIndex(int index) {
+        return this.listPhieuNhap.get(index);
+    }
+    
+    public PhieuNhapDTO getById(int makm) {
+        return PhieuNhapDAO.getInstance().getById(makm);
+    }
 
     public ArrayList<ChiTietPhieuNhapDTO> getChiTietPhieu_Type(int maphieunhap) {
         ArrayList<ChiTietPhieuNhapDTO> arr = ctPhieuNhapDAO.getAll(maphieunhap);
@@ -49,6 +57,14 @@ public class PhieuNhapBUS {
         boolean check = phieunhapDAO.insert(phieu);
         if (check) {
             check = ctPhieuNhapDAO.insert(ctPhieu);
+        }
+        return check;
+    }
+    
+    public boolean update(PhieuNhapDTO pn) {
+        boolean check = phieunhapDAO.update(pn);
+        if (check) {
+            check = ctPhieuNhapDAO.update(getChiTietPhieu(pn.getMaPN()), pn.getMaPN());
         }
         return check;
     }
@@ -127,5 +143,14 @@ public class PhieuNhapBUS {
 
         return result;
     }
-
+    
+    public boolean checkHuyPhieuNhap(int maphieu) {
+        if(maphieu == 1)
+            return true;
+        return false;
+    }
+    
+    public int cancelPhieuNhap(int maphieu) {
+        return phieunhapDAO.delete(maphieu) ? 1 : 0;
+    }
 }

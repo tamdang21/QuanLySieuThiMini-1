@@ -27,6 +27,7 @@ import quanlysieuthimini.GUI.Dialog.SanPhamDialog;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import quanlysieuthimini.BUS.HangSanXuatBUS;
+import quanlysieuthimini.BUS.LoaiSanPhamBUS;
 import quanlysieuthimini.BUS.SanPhamBUS;
 import quanlysieuthimini.DTO.SanPhamDTO;
 import quanlysieuthimini.GUI.Main;
@@ -34,6 +35,7 @@ import quanlysieuthimini.GUI.Component.IntegratedSearch;
 import quanlysieuthimini.GUI.Component.MainFunction;
 import quanlysieuthimini.GUI.Component.PanelBorderRadius;
 import quanlysieuthimini.GUI.Component.TableSorter;
+import quanlysieuthimini.helper.Formater;
 import quanlysieuthimini.helper.JTableExporter;
 
 public final class SanPham extends JPanel implements ActionListener{
@@ -48,6 +50,7 @@ public final class SanPham extends JPanel implements ActionListener{
     Main m;
     public ArrayList<SanPhamDTO> listsp = spBUS.getAll();
     HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
+    LoaiSanPhamBUS loaispBUS = new LoaiSanPhamBUS();
 
     Color BackgroundColor = new Color(240,247,250);
     private DefaultTableModel tblModel;
@@ -130,7 +133,7 @@ public final class SanPham extends JPanel implements ActionListener{
         tableSanPham = new JTable();
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[] {"Mã SP", "Tên SP", "Đơn giá", "Số lượng", "Hãng"};
+        String[] header = new String[] {"Mã sản phẩm", "Tên sản phẩm", "Loại", "Đơn giá", "Số lượng", "Hãng sản xuất"};
         tblModel.setColumnIdentifiers(header);
         tableSanPham.setModel(tblModel);
         tableSanPham.setFocusable(false);
@@ -152,8 +155,6 @@ public final class SanPham extends JPanel implements ActionListener{
         
     }
 
-
-
     public SanPham(Main m){
         this.m = m;
         initComponent();
@@ -174,7 +175,12 @@ public final class SanPham extends JPanel implements ActionListener{
         tblModel.setRowCount(0);
         for(SanPhamDTO sanpham : listsp){
             tblModel.addRow(new Object[]{
-                sanpham.getMaSP(), sanpham.getTenSP(), sanpham.getDonGia(), sanpham.getSoLuong(), hangsxBUS.getTenHang(sanpham.getMaHang())
+                sanpham.getMaSP(), 
+                sanpham.getTenSP(),
+                loaispBUS.getTenLoai(sanpham.getMaLoai()),
+                Formater.FormatVND(sanpham.getDonGia()), 
+                sanpham.getSoLuong(), 
+                hangsxBUS.getTenHang(sanpham.getMaHang())
             });
         }
     }
@@ -201,13 +207,8 @@ public final class SanPham extends JPanel implements ActionListener{
             if (index != -1) {
                 SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listsp.get(index));
             }
-        } else if (e.getSource() == mainFunction.btn.get("phone")) {
-            int index = getRowSelected();
-            if (index != -1) {
-//                ChiTietSanPhamDialog ct = new ChiTietSanPhamDialog(owner, "Tất cả sản phẩm", true, listSP.get(index));
-                  System.out.println("phone");
-            }
-        } else if (e.getSource() == mainFunction.btn.get("export")) {
+        }
+        else if (e.getSource() == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableSanPham);
             } catch (IOException ex) {

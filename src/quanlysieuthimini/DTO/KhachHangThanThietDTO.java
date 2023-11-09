@@ -30,14 +30,13 @@ public class KhachHangThanThietDTO {
     }
 
     public double getChietKhauTheoDiem() {
+        this.ChietKhauTheoDiem = 0.005 * DiemTichLuy;
         return ChietKhauTheoDiem;
     }
 
     public void setChietKhauTheoDiem(double ChietKhauTheoDiem) {
         this.ChietKhauTheoDiem = ChietKhauTheoDiem;
     }
-    
-    
 
     public int getMaKH() {
         return MaKH;

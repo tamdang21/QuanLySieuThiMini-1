@@ -21,29 +21,45 @@ import javax.swing.border.EmptyBorder;
 import quanlysieuthimini.GUI.Component.PanelBorderRadius;
 import quanlysieuthimini.GUI.Component.SelectForm;
 import quanlysieuthimini.GUI.Dialog.ListKhachHang;
-import quanlysieuthimini.GUI.Dialog.QRCode_Dialog;
 import quanlysieuthimini.GUI.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.kitfox.svg.A;
 import quanlysieuthimini.helper.Formater;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import quanlysieuthimini.BUS.ChiTietThanhToanBUS;
 import quanlysieuthimini.BUS.DonViBUS;
 import quanlysieuthimini.BUS.HangSanXuatBUS;
+import quanlysieuthimini.BUS.HinhThucThanhToanBUS;
 import quanlysieuthimini.BUS.KhuyenMaiBUS;
 import quanlysieuthimini.BUS.LoaiSanPhamBUS;
+import quanlysieuthimini.DTO.ChiTietThanhToanDTO;
 import quanlysieuthimini.DTO.KhuyenMaiDTO;
 import quanlysieuthimini.GUI.Dialog.ChonMaVach;
 import quanlysieuthimini.GUI.Dialog.ListKhuyenMai;
@@ -59,7 +75,7 @@ public final class TaoHoaDon extends JPanel {
     DefaultTableModel tblModel, tblModelSP;
     ButtonCustom btnAddSp, btnEditSP, btnDelete, btnIExcel, btnThanhToan, btnQuetMa;
     InputForm txtMaHD, txtNhanVien, txtMaSp, txtTenSp, txtSoLuongBan;
-    //SelectForm cbxSanPham;
+    SelectForm cbxPTTT;
     JTextField txtTimKiem;
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -72,19 +88,23 @@ public final class TaoHoaDon extends JPanel {
     SanPhamBUS spBUS = new SanPhamBUS();
     HoaDonBUS hoadonBUS = new HoaDonBUS();
     KhachHangThanThietBUS khachHangBUS = new KhachHangThanThietBUS();
-    KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
     HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
     DonViBUS donviBUS = new DonViBUS();
     LoaiSanPhamBUS loaispBUS = new LoaiSanPhamBUS();
+    HinhThucThanhToanBUS htttBUS = new HinhThucThanhToanBUS();
+    KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
+    ChiTietThanhToanBUS ctttBUS = new ChiTietThanhToanBUS();
     
     //public JTextArea textAreaMaVach;
     private JLabel labelMaVach;
     private JPanel content_right_bottom_top;
     private JPanel content_right_bottom_bottom;
-    //private Vector v;
 
     ArrayList<ChiTietHoaDonDTO> arrListCTHD = new ArrayList<>();
     ArrayList<SanPhamDTO> listSP = spBUS.getAll();
+    ArrayList<Float> listDKKM = kmBUS.getAllDKKM();
+    ArrayList<KhuyenMaiDTO> listKM = kmBUS.getAll();
+    ArrayList<ChiTietThanhToanDTO> arrListCTTT = new ArrayList<>();
     
     TaiKhoanDTO tk;
     private int masp;
@@ -130,7 +150,7 @@ public final class TaoHoaDon extends JPanel {
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
 
-        // Phiếu nhập
+        // Tạo hóa đơn
         tableHoaDon = new JTable();
         scrollTableHoaDon = new JScrollPane();
         tblModel = new DefaultTableModel();
@@ -225,7 +245,6 @@ public final class TaoHoaDon extends JPanel {
         txtGiaBan.setEditable(false);
         txtSoLuongBan = new InputForm("Số lượng bán");
         
-        //panlePXGX.add(cbxSanPham);
         panlePXGX.add(txtSoLuongBan);
         panlePXGX.add(txtGiaBan);
         
@@ -269,14 +288,16 @@ public final class TaoHoaDon extends JPanel {
         jpanelMaVach.add(panelScanCenter, BorderLayout.CENTER);
         jpanelMaVach.add(jPanelChonMaVach, BorderLayout.EAST);
 
-        scanMaVach.addActionListener((ActionEvent e) -> {
-            new QRCode_Dialog(owner, "Scan", true, txtMaVach);
-        });
-        
         txtMaVach = new JTextField();
-        txtMaVach.setSize(new Dimension(0, 40));
+        txtMaVach.setSize(new Dimension(0, 0));
         txtMaVach.setBorder(BorderFactory.createLineBorder(new Color(204, 204, 204)));
         this.txtMaVach.setEditable(false);
+        
+        scanMaVach.addActionListener((ActionEvent e) -> {
+//            new QRCode_Dialog(owner, "Scan", true, txtMaVach);
+              txtMaVach.setEditable(true);
+              txtMaVach.requestFocus();
+        });
         
         content_right_bottom_top = new JPanel(new BorderLayout());
         content_right_bottom_top.setSize(new Dimension(0, 40));
@@ -310,14 +331,70 @@ public final class TaoHoaDon extends JPanel {
         content_btn.add(btnEditSP);
         content_btn.add(btnDelete);
 
-        btnAddSp.addActionListener((ActionEvent e) -> {
+        btnAddSp.addActionListener((e) -> {
             if (checkInfo()) {
+                if (spBUS.getByMaSP(Integer.valueOf(txtMaSp.getText())).getSoLuong()
+                        < Integer.valueOf(txtSoLuongBan.getText())){
+                    JOptionPane.showMessageDialog(null, "Xin lỗi sản phẩm tồn kho không đủ!!!");
+                    this.txtMaSp.setText("");
+                    this.txtTenSp.setText("");
+                    this.txtGiaBan.setText("");
+                    this.txtSoLuongBan.setText("");
+                    txtMaVach.setText("");
+                    txtMaVach.setEditable(false);
+                    return;
+                }
                 getInfo();
-                Notification notification = new Notification(mainChinh, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Thêm sản phẩm thành công!");
-                notification.showNotification();
-                loadDataTableChiTietHoaDon(arrListCTHD);
-                actionbtn("update");
+                if(checkRowExist(tableHoaDon)){
+                    int maSP = Integer.valueOf(txtMaSp.getText());
+                    double dongia = Double.valueOf(txtGiaBan.getText());
+                    int soLuongTxt = Integer.valueOf(txtSoLuongBan.getText());
+                    ArrayList<ChiTietHoaDonDTO> listCTHD = new ArrayList<>();
+                    for (ChiTietHoaDonDTO cthd : arrListCTHD){
+                        if (cthd.getMaSP() == maSP){
+                            int soLuongMoi = soLuongTxt + cthd.getSoLuong();
+                            cthd.setSoLuong(soLuongMoi);
+                            cthd.setThanhTien(soLuongMoi * dongia);   
+                        }
+                        listCTHD.add(cthd);
+                    }
+                    arrListCTHD = listCTHD;
+                    loadDataTableChiTietHoaDon(arrListCTHD);
+                }else{
+                    loadDataTableChiTietHoaDon(arrListCTHD);
+                }
+                this.txtMaSp.setText("");
+                this.txtTenSp.setText("");
+                this.txtGiaBan.setText("");
+                this.txtSoLuongBan.setText("");
+                txtMaVach.setText("");
+                txtMaVach.setEditable(false);
             }
+        });
+        
+        btnEditSP.addActionListener((e) -> {
+           int index = tableHoaDon.getSelectedRow();
+           if (index < 0)
+               JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
+           else{
+                ChiTietHoaDonDTO arrCTHDDel = arrListCTHD.get(index);
+                SanPhamDTO spTon = listSP.get(index);
+                int masp = arrCTHDDel.getMaSP();
+                int soluongton = spTon.getSoLuong();
+                ArrayList<ChiTietHoaDonDTO> listCthd = new ArrayList<>();
+                for (ChiTietHoaDonDTO cthd : arrListCTHD) {
+                    if (cthd.getMaSP() == masp) {
+                        if (Integer.valueOf(txtSoLuongBan.getText()) <= soluongton)
+                            cthd.setSoLuong(Integer.valueOf(txtSoLuongBan.getText()));
+                        else
+                            JOptionPane.showMessageDialog(null, "Số lượng tồn không đủ. Vui lòng nhập lại");
+                    }
+                    listCthd.add(cthd);
+                }
+                arrListCTHD = listCthd;
+                loadDataTableChiTietHoaDon(arrListCTHD);
+                actionbtn("add");
+           }
         });
 
         btnDelete.addActionListener(new ActionListener() {
@@ -328,10 +405,10 @@ public final class TaoHoaDon extends JPanel {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xóa");
                 } else {
                     ChiTietHoaDonDTO arrCTHDDel = arrListCTHD.get(index);
-                    int mahd = arrCTHDDel.getMaHD();
+                    int masp = arrCTHDDel.getMaSP();
                     ArrayList<ChiTietHoaDonDTO> listCthd = new ArrayList<>();
                     for (ChiTietHoaDonDTO cthd : arrListCTHD) {
-                        if (cthd.getMaHD()!= mahd) {
+                        if (cthd.getMaSP()!= masp) {
                             listCthd.add(cthd);
                         }
                     }
@@ -339,34 +416,13 @@ public final class TaoHoaDon extends JPanel {
                     arrListCTHD = listCthd;
                     loadDataTableChiTietHoaDon(arrListCTHD);
                 }
+                actionbtn("add");
             }
         });
         
-//        btnDelete.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                int index = tableHoaDon.getSelectedRow();
-//                if (index < 0) {
-//                    JOptionPane.showMessageDialog(null, "Vui lòng chọn cấu hình cần xóa");
-//                } else {
-//                    ChiTietHoaDonDTO arrCTHDDel = arrListCTHD.get(index);
-//                    int mahd = arrCTHDDel.getMaphienbansp();
-//                    ArrayList<ChiTietSanPhamDTO> listCthd = new ArrayList<>();
-//                    for (ChiTietSanPhamDTO cthd : arrListSanPham) {
-//                        if (cthd.getMaphienbansp() != mahd) {
-//                            listCthd.add(cthd);
-//                        }
-//                    }
-//                    arrListCTHD.remove(index);
-//                    arrListSanPham = listCthd;
-//                    loadDataTableChiTietHoaDon(arrListCTHD);
-//                }
-//            }
-//        });
 
         btnIExcel.addActionListener((ActionEvent e) -> {
-            //JOptionPane.showMessageDialog(this, "Chức năng không khả dụng !", "Thông báo", JOptionPane.WARNING_MESSAGE);
-        
+          
             
         });
 
@@ -389,8 +445,10 @@ public final class TaoHoaDon extends JPanel {
         right.setLayout(new BorderLayout());
 
         JPanel right_top, right_center, right_bottom, pn_tongtien;
-        right_top = new JPanel(new GridLayout(2, 1, 0, 0));
-        right_top.setPreferredSize(new Dimension(300, 180));
+        
+        right_top = new JPanel(new GridLayout(5, 1, 0, 0));
+        right_top.setPreferredSize(new Dimension(300, 360));
+        
         txtMaHD = new InputForm("Mã hóa đơn");
         txtMaHD.setEditable(false);
         txtNhanVien = new InputForm("Nhân viên bán hàng");
@@ -400,42 +458,45 @@ public final class TaoHoaDon extends JPanel {
         txtMaHD.setText("HD-" + HoaDonDAO.getInstance().getAutoIncrement());
         NhanVienDTO nhanvien = NhanVienDAO.getInstance().getById(tk.getMaNV());
         txtNhanVien.setText(nhanvien.getTenNV());
-
-        right_top.add(txtMaHD);
-        right_top.add(txtNhanVien);
-
-        right_center = new JPanel(new BorderLayout());
-
-        JPanel khPanel = new JPanel(new GridLayout(4, 1, 5, 0));
-        khPanel.setBackground(Color.WHITE);
-        khPanel.setPreferredSize(new Dimension(0, 160));
         
         // Khách hàng
         JLabel khachHangJLabel = new JLabel("Khách hàng");
         khachHangJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        
+        txtKH = new JTextField("");
+        txtKH.setEditable(false);
         
         JPanel khachJPanel = new JPanel(new BorderLayout());
         khachJPanel.setPreferredSize(new Dimension(0, 40));
         khachJPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         khachJPanel.setOpaque(false);
         
-        txtKH = new JTextField("");
-        txtKH.setEditable(false);
-        
         JPanel kJPanelLeft = new JPanel(new GridLayout(1, 1));
         kJPanelLeft.setOpaque(false);
         kJPanelLeft.setPreferredSize(new Dimension(40, 0));
         
         ButtonCustom btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
-        kJPanelLeft.add(btnKh);
         btnKh.addActionListener((ActionEvent e) -> {
             new ListKhachHang(TaoHoaDon.this, owner, "Chọn khách hàng", true);
         });
         
+        kJPanelLeft.add(btnKh);
+        
+        JPanel khPanel = new JPanel(new GridLayout(2, 1, 5, 0));
+        khPanel.setBackground(Color.WHITE);
+        khPanel.setPreferredSize(new Dimension(0, 60));
+        
         khachJPanel.add(kJPanelLeft, BorderLayout.EAST);
         khachJPanel.add(txtKH, BorderLayout.CENTER);
         
+        khPanel.add(khachHangJLabel);
+        khPanel.add(khachJPanel);
+        
         // Khuyến mãi
+        JPanel khPanel3 = new JPanel(new GridLayout(2, 1, 5, 0));
+        khPanel3.setBackground(Color.WHITE);
+        khPanel3.setPreferredSize(new Dimension(0, 60));
+        
         JLabel KhuyenMaiJLabel = new JLabel("Khuyến mãi");
         KhuyenMaiJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         
@@ -451,24 +512,38 @@ public final class TaoHoaDon extends JPanel {
         txtKM = new JTextField("");
         txtKM.setEditable(false);
         
-        ButtonCustom btnKM = new ButtonCustom("Chọn khuyến mãi", "success", 14);
-        kJPanelLeft2.add(btnKM);
-        btnKM.addActionListener((ActionEvent e) -> {
-            new ListKhuyenMai(TaoHoaDon.this, owner, "Chọn khuyến mãi", true);
-        });
+        KhuyenMaiJPanel.add(kJPanelLeft2, BorderLayout.NORTH);
+        KhuyenMaiJPanel.add(txtKM, BorderLayout.CENTER);
         
-        KhuyenMaiJPanel.add(kJPanelLeft2, BorderLayout.EAST);
-        KhuyenMaiJPanel.add(txtKM, BorderLayout.CENTER);;
+        khPanel3.add(KhuyenMaiJLabel);
+        khPanel3.add(KhuyenMaiJPanel);
         
-        // add khách hàng và khuyến mãi vào khPanel
-        khPanel.add(khachHangJLabel);
-        khPanel.add(khachJPanel);
-        khPanel.add(KhuyenMaiJLabel);
-        khPanel.add(KhuyenMaiJPanel);
+        // Phương thức thanh toán
+        JPanel khPanel1 = new JPanel(new BorderLayout());
+        khPanel1.setBackground(Color.WHITE);
+        khPanel1.setPreferredSize(new Dimension(0, 60));
+        
+        String[] listNameHTTT = htttBUS.getArrTenHinhThucThanhToan();
+        cbxPTTT = new SelectForm("Phương thức thanh toán", listNameHTTT);
+        cbxPTTT.setSelectedIndex(0);
+        cbxPTTT.setEnabled(false);
+        
+        khPanel1.add(cbxPTTT);
 
-        right_center.add(khPanel, BorderLayout.NORTH);
+        right_top.add(txtMaHD);
+        right_top.add(txtNhanVien);
+        right_top.add(khPanel);
+        right_top.add(khPanel3);
+        right_top.add(khPanel1);
+        
+        //Tạo Qr thanh toán
+        JLabel qrCodeLabel = new JLabel();
+        
+        right_center = new JPanel();
+        right_center.setPreferredSize(new Dimension(100, 100));
         right_center.setOpaque(false);
-
+        
+        
         right_bottom = new JPanel(new GridLayout(2, 1));
         right_bottom.setPreferredSize(new Dimension(300, 100));
         right_bottom.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -489,13 +564,11 @@ public final class TaoHoaDon extends JPanel {
             public void mousePressed(MouseEvent e) {
                 int index = tableSanPham.getSelectedRow();
                 if (index != -1) {
-                    setInfoSanPham(listSP.get(index));
+                    SanPhamDTO sp = spBUS.getById(listSP.get(index).getMaSP());
+                    setInfoSanPham(sp);
+                    txtMaVach.setText(sp.getMaVach());
                 }
-                if (!checkTonTai()) {
-                    actionbtn("add");
-                } else {
-                    actionbtn("update");
-                }
+                actionbtn("add");
             }
         });
 
@@ -521,19 +594,33 @@ public final class TaoHoaDon extends JPanel {
         btnThanhToan.addActionListener((ActionEvent e) -> {
             if (arrListCTHD.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm");
-            } 
-//            else if (makh == -1) {
-//                JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng");
-//            } 
-            else {
-                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xác nhận thanh toán !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xác nhận thanh toán !", "Xác nhận tạo hóa đơn", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     long now = System.currentTimeMillis();
+                    int maHTTT = htttBUS.getByIndex(cbxPTTT.getSelectedIndex()).getMaHTTT();
                     Timestamp currenTime = new Timestamp(now);
+                    if(makh == -1)
+                        makh = 2;
                     HoaDonDTO HoaDon = new HoaDonDTO(maHD, makh, makm, tk.getMaNV(), currenTime, sum, 1);
                     hoadonBUS.insert(HoaDon, arrListCTHD);
-                    //chiTietSanPhamBUS.updateXuat(arrListSanPham);
-                    JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
+                    ChiTietThanhToanDTO cttt = new ChiTietThanhToanDTO(maHD,maHTTT,sum,currenTime);
+                    arrListCTTT.add(cttt);
+                    ctttBUS.add(arrListCTTT);
+                    ArrayList<HashMap> listCTHD = new ArrayList<>();
+                    for (ChiTietHoaDonDTO cthd : arrListCTHD){
+                        HashMap<String,Integer> map = new HashMap<>();
+                        map.put("maSP",cthd.getMaSP());
+                        map.put("soLuong",cthd.getSoLuong());
+                        listCTHD.add(map);
+                    }
+                    for (HashMap<Integer,Integer> map : listCTHD){
+                        int maSP = map.get("maSP");
+                        int soLuong = spBUS.getById(maSP).getSoLuong() - map.get("soLuong");
+                        spBUS.updateQuantity(maSP, soLuong);
+                    }
+                    khachHangBUS.upDiemTichLuy(makh, 1);
+                    JOptionPane.showMessageDialog(null, "Thanh toán thành công !");
                     mainChinh.setPanel(new HoaDon(mainChinh, tk));
                 }
             }
@@ -543,7 +630,65 @@ public final class TaoHoaDon extends JPanel {
             HoaDon HoaDonPanel = new HoaDon(mainChinh, tk);
             mainChinh.setPanel(HoaDonPanel);
         });
+        
+        txtMaVach.getDocument().addDocumentListener(new DocumentListener(){
+             @Override
+            public void insertUpdate(DocumentEvent e) {
+                // Xử lý khi có dữ liệu được set vào JTextField
+                SwingUtilities.invokeLater(new Runnable(){
+                    @Override
+                    public void run(){
+                        try {
+                            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+                            setInfoSanPham(sp);
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Lỗi mã vạch không tồn tại");
+                        }
+                    }
+                });
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Xử lý khi dữ liệu bị xóa khỏi JTextField
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Xử lý khi dữ liệu thay đổi trong JTextField
+            }
+        
+        });
+        
+        cbxPTTT.getCbb().addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getSource() == cbxPTTT.getCbb()) {
+                    if(!cbxPTTT.getValue().equals("Tiền mặt")) {
+                        try {
+                            if(cbxPTTT.getValue().equals("Momo")) {
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_momo.jpg"));
+                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                            }
+                            else if(cbxPTTT.getValue().equals("MB Bank")) {
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_mbbank.jpg"));
+                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                            }
+                            right_center.add(qrCodeLabel);
+                        } 
+                        catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, "Lỗi không thể tạo mã QR thanh toán");
+                        }
+                    }
+                else {
+                    right_center.remove(qrCodeLabel);
+                }
+                revalidate();
+                repaint();
+            }
+        }
+        });
+        
         right.add(right_top, BorderLayout.NORTH);
         right.add(right_center, BorderLayout.CENTER);
         right.add(right_bottom, BorderLayout.SOUTH);
@@ -563,15 +708,16 @@ public final class TaoHoaDon extends JPanel {
     public void setInfoSanPham(SanPhamDTO sp) {
         this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
         this.txtTenSp.setText(sp.getTenSP());
-        this.txtMaVach.setText("");
-        listSP = sanphamBUS.getAll();
-        int size = listSP.size();
-        String[] arr = new String[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = loaispBUS.getTenLoai(listSP.get(i).getMaLoai())
-                    + hangsxBUS.getTenHang(listSP.get(i).getMaHang())
-                    + (listSP.get(i).getDungTich() + " " + donviBUS.getTenDonVi(listSP.get(i).getMaDV()));
-        }
+        this.txtGiaBan.setText(String.valueOf(sp.getDonGia()));
+        this.txtSoLuongBan.setText("1");
+//        listSP = sanphamBUS.getAll();
+//        int size = listSP.size();
+//        String[] arr = new String[size];
+//        for (int i = 0; i < size; i++) {
+//            arr[i] = loaispBUS.getTenLoai(listSP.get(i).getMaLoai())
+//                    + hangsxBUS.getTenHang(listSP.get(i).getMaHang())
+//                    + (listSP.get(i).getDungTich() + " " + donviBUS.getTenDonVi(listSP.get(i).getMaDV()));
+//        }
         //this.cbxSanPham.setArr(arr);
 //        mapb = ch.get(0).getMaphienbansp();
 //        setMaVachByPb(mapb);
@@ -589,11 +735,13 @@ public final class TaoHoaDon extends JPanel {
 
     public ChiTietHoaDonDTO getInfo() {
         int masp = Integer.parseInt(txtMaSp.getText());
-        int dongia = Integer.parseInt(txtGiaBan.getText());
-        String[] arrMaVach = txtMaVach.getText().split("\n");
+        double dongia = Double.valueOf(txtGiaBan.getText());
         int soLuong = Integer.parseInt(txtSoLuongBan.getText());
-        ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(maHD, masp, soLuong, dongia, soLuong * dongia);
-        arrListCTHD.add(cthd);
+        ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(maHD, masp, dongia,soLuong,  soLuong * dongia);
+        if (!checkRowExist(tableHoaDon)){
+            arrListCTHD.add(cthd);
+            System.out.println("Da them CTHD vao Arrays");
+        }
         return null;
     }
 
@@ -617,7 +765,7 @@ public final class TaoHoaDon extends JPanel {
 
     public boolean checkTonTai() {
         boolean check = false;
-        int maSP = Integer.parseInt(txtMaSp.toString());
+        int maSP = Integer.parseInt(txtMaSp.getText());
         for (ChiTietHoaDonDTO chiTietPhieu : arrListCTHD) {
             if (chiTietPhieu.getMaSP() == maSP) {
                 return true;
@@ -625,6 +773,7 @@ public final class TaoHoaDon extends JPanel {
         }
         return check;
     }
+    
 
 //    public void setMaVachByPb(int mapb) {
 //        ctpb = ChiTietSanPhamDAO.getInstance().selectAllbyPb(mapb);
@@ -644,19 +793,54 @@ public final class TaoHoaDon extends JPanel {
     public void loadDataTableChiTietHoaDon(ArrayList<ChiTietHoaDonDTO> arrCTHD) {
         tblModel.setRowCount(0);
         int size = arrCTHD.size();
+        int maxKM = 0;
         sum = 0;
         for (int i = 0; i < size; i++) {
             SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrCTHD.get(i).getMaSP());
             sum += arrCTHD.get(i).getThanhTien();
             tblModel.addRow(new Object[]{
                 i + 1, 
-                sanpham.getMaSP(), 
+                sanpham.getMaSP(),
+                sanpham.getTenSP(),
                 loaispBUS.getTenLoai(sanpham.getMaLoai()),
-                hangsxBUS.getTenHang(sanpham.getMaHang()),
                 sanpham.getDungTich() + " " + donviBUS.getTenDonVi(sanpham.getMaDV()),
                 Formater.FormatVND(arrCTHD.get(i).getDonGia()),
                 arrCTHD.get(i).getSoLuong(),
                 Formater.FormatVND(arrCTHD.get(i).getThanhTien())
+            });
+        }
+        for (KhuyenMaiDTO km : listKM){
+            if (sum > km.getDieuKienKM())
+                maxKM = km.getMaKM();
+        }
+        if (maxKM != 0)
+            setKhuyenMai(maxKM);
+        else{
+            txtKM.setText("Không có khuyễn mãi");
+            lbltongtien.setText(Formater.FormatVND(sum));
+        }
+        
+        if (tableSanPham.getSelectedRow() != -1)
+            tableSanPham.clearSelection();
+    }
+    
+    public void loadDataTableSanPhamBottom (ArrayList<SanPhamDTO> arrSP){
+        tblModel.setRowCount(0);
+        int size = arrSP.size();
+        sum = 0;
+        for (int i = 0; i < size; i++) {
+            //PhienBanSanPhamDTO phienban = sanphamBUS.getByMaPhienBan(arrCTHD.get(i).getMaphienbansp());
+            SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrSP.get(i).getMaSP());
+            sum += arrSP.get(i).getDonGia();
+            tblModel.addRow(new Object[]{
+                i + 1, 
+                sanpham.getMaSP(), 
+                loaispBUS.getTenLoai(sanpham.getMaLoai()),
+                hangsxBUS.getTenHang(sanpham.getMaHang()),
+                sanpham.getDungTich() + " " + donviBUS.getTenDonVi(sanpham.getMaDV()),
+                Formater.FormatVND(arrSP.get(i).getDonGia()),
+                1,
+                Formater.FormatVND((arrSP.get(i).getDonGia())*(arrSP.get(i).getSoLuong()))
             });
         }
         lbltongtien.setText(Formater.FormatVND(sum));
@@ -670,14 +854,102 @@ public final class TaoHoaDon extends JPanel {
     
     public void setKhuyenMai(int index) {
         makm = index;
-        KhuyenMaiDTO khuyenmai = khuyenmaiBUS.selectKM(makm);
+        KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
         txtKM.setText(khuyenmai.getTenKM());
+        lbltongtien.setText(Formater.FormatVND(khuyenmai.getPhanTramKM() * sum));
     }
 
     public void setPhieuSelected() {
         ChiTietHoaDonDTO cthd = arrListCTHD.get(tableHoaDon.getSelectedRow());
         SanPhamDTO spSel = spBUS.getByMaSP(cthd.getMaSP());
-        setInfoSanPham(spSel);
+        this.txtMaSp.setText(Integer.toString(spSel.getMaSP()));
+        this.txtTenSp.setText(spSel.getTenSP());
+        this.txtGiaBan.setText(String.valueOf(spSel.getDonGia()));
+        this.txtSoLuongBan.setText(String.valueOf(arrListCTHD.get(tableHoaDon.getSelectedRow()).getSoLuong()));
         //cbxSanPham.setSelectedItem(cthd.getMaSP()+ "");
     }
+    
+    private boolean checkRowExist (JTable table){
+        int rowCount = table.getRowCount();
+        for (int i=0;i<rowCount;i++){
+            if (table.getValueAt(i, 1) == Integer.valueOf(txtMaSp.getText())){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public BufferedImage generateQRCodeImage(String text, int width, int height) {
+        try {
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height, hints);
+            BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int rgbColor = bitMatrix.get(x, y) ? Color.BLACK.getRGB() : Color.WHITE.getRGB();
+                    bufferedImage.setRGB(x, y, rgbColor);
+                }
+            }
+            return bufferedImage;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public BufferedImage addLogoToQRCode(BufferedImage qrCodeImage, BufferedImage logo) {
+        int qrCodeWidth = qrCodeImage.getWidth();
+        int qrCodeHeight = qrCodeImage.getHeight();
+        int logoWidth = logo.getWidth();
+        int logoHeight = logo.getHeight();
+
+        BufferedImage qrCodeWithLogo = new BufferedImage(qrCodeWidth, qrCodeHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = qrCodeWithLogo.createGraphics();
+        g.drawImage(qrCodeImage, 0, 0, null);
+        int x = (qrCodeWidth - logoWidth) / 2;
+        int y = (qrCodeHeight - logoHeight) / 2;
+        g.drawImage(logo, x, y, null);
+        g.dispose();
+
+        return qrCodeWithLogo;
+    }
+
+    public Image resizeImage(Image image, int newHeight, int newWidth) {
+        BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = newImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(image, 0, 0, newWidth, newHeight, null);
+        g.dispose();
+        return newImage;
+    }
+    
+    public BufferedImage convertToBufferedImage(Image image) {
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        }
+        BufferedImage bufferedImage = null;
+        
+        // Tạo một BufferedImage với các thuộc tính phù hợp
+        if (image.getWidth(null) > 0 && image.getHeight(null) > 0) {
+            bufferedImage = new BufferedImage(
+                image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB
+        );
+            Graphics2D g2d = bufferedImage.createGraphics();
+            g2d.drawImage(image, 0, 0, null);
+            g2d.dispose();
+        } else {
+            System.out.println("Lỗi: Kích thước hình ảnh không hợp lệ hoặc chưa tải.");
+        }
+
+        return bufferedImage;
+    }
+    
+    public Image scale(ImageIcon x) {
+        int WIDTH = 300;
+        int HEIGHT = 280;
+        Image scaledImage = x.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+        return scaledImage;
+    }
+    
 }

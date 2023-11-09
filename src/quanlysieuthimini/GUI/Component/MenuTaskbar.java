@@ -6,7 +6,7 @@ package quanlysieuthimini.GUI.Component;
 //import quanlysieuthimini.GUI.Panel.NhaCungCap;
 import quanlysieuthimini.GUI.Panel.NhanVien;
 import quanlysieuthimini.GUI.Panel.PhanQuyen;
-//import quanlysieuthimini.GUI.Panel.PhieuNhap;
+import quanlysieuthimini.GUI.Panel.PhieuNhap;
 import quanlysieuthimini.GUI.Panel.HoaDon;
 import quanlysieuthimini.GUI.Panel.QuanLyThanhPhanSP;
 import quanlysieuthimini.GUI.Panel.SanPham;
@@ -29,6 +29,9 @@ import quanlysieuthimini.DTO.QuyenDTO;
 import quanlysieuthimini.DTO.TaiKhoanDTO;
 import quanlysieuthimini.GUI.Log_In;
 import quanlysieuthimini.GUI.Main;
+import quanlysieuthimini.GUI.Panel.CaLamViec;
+import quanlysieuthimini.GUI.Panel.KhachHangThanThiet;
+import quanlysieuthimini.GUI.Panel.KhuyenMai;
 import quanlysieuthimini.GUI.Panel.NhaCungCap;
 
 public class MenuTaskbar extends JPanel {
@@ -36,16 +39,16 @@ public class MenuTaskbar extends JPanel {
     BeginForm trangChu;
     SanPham sanPham;
     QuanLyThanhPhanSP quanLyThuocTinhSP;
-//    KhuVucKho quanLyKho;
-//    PhieuNhap phieuNhap;
+    PhieuNhap phieuNhap;
     HoaDon hoaDon;
-//    KhachHang khachHang;
+    KhachHangThanThiet khachHang;
     NhaCungCap nhacungcap;
     NhanVien nhanVien;
     TaiKhoan taiKhoan;
     PhanQuyen phanQuyen;
+    KhuyenMai khuyenmai;
+    CaLamViec calamviec;
     //ThongKe thongKe;
-    //{"Trang chủ", "home.svg", "trangchu"},
     String[][] getSt = {
         {"Bán hàng", "home.svg", "banhang"},
         {"Nhập hàng", "home.svg", "nhaphang"},
@@ -167,9 +170,9 @@ public class MenuTaskbar extends JPanel {
             }
         }
 
-        listitem[0].setBackground(HowerBackgroundColor);
-        listitem[0].setForeground(HowerFontColor);
-        listitem[0].isSelected = true;
+//        listitem[0].setBackground(HowerBackgroundColor);
+//        listitem[0].setForeground(HowerFontColor);
+//        listitem[0].isSelected = true;
 
         for (int i = 0; i < getSt.length; i++) {
             listitem[i].addMouseListener(new MouseAdapter() {
@@ -193,7 +196,8 @@ public class MenuTaskbar extends JPanel {
         listitem[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("NhapHang");
+                phieuNhap = new PhieuNhap(main, nhanVienDTO);
+                main.setPanel(phieuNhap);
             }
         });
         
@@ -228,7 +232,8 @@ public class MenuTaskbar extends JPanel {
         listitem[5].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("KhachHang");
+                khachHang = new KhachHangThanThiet(main);
+                main.setPanel(khachHang);
             }
         });
         
@@ -245,7 +250,8 @@ public class MenuTaskbar extends JPanel {
         listitem[7].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("KhuyenMai");
+                khuyenmai = new KhuyenMai(main);
+                main.setPanel(khuyenmai);
             }
         });
 
@@ -253,7 +259,8 @@ public class MenuTaskbar extends JPanel {
         listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("PhanCongCa");
+                calamviec = new CaLamViec(main);
+                main.setPanel(calamviec);
             }
         });
         

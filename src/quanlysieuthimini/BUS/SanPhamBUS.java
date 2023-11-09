@@ -40,6 +40,10 @@ public class SanPhamBUS{
     public SanPhamDTO getByIndex(int index) {
         return this.listSP.get(index);
     }
+    
+    public SanPhamDTO getById(int masp) {
+        return SanPhamDAO.getInstance().getById(masp);
+    }
 
     public SanPhamDTO getByMaSP(int masp) {
         int vitri = -1;
@@ -111,5 +115,27 @@ public class SanPhamBUS{
             }
         }
         return n;
+    }
+    
+    public boolean checkMaVachExists(String MaVach) {
+        for(SanPhamDTO i : this.listSP) {
+            if (i.getMaVach().equals(MaVach)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public SanPhamDTO getByMaVach(String mavach) {
+        for(SanPhamDTO sp : listSP) {
+            if(sp.getMaVach().equals(mavach))
+                return sp;
+        }
+        
+        return null;
+    }
+    
+    public boolean updateQuantity(int masp, int soluong) {
+        return spDAO.updateQuantity(masp, soluong);
     }
 }

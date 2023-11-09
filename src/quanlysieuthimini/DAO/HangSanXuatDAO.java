@@ -16,8 +16,8 @@ import quanlysieuthimini.DAO.DAOInterface.DAOInterface;
 import quanlysieuthimini.DTO.HangSanXuatDTO;
 
 public class HangSanXuatDAO implements DAOInterface<HangSanXuatDTO>{
-    public static LoaiSanPhamDAO getInstance() {
-        return new LoaiSanPhamDAO();
+    public static HangSanXuatDAO getInstance() {
+        return new HangSanXuatDAO();
     }
 
     @Override
@@ -159,7 +159,7 @@ public class HangSanXuatDAO implements DAOInterface<HangSanXuatDTO>{
         int result = -1;
         try {
             Connection con = ConnectionDB.openConnection();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlisieuthimini' AND   TABLE_NAME   = 'hangsanxuat'";
+            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlysieuthimini' AND   TABLE_NAME   = 'hangsanxuat'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
             if (!rs2.isBeforeFirst() ) {
@@ -170,7 +170,7 @@ public class HangSanXuatDAO implements DAOInterface<HangSanXuatDTO>{
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(HangSanXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DonViDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

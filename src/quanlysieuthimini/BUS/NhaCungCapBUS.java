@@ -24,6 +24,10 @@ public class NhaCungCapBUS {
     public NhaCungCapDTO getByIndex(int index) {
         return this.listNcc.get(index);
     }
+    
+    public NhaCungCapDTO getById(int mancc) {
+        return NhaCungCapDAO.getInstance().getById(mancc);
+    }
 
     public boolean add(NhaCungCapDTO ncc) {
         boolean check = NccDAO.insert(ncc);

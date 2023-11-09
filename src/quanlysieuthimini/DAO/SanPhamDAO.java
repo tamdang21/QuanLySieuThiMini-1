@@ -21,7 +21,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         try {
             Connection con = (Connection) ConnectionDB.openConnection();
             String sql = "INSERT into sanpham "
-                        + "(MaLoai,MaHang,MaDV,TenSP,DonGia,SoLuong,DungTich,NgaySanXuat,HanSuDung,HinhAnh) "
+                        + "(MaLoai,MaHang,MaDV,TenSP,DonGia,SoLuong,DungTich,NgaySanXuat,HanSuDung,HinhAnh,MaVach) "
                         + "VALUES (?,?,?,?,?,?,?,?,?,?)";
             
             PreparedStatement stmt = (PreparedStatement) con.prepareStatement(sql);
@@ -36,6 +36,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 stmt.setDate(8, (Date) t.getNgaySanXuat());
                 stmt.setDate(9, (Date) t.getHanSuDung());
                 stmt.setString(10,t.getHinhAnh());
+                stmt.setString(11,t.getMaVach());
             
             result = stmt.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);
@@ -55,7 +56,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             try {
                 String sql = "UPDATE sanpham SET "
                         + "MaLoai= ?,MaHang= ?,MaDV= ?,TenSP= ?,DonGia= ?,SoLuong= ?,DungTich= ?"
-                        +",NgaySanXuat= ?,HanSuDung= ?,HinhAnh= ?,TrangThai= ? "
+                        +",NgaySanXuat= ?,HanSuDung= ?,HinhAnh= ?,TrangThai= ?,MaVach=?"
                         + "WHERE MaSP=?";
 
                 //Bước 2: tạo đối tượng preparedStatement
@@ -72,7 +73,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 stmt.setDate(9, (Date) t.getHanSuDung());
                 stmt.setString(10,t.getHinhAnh());
                 stmt.setInt(11,t.getTrangThai());
-                stmt.setInt(12,t.getMaSP());
+                stmt.setString(12,t.getMaVach());
+                stmt.setInt(13,t.getMaSP());
                 
                 result = stmt.executeUpdate()>=1;
             } catch (SQLException ex) {
@@ -133,6 +135,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                     s.setMaHang(rs.getInt("MaHang"));
                     s.setMaDV(rs.getInt("MaDV"));
                     s.setTenSP(rs.getString("TenSP"));
+                    s.setMaVach(rs.getString("MaVach"));
                     s.setDonGia(rs.getDouble("DonGia"));
                     s.setSoLuong(rs.getInt("SoLuong"));
                     s.setDungTich(rs.getInt("DungTich"));
@@ -174,6 +177,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                     s.setMaHang(rs.getInt("MaHang"));
                     s.setMaDV(rs.getInt("MaDV"));
                     s.setTenSP(rs.getString("TenSP"));
+                    s.setMaVach(rs.getString("MaVach"));
                     s.setDonGia(rs.getDouble("DonGia"));
                     s.setSoLuong(rs.getInt("SoLuong"));
                     s.setDungTich(rs.getInt("DungTich"));
@@ -190,6 +194,33 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         }
 
         return s;
+    }
+    
+    public boolean updateQuantity (int maSP, int soluong){
+        boolean result = false;
+        Connection connect = ConnectionDB.openConnection();
+
+        if (connect != null) {
+            try {
+                String sql = "UPDATE sanpham SET "
+                        + "SoLuong= ?"
+                        + " WHERE MaSP=?";
+
+                //Bước 2: tạo đối tượng preparedStatement
+                PreparedStatement stmt = connect.prepareStatement(sql);
+
+                
+                stmt.setInt(1,soluong);
+                stmt.setInt(2,maSP);
+                
+                result = stmt.executeUpdate()>=1;
+            } catch (SQLException ex) {
+                Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                ConnectionDB.closeConnection(connect);
+            }
+        }
+        return result;
     }
     
     @Override

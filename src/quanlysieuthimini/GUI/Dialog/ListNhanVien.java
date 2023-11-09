@@ -99,11 +99,18 @@ public class ListNhanVien extends JDialog implements MouseListener {
                 new String[]{}
         ));
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"MNV","Họ tên","Giới tính","Ngày Sinh","SDT","Email"};
+        String[] header = new String[]{"Mã nhân viên","Họ tên","Giới tính","Ngày Sinh","SDT","Email"};
         tblModel.setColumnIdentifiers(header);
         tableNhanVien.setDefaultRenderer(Object.class, centerRenderer);
         tableNhanVien.setFocusable(false);
         tableNhanVien.setModel(tblModel);
+        tableNhanVien.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        
         scrollTableSanPham.setViewportView(tableNhanVien);
         jPanelTable.add(scrollTableSanPham);
         this.add(jPanelTable,BorderLayout.CENTER);

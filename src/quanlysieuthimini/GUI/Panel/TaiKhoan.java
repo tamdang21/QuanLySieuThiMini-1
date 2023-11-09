@@ -69,7 +69,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         tableTaiKhoan.setDefaultEditor(Object.class, null);
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"MaNV", "Tên đăng nhập", "Nhóm quyền", "Trạng thái"};
+        String[] header = new String[]{"Mã nhân viên", "Tên đăng nhập", "Nhóm quyền", "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tableTaiKhoan.setModel(tblModel);
         tableTaiKhoan.setFocusable(false);

@@ -81,7 +81,9 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         return vitri;
     }
     
-    
+    public NhanVienDTO getById(int manv) {
+        return NhanVienDAO.getInstance().getById(manv);
+    }
     
     public String getNameById(int manv) {
         return nhanVienDAO.getById(manv).getTenNV();

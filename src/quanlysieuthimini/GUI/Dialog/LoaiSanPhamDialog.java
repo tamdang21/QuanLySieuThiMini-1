@@ -29,10 +29,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-/**
- *
- * @author 84907
- */
 public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
 
     HeaderTitle headTite;
@@ -67,7 +63,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
 
     public void initComponent(QuanLyThanhPhanSP qltt) {
         this.qltt = qltt;
-        this.setSize(new Dimension(425, 700));
+        this.setSize(new Dimension(425, 600));
         this.setLayout(new BorderLayout(0, 0));
         this.setResizable(false);
         headTite = new HeaderTitle("LOẠI SẢN PHẨM");
@@ -83,17 +79,17 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
 
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms = new InputForm("Tên Loại Sản Phẩm");
+        ms = new InputForm("Tên Loại");
         ms.setPreferredSize(new Dimension(250, 70));
         
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms1 = new InputForm("Cách Bảo Quản Sản Phẩm");
+        ms1 = new InputForm("Cách Bảo Quản");
         ms1.setPreferredSize(new Dimension(250, 70));
         
         main.setBackground(Color.WHITE);
         main.setPreferredSize(new Dimension(420, 200));
-        ms2 = new InputForm("Mô Tả Chi Tiết Sản Phẩm");
+        ms2 = new InputForm("Mô Tả Chi Tiết");
         ms2.setPreferredSize(new Dimension(250, 70));
         
         
@@ -101,7 +97,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã Loại Sản Phẩm", "Tên Loại Sản Phẩm","Cách Bảo Quản", "Mô Tả"};
+        String[] header = new String[]{"Mã Loại", "Tên Loại","Bảo Quản", "Mô Tả"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -143,7 +139,10 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         tblModel.setRowCount(0);
         for (LoaiSanPhamDTO th : result) {
             tblModel.addRow(new Object[]{
-                th.getMaLoai(), th.getTenLoai()
+                th.getMaLoai(), 
+                th.getTenLoai(), 
+                th.getCachBaoQuan(), 
+                th.getMoTa()
             });
         }
     }
@@ -177,6 +176,8 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
                 thBUS.delete(list.get(index),index);
                 loadDataTable(list);
                 ms.setText("");
+                ms1.setText("");
+                ms2.setText("");
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -201,6 +202,8 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == table) {
             int index = table.getSelectedRow();
             ms.setText(list.get(index).getTenLoai());
+            ms1.setText(list.get(index).getCachBaoQuan());
+            ms2.setText(list.get(index).getMoTa());
         }
     }
 

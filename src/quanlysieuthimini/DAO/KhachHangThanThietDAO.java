@@ -136,6 +136,22 @@ public class KhachHangThanThietDAO implements DAOInterface<KhachHangThanThietDTO
         }
         return result;
     }
+    
+    public boolean upDiemTichLuy (int maKH, int diemCong){
+        try {
+            Connection con = (Connection) ConnectionDB.openConnection();
+            String query = "UPDATE khachhang SET DiemTichLuy = DiemTichLuy + ? WHERE MaKH = ?";
+            PreparedStatement preparedStatement = (PreparedStatement) con.prepareStatement(query);
+            preparedStatement.setInt(1, diemCong);
+            preparedStatement.setInt(2, maKH);
+            int affectedRows = preparedStatement.executeUpdate();
+
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(KhachHangThanThietDAO.class.getName()).log(Level.SEVERE, null, e);
+            return false;
+        }
+    }
 
     @Override
     public int getAutoIncrement() {

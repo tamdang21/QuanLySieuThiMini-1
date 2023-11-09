@@ -137,6 +137,44 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
 
         return result;    }
 
+    public ArrayList<KhuyenMaiDTO> selectAll() {
+        ArrayList<KhuyenMaiDTO> result = new ArrayList<>();
+
+        Connection connect = ConnectionDB.openConnection();
+        if (connect != null) {
+
+            try {
+                String sql = "SELECT * FROM khuyenmai ";
+
+                //Bước 2: tạo đối tượng preparedStatement
+                PreparedStatement stmt = connect.prepareStatement(sql);
+
+                ResultSet rs = stmt.executeQuery();
+
+                //Bước 3: lấy dữ liệu
+                while(rs.next()) {
+                    KhuyenMaiDTO s = new KhuyenMaiDTO();
+                    s.setMaKM(rs.getInt("MaKM"));
+                    s.setTenKM(rs.getString("TenKM"));
+                    s.setDieuKienKM(rs.getFloat("DieuKienKM"));
+                    s.setPhanTramKM(rs.getFloat("PhanTramKM"));
+                    s.setNgayBatDau(rs.getDate("NgayBatDau").toLocalDate());
+                    s.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
+
+                    result.add(s);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(KhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                ConnectionDB.closeConnection(connect);
+            }
+        }
+
+        return result;    }
+
+
+
+
     @Override
     public KhuyenMaiDTO getById(int id) {
         KhuyenMaiDTO s = new KhuyenMaiDTO();

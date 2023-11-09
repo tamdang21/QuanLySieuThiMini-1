@@ -7,21 +7,23 @@ package quanlysieuthimini.DTO;
 import java.time.LocalDate;
 
 public class KhuyenMaiDTO {
-    private int MaKM;
+    private int MaKM, TrangThai;
     private String TenKM;
     private float PhanTramKM, DieuKienKM;
     private LocalDate NgayBatDau, NgayKetThuc;
 
+
     public KhuyenMaiDTO() {
     }
 
-    public KhuyenMaiDTO(int MaKM, String TenKM, float DieuKienKM, float PhanTramKM, LocalDate NgayBatDau, LocalDate NgayKetThuc) {
+    public KhuyenMaiDTO(int MaKM, String TenKM, float DieuKienKM, float PhanTramKM, LocalDate NgayBatDau, LocalDate NgayKetThuc, int  trangThai) {
         this.MaKM = MaKM;
         this.PhanTramKM = PhanTramKM;
         this.TenKM = TenKM;
         this.DieuKienKM = DieuKienKM;
         this.NgayBatDau = NgayBatDau;
         this.NgayKetThuc = NgayKetThuc;
+        this.TrangThai = trangThai;
     }
     
     public String getTrangThai() {
