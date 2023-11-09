@@ -47,7 +47,7 @@ public class InputImage extends JPanel implements ActionListener {
     }
 
     public void setUrl_img(String url_img) {
-        ImageIcon imgicon = new ImageIcon("./src/images/product" + url_img);
+        ImageIcon imgicon = new ImageIcon("./src/images/product/" + url_img);
         imgicon = new ImageIcon(scale(imgicon));
         btnChooseImg.setIcon(imgicon);
         btnChooseImg.setText("");

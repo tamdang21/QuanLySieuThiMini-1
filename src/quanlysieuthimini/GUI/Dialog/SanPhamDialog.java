@@ -224,14 +224,13 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         dungtich.setText(String.valueOf(sp.getDungTich()));
         ngaySX.setText(Formater.FormatDate(sp.getNgaySanXuat()));
         hanSD.setText(Formater.FormatDate(sp.getHanSuDung()));
-        hinhanh.setUrl_img(sp.getHinhAnh());
         
     }
     public String addImage(String urlImg) {
         Random randomGenerator = new Random();
         int ram = randomGenerator.nextInt(1000);
         File sourceFile = new File(urlImg);
-        String destPath = "./src/img_product";
+        String destPath = "./src/images/product/";
         File destFolder = new File(destPath);
         String newName = ram + sourceFile.getName();
         try {

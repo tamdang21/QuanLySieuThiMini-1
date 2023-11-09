@@ -55,7 +55,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             try {
                 String sql = "UPDATE sanpham SET "
                         + "MaLoai= ?,MaHang= ?,MaDV= ?,TenSP= ?,DonGia= ?,SoLuong= ?,DungTich= ?"
-                        +",NgaySanXuat= ?,HanSuDung= ?,HinhAnh= ?,TrangThai= ?"
+                        +",NgaySanXuat= ?,HanSuDung= ?,HinhAnh= ?,TrangThai= ? "
                         + "WHERE MaSP=?";
 
                 //Bước 2: tạo đối tượng preparedStatement
