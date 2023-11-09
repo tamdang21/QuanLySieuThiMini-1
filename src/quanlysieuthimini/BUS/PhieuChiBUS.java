@@ -42,16 +42,24 @@ public class PhieuChiBUS {
     }
     
     public PhieuChiDTO getByMaPN(int mapn) {
-        int vitri = -1;
-        int i = 0;
-        while (i <= this.listPC.size() && vitri == -1) {
-            if (this.listPC.get(i).getMaPC() == mapn) {
-                vitri = i;
-            } else {
-                i++;
+//        int vitri = -1;
+//        int i = 0;
+//        while (i < this.listPC.size() && vitri == -1) {
+//            if (this.listPC.get(i).getMaPN() == mapn) {
+//                vitri = i;
+//            } else {
+//                i++;
+//            }
+//        }
+//        
+//        return this.listPC.get(vitri);
+        
+        for(PhieuChiDTO pc : listPC) {
+            if(pc.getMaPN() == mapn) {
+                return pc;
             }
         }
-        return this.listPC.get(vitri);
+        return null;
     }
 
     public int getIndexByMaPC(int masanpham) {

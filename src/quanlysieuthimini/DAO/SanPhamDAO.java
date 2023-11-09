@@ -196,6 +196,33 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         return s;
     }
     
+    public boolean updateQuantity (int maSP, int soluong){
+        boolean result = false;
+        Connection connect = ConnectionDB.openConnection();
+
+        if (connect != null) {
+            try {
+                String sql = "UPDATE sanpham SET "
+                        + "SoLuong= ?"
+                        + " WHERE MaSP=?";
+
+                //Bước 2: tạo đối tượng preparedStatement
+                PreparedStatement stmt = connect.prepareStatement(sql);
+
+                
+                stmt.setInt(1,soluong);
+                stmt.setInt(2,maSP);
+                
+                result = stmt.executeUpdate()>=1;
+            } catch (SQLException ex) {
+                Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                ConnectionDB.closeConnection(connect);
+            }
+        }
+        return result;
+    }
+    
     @Override
     public int getAutoIncrement() {
         int result = -1;

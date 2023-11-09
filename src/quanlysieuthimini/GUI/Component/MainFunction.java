@@ -19,6 +19,7 @@ public final class MainFunction extends JToolBar {
 
     public void initData() {
         btn.put("create", new ButtonToolBar("THÊM", "add.svg", "create"));
+        btn.put("add", new ButtonToolBar("TẠO PHIẾU", "add.svg", "create"));
         btn.put("delete", new ButtonToolBar("XÓA", "delete.svg", "delete"));
         btn.put("update", new ButtonToolBar("SỬA", "edit.svg", "update"));
         btn.put("cancel", new ButtonToolBar("HUỶ PHIẾU", "cancel.svg", "delete"));

@@ -68,6 +68,10 @@ public final class HoaDon extends JPanel implements ActionListener, KeyListener,
     HoaDonBUS pxBUS = new HoaDonBUS();
     KhachHangThanThietBUS khachHangBUS = new KhachHangThanThietBUS();
     KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
+    
+    public HoaDon() {
+        
+    }
 
     public HoaDon(Main m, TaiKhoanDTO tk) {
         this.m = m;
@@ -96,7 +100,7 @@ public final class HoaDon extends JPanel implements ActionListener, KeyListener,
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "detail", "cancel", "export"};
+        String[] action = {"add", "detail", "cancel", "export"};
         mainFunction = new MainFunction(m.user.getMaQuyen(), "banhang", action);
         functionBar.add(mainFunction);
 
@@ -214,7 +218,7 @@ public final class HoaDon extends JPanel implements ActionListener, KeyListener,
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == mainFunction.btn.get("create")) {
+        if (source == mainFunction.btn.get("add")) {
             taoHoaDon = new TaoHoaDon(m, tk, "create");
             m.setPanel(taoHoaDon);
         } 

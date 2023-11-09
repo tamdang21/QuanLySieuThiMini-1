@@ -67,9 +67,13 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel columnModel = tableNhaCungCap.getColumnModel();
-        columnModel.getColumn(0).setCellRenderer(centerRenderer);
         columnModel.getColumn(0).setPreferredWidth(2);
         columnModel.getColumn(2).setPreferredWidth(300);
+        
+        columnModel.getColumn(0).setCellRenderer(centerRenderer);
+        columnModel.getColumn(1).setCellRenderer(centerRenderer);
+        columnModel.getColumn(2).setCellRenderer(centerRenderer);
+        columnModel.getColumn(3).setCellRenderer(centerRenderer);
         columnModel.getColumn(4).setCellRenderer(centerRenderer);
 
         this.setBackground(BackgroundColor);

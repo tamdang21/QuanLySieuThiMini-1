@@ -332,7 +332,6 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         else if (source == mainFunction.btn.get("phieuchi")) {
             int index = getRowSelected();
             if (index != -1) {
-                //ChiTietPhieuNhapDialog ctsp = new ChiTietPhieuNhapDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
                 new PhieuChiDialog(m, "Thông tin phiếu chi", true, this, TaiKhoanDAO.getInstance().getById(nv.getMaNV()).getMaQuyen(), listPhieu.get(index).getMaPN());
             }
         }

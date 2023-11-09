@@ -62,7 +62,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         this.hoadon = hoadonDTO;
         hoadonBus = new HoaDonBUS();
         ctHoaDon = hoadonBus.selectCTP(hoadon.getMaHD());
-        tienGiam = hoadonBus.getTongThanhTien(hoadon.getMaHD()) * khuyenmaiBUS.selectKM(hoadon.getMaHD()).getPhanTramKM();
+        tienGiam = hoadonBus.getTongThanhTien(hoadon.getMaHD()) * khuyenmaiBUS.getById(hoadon.getMaHD()).getPhanTramKM();
         
         initComponent(title);
         initHoaDon();

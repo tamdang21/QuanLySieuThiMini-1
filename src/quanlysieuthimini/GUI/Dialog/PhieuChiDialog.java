@@ -25,6 +25,7 @@ import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,8 +34,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import quanlysieuthimini.BUS.DonViBUS;
 import quanlysieuthimini.BUS.NhaCungCapBUS;
+import quanlysieuthimini.BUS.NhanVienBUS;
 import quanlysieuthimini.BUS.PhieuChiBUS;
 import quanlysieuthimini.DAO.PhieuNhapDAO;
+import quanlysieuthimini.DTO.NhaCungCapDTO;
+import quanlysieuthimini.DTO.NhanVienDTO;
 import quanlysieuthimini.DTO.PhieuChiDTO;
 import quanlysieuthimini.DTO.SanPhamDTO;
 import quanlysieuthimini.GUI.Panel.PhieuNhap;
@@ -52,31 +56,52 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
     PhieuChiBUS phieuchiBUS;
     PhieuNhap phieunhap;
 
-    ButtonCustom btnPdf, btnHuyBo, btnDuyetPhieuNhap, btnChinhSua;
+    ButtonCustom btnPdf, btnHuyBo, btnChinhSua;
 
     ArrayList<PhieuChiDTO> listPC;
-    NhaCungCapBUS nccBUSS = new NhaCungCapBUS();
     PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
+    NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+    NhanVienBUS nvBUS = new NhanVienBUS();
+    NhanVienDTO nvDTO = new NhanVienDTO();
+    NhaCungCapDTO nccDTO = new NhaCungCapDTO();
     int maquyen;
+    int mapn, mancc, manv;
 
     public PhieuChiDialog(JFrame owner, String title, boolean modal, PhieuNhap phieunhap, int maquyen, int mapn) {
         super(owner, title, modal);
         this.phieunhap = phieunhap;
         this.maquyen = maquyen;
+        mapn = mapn;
         phieuchiBUS = new PhieuChiBUS();
         phieuchi = phieuchiBUS.getByMaPN(mapn);
-        initComponent(phieunhap, title);
-        initPhieuNhap();
-        loadDataTablePhieuChi(listPC);
-        this.setVisible(true);
+        listPC = phieuchiBUS.getAll();
+        
+        if(checkTonTaiPC()) {
+            mancc = phieunhapBUS.getById(mapn).getMaNCC();
+            manv = phieunhapBUS.getById(mapn).getMaNV();
+            initComponent(phieunhap, title);
+            initPhieuChi();
+            loadDataTablePhieuChi(listPC);
+            this.setVisible(true);
+        }
     }
 
-    public void initPhieuNhap() {
-        txtMaPhieu.setText("PC" + Integer.toString(this.phieuchi.getMaPN()));
-        txtNhaCungCap.setText(NhaCungCapDAO.getInstance().getById(phieuchi.getMaPN()).getTenNCC());
-        txtNhanVien.setText(NhanVienDAO.getInstance().getById(phieuchi.getMaNV()).getTenNV());
-        txtThoiGian.setText(Formater.FormatDate(phieuchi.getNgayChi()));
-        txtSoTienChi.setText(Formater.FormatVND(PhieuNhapDAO.getInstance().getById(phieuchi.getMaPN()).getTongTien()));
+    public void initPhieuChi() {
+        if(checkTonTaiPC()) {
+            txtMaPhieu.setText("PC" + Integer.toString(phieuchi.getMaPC()));
+            txtNhaCungCap.setText(nccBUS.getById(mancc).getTenNCC());
+            txtNhanVien.setText(nvBUS.getById(manv).getTenNV());
+            txtThoiGian.setText(Formater.FormatDate(phieuchi.getNgayChi()));
+            txtSoTienChi.setText(Formater.FormatVND(phieuchi.getSoTienChi()));
+        }
+    }
+    
+    public boolean checkTonTaiPC() {
+        if(phieuchi == null) {
+            JOptionPane.showMessageDialog(this, "Phiếu nhập này chưa tạo phiếu chi", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     public void loadDataTablePhieuChi(ArrayList<PhieuChiDTO> arrPC) {
@@ -141,25 +166,24 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
         
         btnPdf = new ButtonCustom("Xuất file PDF", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        btnDuyetPhieuNhap = new ButtonCustom("Phê duyệt", "return", 14);
+        //btnDuyetPhieuNhap = new ButtonCustom("Phê duyệt", "return", 14);
         btnChinhSua = new ButtonCustom("Chỉnh sửa", "success", 14);
         
-        if(maquyen == 1) {
-            btnChinhSua.setVisible(true);
-            btnDuyetPhieuNhap.setVisible(true);
-        }
-        else {
-            btnChinhSua.setVisible(false);
-            btnDuyetPhieuNhap.setVisible(false);
-        }
+//        if(maquyen == 1) {
+//            btnChinhSua.setVisible(true);
+//            //btnDuyetPhieuNhap.setVisible(true);
+//        }
+//        else {
+//            btnChinhSua.setVisible(false);
+//        }
         
         btnPdf.addActionListener(this);
         btnHuyBo.addActionListener(this);
-        btnDuyetPhieuNhap.addActionListener(this);
+        //btnDuyetPhieuNhap.addActionListener(this);
         btnChinhSua.addActionListener(this);
         
         pnmain_btn.add(btnChinhSua);
-        pnmain_btn.add(btnDuyetPhieuNhap);
+        //pnmain_btn.add(btnDuyetPhieuNhap);
         pnmain_btn.add(btnPdf);
         pnmain_btn.add(btnHuyBo);
 
@@ -184,10 +208,10 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
                 w.WritePhieuChi(phieuchi.getMaPC());
             }
         }
-        if (source == btnDuyetPhieuNhap) {
-            PhieuNhapDAO.getInstance().getById(Integer.parseInt(txtMaPhieu.getText())).setTrangThai(2);
-            phieunhap.loadDataTalbe(phieunhapBUS.getAll());
-        }
+//        if (source == btnDuyetPhieuNhap) {
+//            PhieuNhapDAO.getInstance().getById(Integer.parseInt(txtMaPhieu.getText())).setTrangThai(2);
+//            phieunhap.loadDataTalbe(phieunhapBUS.getAll());
+//        }
         if (source == btnChinhSua) {
             
         }

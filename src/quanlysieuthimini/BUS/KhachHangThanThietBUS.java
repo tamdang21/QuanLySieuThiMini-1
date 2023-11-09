@@ -137,4 +137,7 @@ public class KhachHangThanThietBUS {
         }
     }
 
+    public boolean upDiemTichLuy(int makh, int diemcong) {
+        return khDAO.upDiemTichLuy(makh, diemcong);
+    }
 }

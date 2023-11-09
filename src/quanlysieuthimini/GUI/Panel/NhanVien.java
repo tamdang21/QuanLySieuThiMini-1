@@ -91,7 +91,7 @@ public final class NhanVien extends JPanel {
         scrollTableSanPham = new JScrollPane();
         tableNhanVien = new JTable();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"MNV", "Họ tên", "Giới tính", "Ngày Sinh", "SDT", "Email"};
+        String[] header = new String[]{"Mã nhân viên", "Họ tên", "Giới tính", "Ngày Sinh", "SDT", "Email"};
 
         tblModel.setColumnIdentifiers(header);
         tableNhanVien.setModel(tblModel);
@@ -108,8 +108,6 @@ public final class NhanVien extends JPanel {
         scrollTableSanPham.setViewportView(tableNhanVien);
         main.add(scrollTableSanPham);
     }
-
-    
 
     public NhanVien(Main m) {
         this.m = m;

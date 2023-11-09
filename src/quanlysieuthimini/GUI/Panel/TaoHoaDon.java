@@ -21,7 +21,6 @@ import javax.swing.border.EmptyBorder;
 import quanlysieuthimini.GUI.Component.PanelBorderRadius;
 import quanlysieuthimini.GUI.Component.SelectForm;
 import quanlysieuthimini.GUI.Dialog.ListKhachHang;
-import quanlysieuthimini.GUI.Dialog.QRCode_Dialog;
 import quanlysieuthimini.GUI.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -35,26 +34,32 @@ import quanlysieuthimini.helper.Formater;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import quanlysieuthimini.BUS.ChiTietThanhToanBUS;
 import quanlysieuthimini.BUS.DonViBUS;
 import quanlysieuthimini.BUS.HangSanXuatBUS;
 import quanlysieuthimini.BUS.HinhThucThanhToanBUS;
 import quanlysieuthimini.BUS.KhuyenMaiBUS;
 import quanlysieuthimini.BUS.LoaiSanPhamBUS;
+import quanlysieuthimini.DTO.ChiTietThanhToanDTO;
 import quanlysieuthimini.DTO.KhuyenMaiDTO;
 import quanlysieuthimini.GUI.Dialog.ChonMaVach;
 import quanlysieuthimini.GUI.Dialog.ListKhuyenMai;
@@ -70,7 +75,7 @@ public final class TaoHoaDon extends JPanel {
     DefaultTableModel tblModel, tblModelSP;
     ButtonCustom btnAddSp, btnEditSP, btnDelete, btnIExcel, btnThanhToan, btnQuetMa;
     InputForm txtMaHD, txtNhanVien, txtMaSp, txtTenSp, txtSoLuongBan;
-    SelectForm cbxSanPham,cbxPTTT;
+    SelectForm cbxPTTT;
     JTextField txtTimKiem;
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -86,9 +91,9 @@ public final class TaoHoaDon extends JPanel {
     HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
     DonViBUS donviBUS = new DonViBUS();
     LoaiSanPhamBUS loaispBUS = new LoaiSanPhamBUS();
-    HoaDonBUS hdBUS = new HoaDonBUS();
     HinhThucThanhToanBUS htttBUS = new HinhThucThanhToanBUS();
     KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
+    ChiTietThanhToanBUS ctttBUS = new ChiTietThanhToanBUS();
     
     //public JTextArea textAreaMaVach;
     private JLabel labelMaVach;
@@ -99,6 +104,7 @@ public final class TaoHoaDon extends JPanel {
     ArrayList<SanPhamDTO> listSP = spBUS.getAll();
     ArrayList<Float> listDKKM = kmBUS.getAllDKKM();
     ArrayList<KhuyenMaiDTO> listKM = kmBUS.getAll();
+    ArrayList<ChiTietThanhToanDTO> arrListCTTT = new ArrayList<>();
     
     TaiKhoanDTO tk;
     private int masp;
@@ -327,6 +333,17 @@ public final class TaoHoaDon extends JPanel {
 
         btnAddSp.addActionListener((e) -> {
             if (checkInfo()) {
+                if (spBUS.getByMaSP(Integer.valueOf(txtMaSp.getText())).getSoLuong()
+                        < Integer.valueOf(txtSoLuongBan.getText())){
+                    JOptionPane.showMessageDialog(null, "Xin lỗi sản phẩm tồn kho không đủ!!!");
+                    this.txtMaSp.setText("");
+                    this.txtTenSp.setText("");
+                    this.txtGiaBan.setText("");
+                    this.txtSoLuongBan.setText("");
+                    txtMaVach.setText("");
+                    txtMaVach.setEditable(false);
+                    return;
+                }
                 getInfo();
                 if(checkRowExist(tableHoaDon)){
                     int maSP = Integer.valueOf(txtMaSp.getText());
@@ -428,8 +445,10 @@ public final class TaoHoaDon extends JPanel {
         right.setLayout(new BorderLayout());
 
         JPanel right_top, right_center, right_bottom, pn_tongtien;
+        
         right_top = new JPanel(new GridLayout(5, 1, 0, 0));
-        right_top.setPreferredSize(new Dimension(300, 460));
+        right_top.setPreferredSize(new Dimension(300, 360));
+        
         txtMaHD = new InputForm("Mã hóa đơn");
         txtMaHD.setEditable(false);
         txtNhanVien = new InputForm("Nhân viên bán hàng");
@@ -439,42 +458,45 @@ public final class TaoHoaDon extends JPanel {
         txtMaHD.setText("HD-" + HoaDonDAO.getInstance().getAutoIncrement());
         NhanVienDTO nhanvien = NhanVienDAO.getInstance().getById(tk.getMaNV());
         txtNhanVien.setText(nhanvien.getTenNV());
-
-        right_top.add(txtMaHD);
-        right_top.add(txtNhanVien);
-
-        right_center = new JPanel(new BorderLayout());
-
-        JPanel khPanel = new JPanel(new GridLayout(4, 1, 5, 0));
-        khPanel.setBackground(Color.WHITE);
-        khPanel.setPreferredSize(new Dimension(0, 160));
         
         // Khách hàng
         JLabel khachHangJLabel = new JLabel("Khách hàng");
         khachHangJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        
+        txtKH = new JTextField("");
+        txtKH.setEditable(false);
         
         JPanel khachJPanel = new JPanel(new BorderLayout());
         khachJPanel.setPreferredSize(new Dimension(0, 40));
         khachJPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         khachJPanel.setOpaque(false);
         
-        txtKH = new JTextField("");
-        txtKH.setEditable(false);
-        
         JPanel kJPanelLeft = new JPanel(new GridLayout(1, 1));
         kJPanelLeft.setOpaque(false);
         kJPanelLeft.setPreferredSize(new Dimension(40, 0));
         
         ButtonCustom btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
-        kJPanelLeft.add(btnKh);
         btnKh.addActionListener((ActionEvent e) -> {
             new ListKhachHang(TaoHoaDon.this, owner, "Chọn khách hàng", true);
         });
         
+        kJPanelLeft.add(btnKh);
+        
+        JPanel khPanel = new JPanel(new GridLayout(2, 1, 5, 0));
+        khPanel.setBackground(Color.WHITE);
+        khPanel.setPreferredSize(new Dimension(0, 60));
+        
         khachJPanel.add(kJPanelLeft, BorderLayout.EAST);
         khachJPanel.add(txtKH, BorderLayout.CENTER);
         
+        khPanel.add(khachHangJLabel);
+        khPanel.add(khachJPanel);
+        
         // Khuyến mãi
+        JPanel khPanel3 = new JPanel(new GridLayout(2, 1, 5, 0));
+        khPanel3.setBackground(Color.WHITE);
+        khPanel3.setPreferredSize(new Dimension(0, 60));
+        
         JLabel KhuyenMaiJLabel = new JLabel("Khuyến mãi");
         KhuyenMaiJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         
@@ -491,39 +513,36 @@ public final class TaoHoaDon extends JPanel {
         txtKM.setEditable(false);
         
         KhuyenMaiJPanel.add(kJPanelLeft2, BorderLayout.NORTH);
-        KhuyenMaiJPanel.add(txtKM, BorderLayout.CENTER);;
+        KhuyenMaiJPanel.add(txtKM, BorderLayout.CENTER);
+        
+        khPanel3.add(KhuyenMaiJLabel);
+        khPanel3.add(KhuyenMaiJPanel);
         
         // Phương thức thanh toán
         JPanel khPanel1 = new JPanel(new BorderLayout());
         khPanel1.setBackground(Color.WHITE);
-        khPanel1.setPreferredSize(new Dimension(0, 160));
+        khPanel1.setPreferredSize(new Dimension(0, 60));
         
         String[] listNameHTTT = htttBUS.getArrTenHinhThucThanhToan();
         cbxPTTT = new SelectForm("Phương thức thanh toán", listNameHTTT);
+        cbxPTTT.setSelectedIndex(0);
         cbxPTTT.setEnabled(false);
         
-        
-        // add khách hàng và khuyến mãi vào khPanel
-        khPanel.add(khachHangJLabel);
-        khPanel.add(khachJPanel);
-        khPanel.add(KhuyenMaiJLabel);
-        khPanel.add(KhuyenMaiJPanel);
-
-        // add Phương thức thanh toán vào khPanel1
         khPanel1.add(cbxPTTT);
+
+        right_top.add(txtMaHD);
+        right_top.add(txtNhanVien);
+        right_top.add(khPanel);
+        right_top.add(khPanel3);
+        right_top.add(khPanel1);
         
         //Tạo Qr thanh toán
-        JPanel khPanel2 = new JPanel(new GridLayout(4, 1, 5, 0));
-        khPanel2.setBackground(Color.WHITE);
-        khPanel2.setPreferredSize(new Dimension(0, 50));
-        
         JLabel qrCodeLabel = new JLabel();
-        khPanel2.add(qrCodeLabel);
         
-        right_top.add(khPanel, BorderLayout.CENTER);
-        right_top.add(khPanel1, BorderLayout.SOUTH);
-        right_center.add(khPanel2, BorderLayout.NORTH);
+        right_center = new JPanel();
+        right_center.setPreferredSize(new Dimension(100, 100));
         right_center.setOpaque(false);
+        
         
         right_bottom = new JPanel(new GridLayout(2, 1));
         right_bottom.setPreferredSize(new Dimension(300, 100));
@@ -575,19 +594,33 @@ public final class TaoHoaDon extends JPanel {
         btnThanhToan.addActionListener((ActionEvent e) -> {
             if (arrListCTHD.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm");
-            } 
-//            else if (makh == -1) {
-//                JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng");
-//            } 
-            else {
-                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xác nhận thanh toán !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xác nhận thanh toán !", "Xác nhận tạo hóa đơn", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     long now = System.currentTimeMillis();
+                    int maHTTT = htttBUS.getByIndex(cbxPTTT.getSelectedIndex()).getMaHTTT();
                     Timestamp currenTime = new Timestamp(now);
+                    if(makh == -1)
+                        makh = 2;
                     HoaDonDTO HoaDon = new HoaDonDTO(maHD, makh, makm, tk.getMaNV(), currenTime, sum, 1);
                     hoadonBUS.insert(HoaDon, arrListCTHD);
-                    //chiTietSanPhamBUS.updateXuat(arrListSanPham);
-                    JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
+                    ChiTietThanhToanDTO cttt = new ChiTietThanhToanDTO(maHD,maHTTT,sum,currenTime);
+                    arrListCTTT.add(cttt);
+                    ctttBUS.add(arrListCTTT);
+                    ArrayList<HashMap> listCTHD = new ArrayList<>();
+                    for (ChiTietHoaDonDTO cthd : arrListCTHD){
+                        HashMap<String,Integer> map = new HashMap<>();
+                        map.put("maSP",cthd.getMaSP());
+                        map.put("soLuong",cthd.getSoLuong());
+                        listCTHD.add(map);
+                    }
+                    for (HashMap<Integer,Integer> map : listCTHD){
+                        int maSP = map.get("maSP");
+                        int soLuong = spBUS.getById(maSP).getSoLuong() - map.get("soLuong");
+                        spBUS.updateQuantity(maSP, soLuong);
+                    }
+                    khachHangBUS.upDiemTichLuy(makh, 1);
+                    JOptionPane.showMessageDialog(null, "Thanh toán thành công !");
                     mainChinh.setPanel(new HoaDon(mainChinh, tk));
                 }
             }
@@ -627,36 +660,34 @@ public final class TaoHoaDon extends JPanel {
         
         });
         
-        cbxPTTT.getCbb().addItemListener((e) -> {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String selectedValue = (String)cbxPTTT.getCbb().getSelectedItem();
-                    if (selectedValue.equals("Momo")){
-                        System.out.println("Thanh toán MOMO");
-                        
-//                        String qrCodeText = String.format("2|99|%s|%s|%s|0|0|%d", 
-//                                                        "0858212963", 
-//                                                        "Koong Chan Phong", 
-//                                                        "koongchanphong0712@gmail.com", 
-//                                                        sum);
-//                        BufferedImage qrCodeImage = generateQRCodeImage(qrCodeText, 1234, 1234);
-//                        System.out.println(qrCodeImage);
-//                        ImageIcon logoIcon = new ImageIcon("/images/icon/momoIcon.png");
-//                        System.out.println(logoIcon.getIconHeight());
-//                        System.out.println("Image Path: " + logoIcon.getDescription());
-//                        BufferedImage logo = convertToBufferedImage(scale(logoIcon));
-//                        BufferedImage qrCodeWithLogo = addLogoToQRCode(qrCodeImage, logo);
-//                        qrCodeLabel.setIcon(new ImageIcon(qrCodeWithLogo));
-                           try {
-                            BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/momoIcon.png"));
-                            qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
-                           } catch (Exception ex2) {
-                               ex2.printStackTrace();
-                           }
-                          
+        cbxPTTT.getCbb().addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getSource() == cbxPTTT.getCbb()) {
+                    if(!cbxPTTT.getValue().equals("Tiền mặt")) {
+                        try {
+                            if(cbxPTTT.getValue().equals("Momo")) {
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_momo.jpg"));
+                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                            }
+                            else if(cbxPTTT.getValue().equals("MB Bank")) {
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_mbbank.jpg"));
+                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                            }
+                            right_center.add(qrCodeLabel);
+                        } 
+                        catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, "Lỗi không thể tạo mã QR thanh toán");
+                        }
                     }
+                else {
+                    right_center.remove(qrCodeLabel);
                 }
+                revalidate();
+                repaint();
+            }
+        }
         });
-        
         
         right.add(right_top, BorderLayout.NORTH);
         right.add(right_center, BorderLayout.CENTER);
@@ -706,7 +737,7 @@ public final class TaoHoaDon extends JPanel {
         int masp = Integer.parseInt(txtMaSp.getText());
         double dongia = Double.valueOf(txtGiaBan.getText());
         int soLuong = Integer.parseInt(txtSoLuongBan.getText());
-        ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(maHD, masp, soLuong, dongia, soLuong * dongia);
+        ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(maHD, masp, dongia,soLuong,  soLuong * dongia);
         if (!checkRowExist(tableHoaDon)){
             arrListCTHD.add(cthd);
             System.out.println("Da them CTHD vao Arrays");
@@ -823,7 +854,7 @@ public final class TaoHoaDon extends JPanel {
     
     public void setKhuyenMai(int index) {
         makm = index;
-        KhuyenMaiDTO khuyenmai = kmBUS.getByID(makm);
+        KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
         txtKM.setText(khuyenmai.getTenKM());
         lbltongtien.setText(Formater.FormatVND(khuyenmai.getPhanTramKM() * sum));
     }
