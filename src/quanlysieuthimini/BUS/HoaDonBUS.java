@@ -52,14 +52,6 @@ public class HoaDonBUS {
     public ArrayList<ChiTietHoaDonDTO> selectCTP(int maphieu) {
         return chiTietHoaDonDAO.getAll(maphieu);
     }
-    
-    public double getTongThanhTien(int maHD){
-        double tong = 0;
-        for(ChiTietHoaDonDTO cthd: selectCTP(maHD)){
-            tong += cthd.getThanhTien();
-        }
-        return tong;
-    }
 
     public ArrayList<HoaDonDTO> fillerHoaDon(int type, String input, int makh, int manv, int makm, Date time_s, Date time_e, String price_minnn, String price_maxxx) {
         Long price_min = !price_minnn.equals("") ? Long.valueOf(price_minnn) : 0L;

@@ -41,6 +41,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,6 +85,7 @@ public final class TaoHoaDon extends JPanel {
     int manv;
     int makh = -1, makm = -1;
     String type;
+    double phantramgiam = 0;
 
     SanPhamBUS spBUS = new SanPhamBUS();
     HoaDonBUS hoadonBUS = new HoaDonBUS();
@@ -667,11 +669,11 @@ public final class TaoHoaDon extends JPanel {
                     if(!cbxPTTT.getValue().equals("Tiền mặt")) {
                         try {
                             if(cbxPTTT.getValue().equals("Momo")) {
-                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_momo.jpg"));
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_momo.jpg"));
                                 qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
                             }
                             else if(cbxPTTT.getValue().equals("MB Bank")) {
-                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/icon/qr_mbbank.jpg"));
+                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_mbbank.jpg"));
                                 qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
                             }
                             right_center.add(qrCodeLabel);
@@ -793,7 +795,6 @@ public final class TaoHoaDon extends JPanel {
     public void loadDataTableChiTietHoaDon(ArrayList<ChiTietHoaDonDTO> arrCTHD) {
         tblModel.setRowCount(0);
         int size = arrCTHD.size();
-        int maxKM = 0;
         sum = 0;
         for (int i = 0; i < size; i++) {
             SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrCTHD.get(i).getMaSP());
@@ -809,19 +810,37 @@ public final class TaoHoaDon extends JPanel {
                 Formater.FormatVND(arrCTHD.get(i).getThanhTien())
             });
         }
-        for (KhuyenMaiDTO km : listKM){
-            if (sum > km.getDieuKienKM())
-                maxKM = km.getMaKM();
-        }
-        if (maxKM != 0)
-            setKhuyenMai(maxKM);
+
+        LocalDate now = LocalDate.now();
+        int maKM = kmBUS.KiemTraKhuyenMai(listKM, sum, now);
+        
+        if (maKM != 0)
+            setKhuyenMai(maKM);
         else{
             txtKM.setText("Không có khuyễn mãi");
             lbltongtien.setText(Formater.FormatVND(sum));
         }
         
+        if(makh != -1)
+            setKhachHang(makh);
+        
         if (tableSanPham.getSelectedRow() != -1)
             tableSanPham.clearSelection();
+    }
+    
+    public void setKhachHang(int index) {
+        makh = index;
+        KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
+        phantramgiam += khachhang.getChietKhauTheoDiem();
+        lbltongtien.setText(Formater.FormatVND(sum - (phantramgiam * sum)));
+    }
+    
+    public void setKhuyenMai(int index) {
+        makm = index;
+        KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
+        txtKM.setText(khuyenmai.getTenKM());
+        phantramgiam += khuyenmai.getPhanTramKM();
+        lbltongtien.setText(Formater.FormatVND(sum - (phantramgiam * sum)));
     }
     
     public void loadDataTableSanPhamBottom (ArrayList<SanPhamDTO> arrSP){
@@ -844,19 +863,6 @@ public final class TaoHoaDon extends JPanel {
             });
         }
         lbltongtien.setText(Formater.FormatVND(sum));
-    }
-
-    public void setKhachHang(int index) {
-        makh = index;
-        KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
-        txtKH.setText(khachhang.getTenKH());
-    }
-    
-    public void setKhuyenMai(int index) {
-        makm = index;
-        KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
-        txtKM.setText(khuyenmai.getTenKM());
-        lbltongtien.setText(Formater.FormatVND(khuyenmai.getPhanTramKM() * sum));
     }
 
     public void setPhieuSelected() {

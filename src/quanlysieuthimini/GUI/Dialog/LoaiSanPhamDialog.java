@@ -34,7 +34,13 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
     HeaderTitle headTite;
     JPanel top, main, bottom;
     InputForm ms, ms1, ms2;
-    DefaultTableModel tblModel;
+    DefaultTableModel tblModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        }
+        
+    };
     JTable table;
     ButtonCustom add, del, update;
     LoaiSanPhamBUS thBUS = new LoaiSanPhamBUS();
@@ -96,7 +102,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         table = new JTable();
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
-        tblModel = new DefaultTableModel();
+        table.setFocusable(false);
         String[] header = new String[]{"Mã Loại", "Tên Loại","Bảo Quản", "Mô Tả"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);

@@ -1,9 +1,5 @@
 package quanlysieuthimini.GUI.Component;
 
-//import quanlysieuthimini.GUI.Panel.ChuyenKho;
-//import quanlysieuthimini.GUI.Panel.KhachHang;
-//import quanlysieuthimini.GUI.Panel.KhuVucKho;
-//import quanlysieuthimini.GUI.Panel.NhaCungCap;
 import quanlysieuthimini.GUI.Panel.NhanVien;
 import quanlysieuthimini.GUI.Panel.PhanQuyen;
 import quanlysieuthimini.GUI.Panel.PhieuNhap;
@@ -33,6 +29,7 @@ import quanlysieuthimini.GUI.Panel.CaLamViec;
 import quanlysieuthimini.GUI.Panel.KhachHangThanThiet;
 import quanlysieuthimini.GUI.Panel.KhuyenMai;
 import quanlysieuthimini.GUI.Panel.NhaCungCap;
+import quanlysieuthimini.GUI.Panel.ThongKe.ThongKe;
 
 public class MenuTaskbar extends JPanel {
 
@@ -48,7 +45,7 @@ public class MenuTaskbar extends JPanel {
     PhanQuyen phanQuyen;
     KhuyenMai khuyenmai;
     CaLamViec calamviec;
-    //ThongKe thongKe;
+    ThongKe thongKe;
     String[][] getSt = {
         {"Bán hàng", "home.svg", "banhang"},
         {"Nhập hàng", "home.svg", "nhaphang"},
@@ -286,7 +283,8 @@ public class MenuTaskbar extends JPanel {
         listitem[11].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                System.out.println("ThongKe");
+                thongKe = new ThongKe();
+                main.setPanel(thongKe);
             }
         });
 
