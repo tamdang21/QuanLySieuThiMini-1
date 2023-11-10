@@ -17,6 +17,7 @@ import quanlysieuthimini.GUI.Component.InputForm;
 import quanlysieuthimini.GUI.Component.InputImage;
 import quanlysieuthimini.GUI.Component.NumericDocumentFilter;
 import quanlysieuthimini.GUI.Component.SelectForm;
+import quanlysieuthimini.GUI.Component.InputDate;
 import quanlysieuthimini.GUI.Panel.SanPham;
 import quanlysieuthimini.helper.Formater;
 import quanlysieuthimini.helper.Validation;
@@ -40,6 +41,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
@@ -60,7 +63,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
    private HeaderTitle titlePage;
    private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
    private ButtonCustom btnThemCHMS, btnHuyBo, btnAddSanPham, btnViewCauHinh, btnQuetMa;
-   InputForm tenSP, dongia, soluong, dungtich, ngaySX, hanSD, mavach;
+   InputForm tenSP, dongia, soluong, dungtich, mavach;
+   InputDate ngaySX, hanSD;
    SelectForm hangsx, loaisp, donvi;
    InputImage hinhanh;
    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -92,7 +96,6 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
    public SanPhamDialog(SanPham jpSP, JFrame owner, String title, boolean modal, String type) {
        super(owner, title, modal);
-       System.out.println("khơi tao xem sanphamdialog");
        init(jpSP);
        initComponents(title, type);
 
@@ -100,7 +103,6 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
    public SanPhamDialog(SanPham jpSP, JFrame owner, String title, boolean modal, String type, SanPhamDTO sp) {
        super(owner, title, modal);
-       System.out.println("Update sanphamdialog");
        init(jpSP);
        this.sp = sp;
        //get phiên bản sp
@@ -128,8 +130,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
        soluong = new InputForm("Số lượng");
        mavach = new InputForm("Mã vạch");
        dungtich = new InputForm("Dung Tích");
-       ngaySX = new InputForm("Ngày Sản Xuất");
-       hanSD =  new InputForm("Hạn sử dụng");
+       ngaySX = new InputDate("Ngày Sản Xuất");
+       hanSD =  new InputDate("Hạn sử dụng");
        hinhanh = new InputImage("Hình minh họa");
        pninfosanpham.add(tenSP);
        pninfosanpham.add(hangsx);
@@ -198,21 +200,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
-    public void setInfo(SanPhamDTO sp) throws Exception{
-        hinhanh.setUrl_img(sp.getHinhAnh());
-        tenSP.setText(sp.getTenSP());
-//        hangsx.set(hangsxDAO.getById(sp.getMaHang()).getTenHang());
-        hangsx.setSelectedIndex(hangsxBUS.getIndexByMaNCC(sp.getMaHang()));
-        loaisp.setSelectedItem(loaiSPDAO.getInstance().getById(sp.getMaLoai()).getTenLoai());
-        donvi.setSelectedItem(donviDAO.getInstance().getById(sp.getMaDV()).getTenDV());
-        dongia.setText(String.valueOf(sp.getDonGia()));
-        soluong.setText(String.valueOf(sp.getSoLuong()));
-        mavach.setText(String.valueOf(sp.getMaVach()));
-        dungtich.setText(String.valueOf(sp.getDungTich()));
-        ngaySX.setText(Formater.FormatDate(sp.getNgaySanXuat()));
-        hanSD.setText(Formater.FormatDate(sp.getHanSuDung()));
-        
-    }
+    
     public String addImage(String urlImg) {
         Random randomGenerator = new Random();
         int ram = randomGenerator.nextInt(1000);
@@ -230,16 +218,19 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
-        if (source == btnThemCHMS && validateCardOne()) {
+        if (source == btnThemCHMS ) {
             CardLayout c = (CardLayout) pnmain.getLayout();
             c.next(pnmain);
         }
         else if (source == btnAddSanPham) {
             try{
-                eventAddSanPham();
-                System.out.print("tbn addThem sp");
+                if(validateInput())
+                    if(validateData()){
+                        eventAddSanPham();
+                        dispose();
+                    }
             }catch(Exception ex){
-                System.out.print(ex);
+               Logger.getLogger(SanPhamDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         else if(source == btnQuetMa) {
@@ -250,13 +241,14 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             c.next(pnmain);
         } else if (source == btnEditCT){
             CardLayout c = (CardLayout) pnmain.getLayout();
-            c.next(pnmain);
+            c.next(pnmain); 
         } else if(source == btnSaveCH){
 
             SanPhamDTO snNew = new SanPhamDTO();
             try{
                 snNew = getInfo();
             }catch(Exception ex){
+                System.out.println("getinfo");
                 System.out.println(ex);
             }
             if(!snNew.getHinhAnh().equalsIgnoreCase(this.sp.getHinhAnh())){
@@ -273,13 +265,34 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             dispose();
         }
     }
-        public boolean validateCardOne() {
+    public boolean validateData() throws Exception{
         boolean check = true;
-        if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty(hanSD.getText())
+        if(!Validation.isNumber(dongia.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho đơn giá"); 
+            check = false;
+        }
+        if(!Validation.isNumber(soluong.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho số lượng");
+            check = false;
+        }
+        if(!Validation.isNumber(dungtich.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho dung tích");
+            check = false;
+        }
+        if(hanSD.getDate().compareTo(ngaySX.getDate()) <= 0){
+            JOptionPane.showMessageDialog(this, "Hạn sử dụng phải đặt sau ngày sản xuất");
+            check = false;
+        }
+        return check;
+    }
+    public boolean validateInput() throws Exception{
+        boolean check = true;
+        if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty(hanSD.getDate().toString())
                 || Validation.isEmpty(hangsx.getValue()) || Validation.isEmpty(loaisp.getValue())
                 || Validation.isEmpty(donvi.getValue()) || Validation.isEmpty(soluong.getText())
                 || Validation.isEmpty(mavach.getText()) || Validation.isEmpty(dongia.getText()) 
-                || Validation.isEmpty(dungtich.getText()) || Validation.isEmpty(ngaySX.getText())) {
+                || Validation.isEmpty(dungtich.getText()) || Validation.isEmpty(ngaySX.getDate().toString())
+                || Validation.isEmpty(hinhanh.getUrl_img()) || Validation.isEmpty(mavach.getText())) {
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
         } else {
@@ -290,13 +303,27 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     public void eventAddSanPham() throws Exception{
         SanPhamDTO sp = getInfo();
         sp.setHinhAnh(addImage(sp.getHinhAnh()));
+        SanPhamDAO.getInstance().insert(sp);
         if (jpSP.spBUS.add(sp)) {
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
             jpSP.loadDataTalbe(jpSP.listsp);
-            dispose();
         }
     }
-
+    public void setInfo(SanPhamDTO sp) throws Exception{
+        hinhanh.setUrl_img(sp.getHinhAnh());
+        tenSP.setText(sp.getTenSP());
+//        hangsx.set(hangsxDAO.getById(sp.getMaHang()).getTenHang());
+        hangsx.setSelectedIndex(hangsxBUS.getIndexByMaNCC(sp.getMaHang()));
+        loaisp.setSelectedItem(loaiSPDAO.getInstance().getById(sp.getMaLoai()).getTenLoai());
+        donvi.setSelectedItem(donviDAO.getInstance().getById(sp.getMaDV()).getTenDV());
+        dongia.setText(String.valueOf(sp.getDonGia()));
+        soluong.setText(String.valueOf(sp.getSoLuong()));
+        mavach.setText(String.valueOf(sp.getMaVach()));
+        dungtich.setText(String.valueOf(sp.getDungTich()));
+        ngaySX.setDate(sp.getNgaySanXuat());
+        hanSD.setDate(sp.getHanSuDung());
+        
+    }
     public SanPhamDTO getInfo() throws Exception{
         String hinhanh = this.hinhanh.getUrl_img();
         String vtensp = tenSP.getText();
@@ -307,8 +334,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         int vsoluong = Integer.parseInt(soluong.getText());
         String vmavach = mavach.getText();
         int vdungtich = Integer.parseInt(dungtich.getText());
-        Date vngaySX = sp.getNgaySanXuat();
-        Date vhanSD = sp.getHanSuDung();
+        Date vngaySX = ngaySX.getDate();
+        Date vhanSD = hanSD.getDate();
         
         SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,hinhanh,1);
         return result;

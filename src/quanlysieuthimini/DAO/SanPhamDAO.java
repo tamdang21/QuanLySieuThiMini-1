@@ -1,6 +1,10 @@
 package quanlysieuthimini.DAO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +14,8 @@ import quanlysieuthimini.DTO.KhachHangThanThietDTO;
 import quanlysieuthimini.DTO.SanPhamDTO;
 
 public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
-
+    
+    
     public static SanPhamDAO getInstance() {
         return new SanPhamDAO();
     }
@@ -22,7 +27,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             Connection con = (Connection) ConnectionDB.openConnection();
             String sql = "INSERT into sanpham "
                         + "(MaLoai,MaHang,MaDV,TenSP,DonGia,SoLuong,DungTich,NgaySanXuat,HanSuDung,HinhAnh,MaVach) "
-                        + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?)"; 
             
             PreparedStatement stmt = (PreparedStatement) con.prepareStatement(sql);
             
@@ -33,8 +38,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 stmt.setDouble(5,t.getDonGia());
                 stmt.setInt(6,t.getSoLuong());
                 stmt.setInt(7,t.getDungTich());
-                stmt.setDate(8, (Date) t.getNgaySanXuat());
-                stmt.setDate(9, (Date) t.getHanSuDung());
+                stmt.setDate(8, new Date(t.getNgaySanXuat().getTime()));
+                stmt.setDate(9, new Date(t.getHanSuDung().getTime()));
                 stmt.setString(10,t.getHinhAnh());
                 stmt.setString(11,t.getMaVach());
             
