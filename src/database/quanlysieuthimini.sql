@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2023 at 02:28 PM
+-- Generation Time: Nov 10, 2023 at 04:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -36,6 +36,17 @@ CREATE TABLE `calamviec` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `calamviec`
+--
+
+INSERT INTO `calamviec` (`MaCa`, `TenCa`, `GioBatDau`, `GioKetThuc`, `LuongTheoCa`, `TrangThai`) VALUES
+(1, 'Sáng', '06:00:00', '11:30:00', 22.00, 1),
+(2, 'Chiều', '11:30:00', '17:00:00', 22.00, 1),
+(3, 'Tối', '17:00:00', '23:00:00', 25.00, 1),
+(4, 'Khuya', '23:00:00', '06:00:00', 30.00, 1),
+(5, 'Sáng', '12:00:00', '13:00:00', 12.00, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +62,14 @@ CREATE TABLE `chitiethoadon` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `chitiethoadon`
+--
+
+INSERT INTO `chitiethoadon` (`MaHD`, `MaSP`, `DonGia`, `SoLuong`, `ThanhTien`, `TrangThai`) VALUES
+(3, 1, 10000.00, 14, 140000.00, 1),
+(3, 2, 20.00, 1, 20.00, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -65,6 +84,15 @@ CREATE TABLE `chitietphieunhap` (
   `ThanhTien` decimal(10,2) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitietphieunhap`
+--
+
+INSERT INTO `chitietphieunhap` (`MaPN`, `MaSP`, `SoLuong`, `DonGia`, `ThanhTien`, `TrangThai`) VALUES
+(1, 1, 98, 10000.00, 980000.00, 1),
+(1, 2, 100, 20.00, 2000.00, 1),
+(24, 1, 12, 10000.00, 120000.00, 1);
 
 -- --------------------------------------------------------
 
@@ -147,6 +175,13 @@ CREATE TABLE `chitietthanhtoan` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `chitietthanhtoan`
+--
+
+INSERT INTO `chitietthanhtoan` (`MaHD`, `MaHTTT`, `SoTien`, `NgayThanhToan`, `TrangThai`) VALUES
+(3, 1, 140020.00, '2023-11-10 02:58:30', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -189,6 +224,20 @@ CREATE TABLE `donvi` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `donvi`
+--
+
+INSERT INTO `donvi` (`MaDV`, `TenDV`, `TrangThai`) VALUES
+(1, 'kg', 0),
+(2, 'bichX', 0),
+(3, 'bich4', 0),
+(4, 'kg', 1),
+(5, 'bịch', 1),
+(6, 'ml', 1),
+(7, 'lít', 1),
+(8, 'gam', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -202,6 +251,14 @@ CREATE TABLE `hangsanxuat` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `hangsanxuat`
+--
+
+INSERT INTO `hangsanxuat` (`MaHang`, `TenHang`, `TruSo`, `TrangThai`) VALUES
+(7, 'Nuti food', 'TpHCM', 1),
+(8, 'Fanta', 'Tiền Giang', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -214,6 +271,15 @@ CREATE TABLE `hinhthucthanhtoan` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `hinhthucthanhtoan`
+--
+
+INSERT INTO `hinhthucthanhtoan` (`MaHTTT`, `TenHTTT`, `TrangThai`) VALUES
+(1, 'Tiền mặt', 1),
+(2, 'Momo', 1),
+(3, 'MB Bank', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -222,13 +288,20 @@ CREATE TABLE `hinhthucthanhtoan` (
 
 CREATE TABLE `hoadon` (
   `MaHD` int(11) NOT NULL,
-  `MaKH` int(11) NOT NULL,
-  `MaKM` int(11) NOT NULL,
+  `MaKH` int(11) DEFAULT NULL,
+  `MaKM` int(11) DEFAULT NULL,
   `MaNV` int(11) NOT NULL,
   `NgayLap` timestamp NOT NULL DEFAULT current_timestamp(),
   `TongTien` decimal(10,2) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hoadon`
+--
+
+INSERT INTO `hoadon` (`MaHD`, `MaKH`, `MaKM`, `MaNV`, `NgayLap`, `TongTien`, `TrangThai`) VALUES
+(3, 1, 3, 1, '2023-11-10 02:58:30', 140020.00, 1);
 
 -- --------------------------------------------------------
 
@@ -241,8 +314,17 @@ CREATE TABLE `khachhang` (
   `TenKH` varchar(100) NOT NULL,
   `DiaChi` varchar(255) NOT NULL,
   `SDT` varchar(100) NOT NULL,
+  `DiemTichLuy` int(11) NOT NULL,
+  `ChietKhauTheoDiem` double NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `khachhang`
+--
+
+INSERT INTO `khachhang` (`MaKH`, `TenKH`, `DiaChi`, `SDT`, `DiemTichLuy`, `ChietKhauTheoDiem`, `TrangThai`) VALUES
+(1, 'Quân Ca', 'hahahhaa', '123432123', 2, 0.005, 1);
 
 -- --------------------------------------------------------
 
@@ -260,6 +342,15 @@ CREATE TABLE `khuyenmai` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`MaKM`, `TenKM`, `DieuKienKM`, `PhanTramKM`, `NgayBatDau`, `NgayKetThuc`, `TrangThai`) VALUES
+(1, 'Khuyến mãi 20/11', 2000, 0.3, '2023-11-10', '2023-11-22', 1),
+(2, 'Halloween', 1000, 0.15, '2023-11-01', '2023-11-12', 1),
+(3, 'Tết vui xuân', 3000, 0.4, '2023-01-01', '2023-02-28', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -273,6 +364,20 @@ CREATE TABLE `loaisanpham` (
   `MoTa` varchar(255) NOT NULL,
   `TrangThai` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loaisanpham`
+--
+
+INSERT INTO `loaisanpham` (`MaLoai`, `TenLoai`, `CachBaoQuan`, `MoTa`, `TrangThai`) VALUES
+(1, 'ga', 'ga', 'ga', 0),
+(2, 'eqeq', 'ewq', 'qwe', 0),
+(3, 'qwe', 'rewr', 'wer', 0),
+(4, 'asd', 'sda', 'asd', 0),
+(5, 'sdf', 'asda', 'sada', 0),
+(6, 'Đồ uống', 'Để ngăn mát', 'Các loại nước uống dạng chai hoặc hộp', 1),
+(7, 'Đồ đông lạnh', 'Ngăn đông, nhiệt độ < -10 C', 'Các loại đồ sống, kem, ...', 1),
+(8, 'hahaha', 'ád', 'fff', 1);
 
 -- --------------------------------------------------------
 
@@ -288,6 +393,14 @@ CREATE TABLE `nhacungcap` (
   `Email` varchar(255) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nhacungcap`
+--
+
+INSERT INTO `nhacungcap` (`MaNCC`, `TenNCC`, `DiaChi`, `SDT`, `Email`, `TrangThai`) VALUES
+(1, 'haha', 'haha', '123123', 'dominhquan15623@gmail.com', 1),
+(2, 'Công ty hữu hạn 1 thành viên', '123 Tân Bình lục bảo', '12312312312', 'thanhvien@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -318,7 +431,8 @@ INSERT INTO `nhanvien` (`MaNV`, `TenNV`, `DiaChi`, `SDT`, `NgaySinh`, `GioiTinh`
 (3, 'Lê Ngọc Giàu', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
 (4, 'Nguyễn Khánh Nam', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
 (5, 'Nguyễn Nhật Khải', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
-(6, 'Trần Tiến Phát', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1);
+(6, 'Trần Tiến Phát', 'TpHCM', '0778715603', '2003-06-15', 1, 'dominhquan15623@gmail.com', 0.00, '', 1),
+(7, 'haha', 'haha', '12312353465', '2023-11-17', 1, 'adsasdsd', 5.40, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -351,6 +465,13 @@ CREATE TABLE `phieuchi` (
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `phieuchi`
+--
+
+INSERT INTO `phieuchi` (`MaPC`, `MaPN`, `MaNV`, `TenNguoiChi`, `NgayChi`, `LyDoChi`, `SoTienChi`, `GhiChu`, `TrangThai`) VALUES
+(1, 24, 1, 'Đỗ Minh Quân', '2023-11-09 02:04:11', 'Nhập hàng', 120000.00, '', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -365,6 +486,14 @@ CREATE TABLE `phieunhap` (
   `TongTien` decimal(10,2) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `phieunhap`
+--
+
+INSERT INTO `phieunhap` (`MaPN`, `MaNV`, `MaNCC`, `NgayNhap`, `TongTien`, `TrangThai`) VALUES
+(1, 1, 1, '2023-11-08 08:17:29', 982000.00, 0),
+(24, 1, 1, '2023-11-07 08:44:20', 120000.00, 2);
 
 -- --------------------------------------------------------
 
@@ -408,6 +537,14 @@ CREATE TABLE `sanpham` (
   `HinhAnh` varchar(255) NOT NULL,
   `TrangThai` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sanpham`
+--
+
+INSERT INTO `sanpham` (`MaSP`, `MaLoai`, `MaHang`, `MaDV`, `MaVach`, `TenSP`, `DonGia`, `SoLuong`, `DungTich`, `NgaySanXuat`, `HanSuDung`, `HinhAnh`, `TrangThai`) VALUES
+(1, 6, 7, 6, '123123345345', 'Nước cam', 10000.00, 45, 450, '2023-11-01', '2024-11-15', '', 1),
+(2, 7, 8, 5, '123123123', 'yaout đá vị cam', 20.00, 98, 1, '2023-11-01', '2023-11-30', '9HK1_2023-2024-Tuan_1.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -592,73 +729,73 @@ ALTER TABLE `taikhoan`
 -- AUTO_INCREMENT for table `calamviec`
 --
 ALTER TABLE `calamviec`
-  MODIFY `MaCa` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaCa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `donvi`
 --
 ALTER TABLE `donvi`
-  MODIFY `MaDV` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaDV` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `hangsanxuat`
 --
 ALTER TABLE `hangsanxuat`
-  MODIFY `MaHang` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaHang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `hinhthucthanhtoan`
 --
 ALTER TABLE `hinhthucthanhtoan`
-  MODIFY `MaHTTT` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaHTTT` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `hoadon`
 --
 ALTER TABLE `hoadon`
-  MODIFY `MaHD` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaHD` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaKH` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `khuyenmai`
 --
 ALTER TABLE `khuyenmai`
-  MODIFY `MaKM` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaKM` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `loaisanpham`
 --
 ALTER TABLE `loaisanpham`
-  MODIFY `MaLoai` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaLoai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `nhacungcap`
 --
 ALTER TABLE `nhacungcap`
-  MODIFY `MaNCC` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaNCC` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `MaNV` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `MaNV` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `phieuchi`
 --
 ALTER TABLE `phieuchi`
-  MODIFY `MaPC` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaPC` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `phieunhap`
 --
 ALTER TABLE `phieunhap`
-  MODIFY `MaPN` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaPN` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `quyen`
@@ -670,7 +807,7 @@ ALTER TABLE `quyen`
 -- AUTO_INCREMENT for table `sanpham`
 --
 ALTER TABLE `sanpham`
-  MODIFY `MaSP` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MaSP` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

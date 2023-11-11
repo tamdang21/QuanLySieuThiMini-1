@@ -35,7 +35,13 @@ public class DonViDialog extends JDialog implements MouseListener {
     HeaderTitle headTite;
     JPanel top, main, bottom, all;
     InputForm ms;
-    DefaultTableModel tblModel;
+    DefaultTableModel tblModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;// Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        }
+        
+    };
     JTable table;
     JScrollPane scrollTable;
     ButtonCustom add, del, update;
@@ -87,7 +93,8 @@ public class DonViDialog extends JDialog implements MouseListener {
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
         scrollTable = new JScrollPane(table);
-        tblModel = new DefaultTableModel();
+        
+        
         String[] header = new String[]{"Mã Đơn Vị", "Tên Đơn Vị"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);

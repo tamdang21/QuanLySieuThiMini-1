@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 import quanlysieuthimini.GUI.Component.PanelBorderRadius;
 import quanlysieuthimini.GUI.Dialog.ListNhanVien;
 import quanlysieuthimini.GUI.Dialog.TaiKhoanDialog;
-import quanlysieuthimini.helper.BCrypt;
+//import quanlysieuthimini.helper.BCrypt;
 import quanlysieuthimini.helper.JTableExporter;
 import quanlysieuthimini.helper.Validation;
 import java.awt.event.ActionEvent;
@@ -287,7 +287,8 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                         k += 1;
                     } else {
                         System.out.println(manv + ":" + tendangnhap + ":" + matkhau + ":" + maquyen);
-                        String pass = BCrypt.hashpw(matkhau, BCrypt.gensalt(12));
+                        //String pass = BCrypt.hashpw(matkhau, BCrypt.gensalt(12));
+                        String pass = matkhau;
                         TaiKhoanDTO newaccount = new TaiKhoanDTO(manv, maquyen, tendangnhap, pass, 1);
                         TaiKhoanDAO.getInstance().insert(newaccount);
                         listTk.add(newaccount);

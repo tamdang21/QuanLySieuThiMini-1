@@ -129,13 +129,13 @@ public class KhachHangThanThietBUS {
         return khDAO.getById(makh);
     }
     
-    public void tinhChietKhauTheoKH(int maKH) {
-        for(HoaDonDTO hoadon : listHoaDon) {
-            if(hoadon.getMaKH() == maKH) {
-                
-            }
-        }
-    }
+//    public void tinhChietKhauTheoKH(int maKH) {
+//        for(HoaDonDTO hoadon : listHoaDon) {
+//            if(hoadon.getMaKH() == maKH) {
+//                
+//            }
+//        }
+//    }
 
     public boolean upDiemTichLuy(int makh, int diemcong) {
         return khDAO.upDiemTichLuy(makh, diemcong);

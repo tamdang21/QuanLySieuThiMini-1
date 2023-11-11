@@ -13,7 +13,7 @@ import quanlysieuthimini.GUI.Component.HeaderTitle;
 import quanlysieuthimini.GUI.Component.InputForm;
 import quanlysieuthimini.GUI.Component.SelectForm;
 import quanlysieuthimini.GUI.Panel.TaiKhoan;
-import quanlysieuthimini.helper.BCrypt;
+//import quanlysieuthimini.helper.BCrypt;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -103,7 +103,8 @@ public class TaiKhoanDialog extends JDialog {
                         }
                     }
                     if (check == 0) {
-                        String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                        //String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                        String pass = password.getPass();
                         int maquyen = listNq.get(maQuyen.getSelectedIndex()).getMaQuyen();
                         int tt = trangthai.getSelectedIndex();
                         TaiKhoanDTO tk = new TaiKhoanDTO(manv, maquyen, tendangnhap, pass, tt);
@@ -124,7 +125,8 @@ public class TaiKhoanDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (!(username.getText().length() == 0)) {
                     String tendangnhap = username.getText();
-                    String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                    //String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                    String pass = password.getPass();
                     int maquyen = listNq.get(maQuyen.getSelectedIndex()).getMaQuyen();
                     int tt = trangthai.getSelectedIndex();
                     TaiKhoanDTO tk = new TaiKhoanDTO(manv, maquyen, tendangnhap, pass, tt);

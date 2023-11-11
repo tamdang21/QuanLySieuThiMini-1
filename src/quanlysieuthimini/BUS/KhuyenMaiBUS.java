@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class KhuyenMaiBUS implements ActionListener, DocumentListener {
@@ -194,6 +195,17 @@ public class KhuyenMaiBUS implements ActionListener, DocumentListener {
 
     public KhuyenMaiDTO getById(int makm) {
         return khuyenMaiDAO.getById(makm);
+    }
+    
+    public int KiemTraKhuyenMai(ArrayList<KhuyenMaiDTO> arrListKhuyenMai, int sum, LocalDate now) {
+        int maKM = 0;
+        
+        for(KhuyenMaiDTO km : arrListKhuyenMai) {
+            if(sum > km.getDieuKienKM() && (now.isAfter(km.getNgayBatDau()) && now.isBefore(km.getNgayKetThuc())))
+                maKM = km.getMaKM();
+        }
+        
+        return maKM;
     }
     
     private static CellStyle createStyleForHeader(Sheet sheet) {

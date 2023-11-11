@@ -222,7 +222,7 @@ public final class SanPham extends JPanel implements ActionListener{
     public int getRowSelected(){
         int index = tableSanPham.getSelectedRow();
         if(index == -1){
-                JOptionPane.showMessageDialog(this,"Vui lòng chọn sản phẩm");
+            JOptionPane.showMessageDialog(this,"Vui lòng chọn sản phẩm");
         }
         return index;
     }

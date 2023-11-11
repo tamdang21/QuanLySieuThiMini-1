@@ -15,7 +15,7 @@ import quanlysieuthimini.GUI.Component.HeaderTitle;
 import quanlysieuthimini.GUI.Component.InputForm;
 import quanlysieuthimini.GUI.Component.MenuTaskbar;
 import quanlysieuthimini.GUI.Component.NumericDocumentFilter;
-import quanlysieuthimini.helper.BCrypt;
+//import quanlysieuthimini.helper.BCrypt;
 import quanlysieuthimini.helper.Validation;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -196,8 +196,10 @@ public class MyAccount extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không khớp với mật khẩu mới", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                     return;
                 } else {
-                    if (BCrypt.checkpw(current_pwd.getPass(), tkdto.getMatKhau())) {
-                        String pass = BCrypt.hashpw(confirm.getPass(), BCrypt.gensalt(12));
+                    //BCrypt.checkpw(current_pwd.getPass(), tkdto.getMatKhau())
+                    if (current_pwd.getPass().equals(tkdto.getMatKhau())) {
+                        //String pass = BCrypt.hashpw(confirm.getPass(), BCrypt.gensalt(12));
+                        String pass = confirm.getPass();
                         TaiKhoanDAO.getInstance().updatePass(nv.getEmail(), pass);
                         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                         current_pwd.setPass("");

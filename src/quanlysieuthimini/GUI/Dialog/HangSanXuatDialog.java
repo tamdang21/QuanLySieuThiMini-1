@@ -45,7 +45,13 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
     HeaderTitle headTite;
     JPanel top, main, bottom, all;
     InputForm ms, ms1;
-    DefaultTableModel tblModel;
+    DefaultTableModel tblModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        }
+        
+    };
     JTable table;
     JScrollPane scrollTable;
     ButtonCustom add, del, update;
@@ -106,7 +112,6 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         table.addMouseListener(this);
         scrollTable = new JScrollPane(table);
         scrollTable.setBackground(Color.WHITE);
-        tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã Hãng", "Tên Hãng", "Trụ Sở"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
