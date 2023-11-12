@@ -41,6 +41,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         }
         
     };
+    JScrollPane scrollTable;
     JTable table;
     ButtonCustom add, del, update;
     LoaiSanPhamBUS thBUS = new LoaiSanPhamBUS();
@@ -102,6 +103,8 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         table = new JTable();
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
+        scrollTable = new JScrollPane(table);
+
         table.setFocusable(false);
         String[] header = new String[]{"Mã Loại", "Tên Loại","Bảo Quản", "Mô Tả"};
         tblModel.setColumnIdentifiers(header);
@@ -111,9 +114,10 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setCellRenderer(centerRenderer);
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
+        columnModel.getColumn(2).setCellRenderer(centerRenderer);
+        columnModel.getColumn(3).setCellRenderer(centerRenderer);
         
-        JScrollPane scrollTable = new JScrollPane(table);
-        scrollTable.setBorder(new EmptyBorder(0, 0, 0, 0));
+        //scrollTable.setBorder(new EmptyBorder(0, 0, 0, 0));
         scrollTable.setViewportView(table);
         scrollTable.setPreferredSize(new Dimension(420, 250));
         
@@ -188,21 +192,21 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == update) {
             int index = getRowSelected();
             if (index != -1) {
-                if (Validation.isEmpty(ms.getText())) {
+                if (Validation.isEmpty(ms.getText()) || Validation.isEmpty(ms1.getText()) || Validation.isEmpty(ms2.getText())) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập Loại Sản Phẩm mới");
                 } else {
                     String tenLoai = ms.getText();
                     String CachBQ = ms1.getText();
                     String MoTa = ms2.getText();
-                    if (!thBUS.checkDup(tenLoai)) {
+//                    if (!thBUS.checkDup(tenLoai)) {
                         thBUS.update(new LoaiSanPhamDTO(list.get(index).getMaLoai(),tenLoai, CachBQ, MoTa));
                         loadDataTable(list);
                         ms.setText("");
                         ms1.setText("");
                         ms2.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Loại Sản Phẩm đã tồn tại !");
-                    }
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, "Loại Sản Phẩm đã tồn tại !");
+//                    }
                 }
             }
         } else if (e.getSource() == table) {

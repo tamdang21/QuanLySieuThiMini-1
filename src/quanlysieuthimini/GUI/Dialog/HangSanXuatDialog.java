@@ -123,6 +123,8 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setCellRenderer(centerRenderer);
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
+        columnModel.getColumn(2).setCellRenderer(centerRenderer);
+
         main.add(ms);
         main.add(ms1);
         main.add(scrollTable);
@@ -184,7 +186,7 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == update) {
             int index = getRowSelected();
             if (index != -1) {
-                if (Validation.isEmpty(ms.getText())) {
+                if (Validation.isEmpty(ms.getText()) || Validation.isEmpty(ms1.getText())) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin Hãng sản Xuất mới");
                 } else {
                     String tenHang = ms.getText();
@@ -196,14 +198,14 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
 //                        ms1.setText("");
 //                        dispose();
                     
-                    if (!msBUS.checkDup(tenHang)) {
+//                    if (!msBUS.checkDup(tenHang)) {
                         msBUS.update(new HangSanXuatDTO(list.get(index).getMaHang(), tenHang, TruSo));
                         loadDataTable(list);
                         ms.setText("");
                         ms1.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Hãng Sản Xuất đã tồn tại !");
-                    }
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, "Hãng Sản Xuất đã tồn tại !");
+//                    }
                 }
             }
         } else if (e.getSource() == table) {

@@ -1,5 +1,9 @@
 package quanlysieuthimini.GUI.Panel;
 
+import com.aspose.barcode.barcoderecognition.BarCodeReader;
+import com.aspose.barcode.barcoderecognition.BarCodeResult;
+import com.aspose.barcode.generation.BarcodeGenerator;
+import com.aspose.barcode.generation.EncodeTypes;
 import quanlysieuthimini.BUS.KhachHangThanThietBUS;
 import quanlysieuthimini.BUS.HoaDonBUS;
 import quanlysieuthimini.BUS.SanPhamBUS;
@@ -36,6 +40,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -334,69 +340,7 @@ public final class TaoHoaDon extends JPanel {
         content_btn.add(btnDelete);
 
         btnAddSp.addActionListener((e) -> {
-            if (checkInfo()) {
-                if (spBUS.getByMaSP(Integer.valueOf(txtMaSp.getText())).getSoLuong()
-                        < Integer.valueOf(txtSoLuongBan.getText())){
-                    JOptionPane.showMessageDialog(null, "Xin lỗi sản phẩm tồn kho không đủ!!!");
-                    this.txtMaSp.setText("");
-                    this.txtTenSp.setText("");
-                    this.txtGiaBan.setText("");
-                    this.txtSoLuongBan.setText("");
-                    txtMaVach.setText("");
-                    txtMaVach.setEditable(false);
-                    return;
-                }
-                getInfo();
-                if(checkRowExist(tableHoaDon)){
-                    int maSP = Integer.valueOf(txtMaSp.getText());
-                    double dongia = Double.valueOf(txtGiaBan.getText());
-                    int soLuongTxt = Integer.valueOf(txtSoLuongBan.getText());
-                    ArrayList<ChiTietHoaDonDTO> listCTHD = new ArrayList<>();
-                    for (ChiTietHoaDonDTO cthd : arrListCTHD){
-                        if (cthd.getMaSP() == maSP){
-                            int soLuongMoi = soLuongTxt + cthd.getSoLuong();
-                            cthd.setSoLuong(soLuongMoi);
-                            cthd.setThanhTien(soLuongMoi * dongia);   
-                        }
-                        listCTHD.add(cthd);
-                    }
-                    arrListCTHD = listCTHD;
-                    loadDataTableChiTietHoaDon(arrListCTHD);
-                }else{
-                    loadDataTableChiTietHoaDon(arrListCTHD);
-                }
-                this.txtMaSp.setText("");
-                this.txtTenSp.setText("");
-                this.txtGiaBan.setText("");
-                this.txtSoLuongBan.setText("");
-                txtMaVach.setText("");
-                txtMaVach.setEditable(false);
-            }
-        });
-        
-        btnEditSP.addActionListener((e) -> {
-           int index = tableHoaDon.getSelectedRow();
-           if (index < 0)
-               JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
-           else{
-                ChiTietHoaDonDTO arrCTHDDel = arrListCTHD.get(index);
-                SanPhamDTO spTon = listSP.get(index);
-                int masp = arrCTHDDel.getMaSP();
-                int soluongton = spTon.getSoLuong();
-                ArrayList<ChiTietHoaDonDTO> listCthd = new ArrayList<>();
-                for (ChiTietHoaDonDTO cthd : arrListCTHD) {
-                    if (cthd.getMaSP() == masp) {
-                        if (Integer.valueOf(txtSoLuongBan.getText()) <= soluongton)
-                            cthd.setSoLuong(Integer.valueOf(txtSoLuongBan.getText()));
-                        else
-                            JOptionPane.showMessageDialog(null, "Số lượng tồn không đủ. Vui lòng nhập lại");
-                    }
-                    listCthd.add(cthd);
-                }
-                arrListCTHD = listCthd;
-                loadDataTableChiTietHoaDon(arrListCTHD);
-                actionbtn("add");
-           }
+            addHandle();
         });
 
         btnDelete.addActionListener(new ActionListener() {
@@ -424,7 +368,6 @@ public final class TaoHoaDon extends JPanel {
         
 
         btnIExcel.addActionListener((ActionEvent e) -> {
-          
             
         });
 
@@ -632,35 +575,32 @@ public final class TaoHoaDon extends JPanel {
             HoaDon HoaDonPanel = new HoaDon(mainChinh, tk);
             mainChinh.setPanel(HoaDonPanel);
         });
-        
-        txtMaVach.getDocument().addDocumentListener(new DocumentListener(){
-             @Override
-            public void insertUpdate(DocumentEvent e) {
-                // Xử lý khi có dữ liệu được set vào JTextField
-                SwingUtilities.invokeLater(new Runnable(){
-                    @Override
-                    public void run(){
-                        try {
-                            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
-                            setInfoSanPham(sp);
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(null, "Lỗi mã vạch không tồn tại");
-                        }
-                    }
-                });
+
+        txtMaVach.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                // Xử lý khi dữ liệu bị xóa khỏi JTextField
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+                    setInfoSanPham(sp);
+                    addHandle();
+                }
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                // Xử lý khi dữ liệu thay đổi trong JTextField
+            public void keyReleased(KeyEvent e) {
             }
-        
+            
         });
+        
+        if(txtMaVach.getText().length() >= 13) {
+            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+            setInfoSanPham(sp);
+            addHandle();
+        }
         
         cbxPTTT.getCbb().addItemListener(new ItemListener() {
             @Override
@@ -669,8 +609,16 @@ public final class TaoHoaDon extends JPanel {
                     if(!cbxPTTT.getValue().equals("Tiền mặt")) {
                         try {
                             if(cbxPTTT.getValue().equals("Momo")) {
-                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_momo.jpg"));
-                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+//                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_momo.jpg"));
+//                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                                
+                                String qrCodeText = String.format("2|99|%s|%s|%s|0|0|%s", 
+                                                                    "0858212963", 
+                                                                    "Koong Chấn Phong", 
+                                                                    "koongchanphong0712@gmail.com", 
+                                                                    String.valueOf(sum*1000));
+                                BufferedImage qrImg = generateQRCodeImage(qrCodeText, 300, 280);
+                                qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(qrImg))));
                             }
                             else if(cbxPTTT.getValue().equals("MB Bank")) {
                                 BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_mbbank.jpg"));
@@ -708,10 +656,13 @@ public final class TaoHoaDon extends JPanel {
     }
 
     public void setInfoSanPham(SanPhamDTO sp) {
-        this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
-        this.txtTenSp.setText(sp.getTenSP());
-        this.txtGiaBan.setText(String.valueOf(sp.getDonGia()));
-        this.txtSoLuongBan.setText("1");
+        if(sp != null) {
+            this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
+            this.txtTenSp.setText(sp.getTenSP());
+            this.txtGiaBan.setText(String.valueOf(sp.getDonGia()));
+            this.txtSoLuongBan.setText("1");
+        }
+        
 //        listSP = sanphamBUS.getAll();
 //        int size = listSP.size();
 //        String[] arr = new String[size];
@@ -727,10 +678,19 @@ public final class TaoHoaDon extends JPanel {
 
     public boolean checkInfo() {
         boolean check = true;
-        if (txtMaSp.getText().equals("") || txtMaVach.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
+        
+        if(spBUS.getByMaVach(txtMaVach.getText()) == null && txtMaVach.getText().length() == 13 && txtMaSp.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Mã vạch này không tồn tại !!!");
+            System.err.println("Mã vạch này không tồn tại !!!");
             check = false;
         }
+        
+        else if (txtMaSp.getText().equals("") || txtMaVach.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
+            System.err.println("Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
+            check = false;
+        }
+        
 
         return check;
     }
@@ -832,7 +792,8 @@ public final class TaoHoaDon extends JPanel {
         makh = index;
         KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
         phantramgiam += khachhang.getChietKhauTheoDiem();
-        lbltongtien.setText(Formater.FormatVND(sum - (phantramgiam * sum)));
+        sum -= (phantramgiam * sum);
+        lbltongtien.setText(Formater.FormatVND(sum));
     }
     
     public void setKhuyenMai(int index) {
@@ -840,7 +801,8 @@ public final class TaoHoaDon extends JPanel {
         KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
         txtKM.setText(khuyenmai.getTenKM());
         phantramgiam += khuyenmai.getPhanTramKM();
-        lbltongtien.setText(Formater.FormatVND(sum - (phantramgiam * sum)));
+        sum -= (phantramgiam * sum);
+        lbltongtien.setText(Formater.FormatVND(sum));
     }
     
     public void loadDataTableSanPhamBottom (ArrayList<SanPhamDTO> arrSP){
@@ -902,6 +864,47 @@ public final class TaoHoaDon extends JPanel {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    public void addHandle() {
+        if (checkInfo()) {
+                if (spBUS.getByMaSP(Integer.valueOf(txtMaSp.getText())).getSoLuong()
+                        < Integer.valueOf(txtSoLuongBan.getText())){
+                    JOptionPane.showMessageDialog(null, "Xin lỗi sản phẩm tồn kho không đủ!!!");
+                    this.txtMaSp.setText("");
+                    this.txtTenSp.setText("");
+                    this.txtGiaBan.setText("");
+                    this.txtSoLuongBan.setText("");
+                    txtMaVach.setText("");
+                    txtMaVach.setEditable(false);
+                    return;
+                }
+                getInfo();
+                if(checkRowExist(tableHoaDon)){
+                    int maSP = Integer.valueOf(txtMaSp.getText());
+                    double dongia = Double.valueOf(txtGiaBan.getText());
+                    int soLuongTxt = Integer.valueOf(txtSoLuongBan.getText());
+                    ArrayList<ChiTietHoaDonDTO> listCTHD = new ArrayList<>();
+                    for (ChiTietHoaDonDTO cthd : arrListCTHD){
+                        if (cthd.getMaSP() == maSP){
+                            int soLuongMoi = soLuongTxt + cthd.getSoLuong();
+                            cthd.setSoLuong(soLuongMoi);
+                            cthd.setThanhTien(soLuongMoi * dongia);   
+                        }
+                        listCTHD.add(cthd);
+                    }
+                    arrListCTHD = listCTHD;
+                    loadDataTableChiTietHoaDon(arrListCTHD);
+                }else{
+                    loadDataTableChiTietHoaDon(arrListCTHD);
+                }
+                this.txtMaSp.setText("");
+                this.txtTenSp.setText("");
+                this.txtGiaBan.setText("");
+                this.txtSoLuongBan.setText("");
+                txtMaVach.setText("");
+                txtMaVach.setEditable(false);
+            }
     }
 
     public BufferedImage addLogoToQRCode(BufferedImage qrCodeImage, BufferedImage logo) {

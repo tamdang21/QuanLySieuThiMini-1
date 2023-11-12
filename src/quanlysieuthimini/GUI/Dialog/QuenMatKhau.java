@@ -150,6 +150,8 @@ public class QuenMatKhau extends JDialog implements ActionListener {
                         c.next(jpMain);
                         this.emailCheck = email;
                         String opt = SendEmailSMTP.getOTP();
+                        System.err.println("OTP: " + opt);
+                        System.err.println("Email: " + email);
                         SendEmailSMTP.sendOTP(email, opt);
                         TaiKhoanDAO.getInstance().sendOTP(email, opt);
                     }
