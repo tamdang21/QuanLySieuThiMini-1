@@ -144,6 +144,7 @@ public class ThongKeDAO {
                      FROM years
                      LEFT JOIN hoadon ON YEAR(hoadon.NgayLap) = years.year
                      LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD
+                     LEFT JOIN chitietphieunhap ON chitiethoadon.DonGia = chitietphieunhap.DonGia
                      GROUP BY years.year
                      ORDER BY years.year;""";
             PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);
@@ -275,8 +276,8 @@ public class ThongKeDAO {
                     + "     ) AS months\n"
                     + "LEFT JOIN hoadon ON MONTH(hoadon.NgayLap) = months.month AND YEAR(hoadon.NgayLap) = ? \n"
                     + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n"
-                    //+ "LEFT JOIN ctsanpham ON ctsanpham.MaHD = chitiethoadon.MaHD AND ctsanpham.maphienbansp = chitiethoadon.maphienbansp\n"
-                    //+ "LEFT JOIN chitietphieunhap ON ctsanpham.MaPN = chitietphieunhap.MaPN AND ctsanpham.maphienbansp = chitietphieunhap.maphienbansp\n"
+                    + "LEFT JOIN sanpham ON sanpham.MaSP = chitiethoadon.MaSP\n"
+                    + "LEFT JOIN chitietphieunhap ON sanpham.MaSP = chitietphieunhap.MaSP\n"
                     + "GROUP BY months.month\n"
                     + "ORDER BY months.month;";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -344,8 +345,8 @@ public class ThongKeDAO {
                     + ") AS dates\n"
                     + "LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date\n"
                     + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n"
-                    //+ "LEFT JOIN ctsanpham ON ctsanpham.MaHD = chitiethoadon.MaHD AND ctsanpham.maphienbansp = chitiethoadon.maphienbansp\n"
-                    //+ "LEFT JOIN chitietphieunhap ON ctsanpham.MaPN = chitietphieunhap.MaPN AND ctsanpham.maphienbansp = chitietphieunhap.maphienbansp\n"
+                    + "LEFT JOIN sanpham ON sanpham.MaSP = chitiethoadon.MaSP\n"
+                    + "LEFT JOIN chitietphieunhap ON sanpham.MaSP = chitietphieunhap.MaSP\n"
                     + "GROUP BY dates.date\n"
                     + "ORDER BY dates.date;";
             PreparedStatement pst = con.prepareStatement(sql);
