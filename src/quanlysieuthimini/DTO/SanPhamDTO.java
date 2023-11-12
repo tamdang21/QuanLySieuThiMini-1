@@ -14,6 +14,11 @@ public class SanPhamDTO {
     private double DonGia;
     private Date NgaySanXuat, HanSuDung;
 
+    @Override
+    public String toString() {
+        return "SanPhamDTO{" + "MaSP=" + MaSP + ", MaLoai=" + MaLoai + ", MaHang=" + MaHang + ", MaDV=" + MaDV + ", TrangThai=" + TrangThai + ", TenSP=" + TenSP + ", MaVach=" + MaVach + ", HinhAnh=" + HinhAnh + ", SoLuong=" + SoLuong + ", DungTich=" + DungTich + ", DonGia=" + DonGia + ", NgaySanXuat=" + NgaySanXuat + ", HanSuDung=" + HanSuDung + '}';
+    }
+    
     public SanPhamDTO() {
     }
 
