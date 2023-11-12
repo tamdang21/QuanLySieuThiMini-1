@@ -177,12 +177,11 @@ public class QuenMatKhau extends JDialog implements ActionListener {
                 }
             }
         } else if (e.getSource() == btnChangePass){
-            String pass = txtPassword.getText().trim();
-            if(pass.equals("")){
+            String password = txtPassword.getText().trim();
+            if(password.equals("")){
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
             } else {
                 //String password = BCrypt.hashpw(pass, BCrypt.gensalt(12));
-                String password = pass;
                 TaiKhoanDAO.getInstance().updatePass(this.emailCheck, password);
                 TaiKhoanDAO.getInstance().sendOTP(emailCheck, "null");
                JOptionPane.showMessageDialog(this, "Thay đổi mật khẩu thành công");

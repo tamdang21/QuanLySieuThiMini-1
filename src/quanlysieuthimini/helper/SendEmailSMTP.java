@@ -14,12 +14,13 @@ public class SendEmailSMTP {
     
     public static void sendOTP(String emailTo, String otp) {
         String username = "dominhquan15623@gmail.com";
-        String password = "yanfuiwhtlszbhoh";
+        String password = "xmbo tkvp wsss vdoo";
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true"); //TLS
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {

@@ -61,6 +61,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
     }
     
     public void updatePass(String email, String password){
+        int result;
         try {
             Connection con = ConnectionDB.openConnection();
             String sql = "UPDATE taikhoan tk join nhanvien nv on tk.MaNV=nv.MaNV SET MatKhau=? WHERE Email=?";
@@ -68,6 +69,8 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
             
             pst.setString(1, password);
             pst.setString(2, email);
+            
+            result = pst.executeUpdate();
             
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {
@@ -103,6 +106,7 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
     }
     
     public void sendOTP(String email, String opt){
+        int result;
         try {
             Connection con = ConnectionDB.openConnection();
             String sql = "UPDATE taikhoan tk join nhanvien nv on tk.MaNV=nv.MaNV SET OTP=? WHERE Email=?";
@@ -110,6 +114,8 @@ public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO>{
             
             pst.setString(1, opt);
             pst.setString(2, email);
+            
+            result = pst.executeUpdate();
             
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {
