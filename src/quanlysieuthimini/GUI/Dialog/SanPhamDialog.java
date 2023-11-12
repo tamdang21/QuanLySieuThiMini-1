@@ -246,19 +246,22 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
             SanPhamDTO snNew = new SanPhamDTO();
             try{
-                snNew = getInfo();
+                if(validateInput())
+                    if(validateData()){
+                        snNew = getInfo();
+                        if(!snNew.getHinhAnh().equalsIgnoreCase(this.sp.getHinhAnh())){
+                            snNew.setHinhAnh(addImage(snNew.getHinhAnh()));
+                        }
+                        snNew.setMaSP(this.sp.getMaSP());
+                        SanPhamDAO.getInstance().update(sp);
+                        this.jpSP.spBUS.update(snNew);
+                        this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
+                        dispose();
+                    }
             }catch(Exception ex){
-                System.out.println("getinfo");
-                System.out.println(ex);
+                Logger.getLogger(SanPhamDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(!snNew.getHinhAnh().equalsIgnoreCase(this.sp.getHinhAnh())){
-                snNew.setHinhAnh(addImage(snNew.getHinhAnh()));
-            }
-            snNew.setMaSP(this.sp.getMaSP());
-            SanPhamDAO.getInstance().update(sp);
-            this.jpSP.spBUS.update(snNew);
-            this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
-            dispose();
+            
             
         }
         if(source == btnHuyBo){
@@ -267,8 +270,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
     public boolean validateData() throws Exception{
         boolean check = true;
-        if(!Validation.isNumber(dongia.getText())){
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho đơn giá"); 
+        if(!Validation.isNumber(dongia.getText()) && !Validation.isDouble(dongia.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho đơn giá");
             check = false;
         }
         if(!Validation.isNumber(soluong.getText())){
@@ -283,15 +286,19 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, "Hạn sử dụng phải đặt sau ngày sản xuất");
             check = false;
         }
+        if(!Validation.isNumber(mavach.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho mã vạch");
+            check = false;
+        }
         return check;
     }
     public boolean validateInput() throws Exception{
         boolean check = true;
-        if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty(hanSD.getDate().toString())
+        if (Validation.isEmpty(tenSP.getText()) ||hanSD.getDate() == null
                 || Validation.isEmpty(hangsx.getValue()) || Validation.isEmpty(loaisp.getValue())
                 || Validation.isEmpty(donvi.getValue()) || Validation.isEmpty(soluong.getText())
                 || Validation.isEmpty(mavach.getText()) || Validation.isEmpty(dongia.getText()) 
-                || Validation.isEmpty(dungtich.getText()) || Validation.isEmpty(ngaySX.getDate().toString())
+                || Validation.isEmpty(dungtich.getText()) || ngaySX.getDate() == null 
                 || Validation.isEmpty(hinhanh.getUrl_img()) || Validation.isEmpty(mavach.getText())) {
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
@@ -325,7 +332,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         
     }
     public SanPhamDTO getInfo() throws Exception{
-        String hinhanh = this.hinhanh.getUrl_img();
+                System.out.print(this.hinhanh.getUrl_img());
+
+        String vhinhanh = this.hinhanh.getUrl_img();
+        System.out.print(vhinhanh);
         String vtensp = tenSP.getText();
         int mahangsx = hangsxBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaHang();
         int maloaisp = loaispBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaLoai();
@@ -336,8 +346,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         int vdungtich = Integer.parseInt(dungtich.getText());
         Date vngaySX = ngaySX.getDate();
         Date vhanSD = hanSD.getDate();
-        
-        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,hinhanh,1);
+        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,vhinhanh,1);
         return result;
     }
 }

@@ -19,7 +19,21 @@ public class Validation {
         }
         return pat.matcher(email).matches();
     }
-
+    
+    public static boolean isDouble(String num) {
+        boolean result = true;
+        if (num == null) return false;
+        try {
+            double k = Double.parseDouble(num);
+            if(k < 0) {
+                result = false;
+            }
+        } catch (NumberFormatException e) {
+            result = false;
+        }
+        return result;
+    }
+    
     public static boolean isNumber(String num) {
         boolean result = true;
         if (num == null) return false;
