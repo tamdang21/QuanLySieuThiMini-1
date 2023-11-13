@@ -47,18 +47,18 @@ public class MenuTaskbar extends JPanel {
     CaLamViec calamviec;
     ThongKe thongKe;
     String[][] getSt = {
-        {"Bán hàng", "home.svg", "banhang"},
-        {"Nhập hàng", "home.svg", "nhaphang"},
-        {"Sản phẩm", "product.svg", "sanpham"},
+        {"Bán hàng", "sale.svg", "banhang"},
+        {"Nhập hàng", "import.svg", "nhaphang"},
+        {"Sản phẩm", "food.svg", "sanpham"},
         {"Thành phần", "brand.svg", "thanhphan"},
-        {"Nhân viên", "area.svg", "nhanvien"},
-        {"Khách hàng", "import.svg", "khachhang"},
-        {"Nhà cung cấp", "export.svg", "nhacungcap"},
-        {"Khuyến mãi", "customer.svg", "khuyenmai"},
-        {"Phân công ca", "supplier.svg", "phancongca"},
+        {"Nhân viên", "employees.svg", "nhanvien"},
+        {"Khách hàng", "customer.svg", "khachhang"},
+        {"Nhà cung cấp", "supplier.svg", "nhacungcap"},
+        {"Khuyến mãi", "promotion.svg", "khuyenmai"},
+        {"Phân công ca", "divide.svg", "phancongca"},
         {"Tài khoản", "account.svg", "taikhoan"},
         {"Phân quyền", "permission.svg", "phanquyen"},
-        {"Thống kê", "statistical.svg", "thongke"},
+        {"Thống kê", "statistics.svg", "thongke"},
         {"Đăng xuất", "log_out.svg", "dangxuat"}, 
     };
 
