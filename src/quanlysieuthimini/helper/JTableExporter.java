@@ -1,5 +1,7 @@
 package quanlysieuthimini.helper;
 
+import java.awt.Desktop;
+import java.io.File;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -59,6 +61,12 @@ public class JTableExporter {
             }
 
             workbook.close();
+            try {
+                File path = new File(filePath);
+                Desktop.getDesktop().open(path);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
         }
     }
 }
