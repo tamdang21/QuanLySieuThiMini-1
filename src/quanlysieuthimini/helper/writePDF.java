@@ -44,8 +44,12 @@ import quanlysieuthimini.BUS.KhachHangThanThietBUS;
 import quanlysieuthimini.BUS.DonViBUS;
 import quanlysieuthimini.BUS.HangSanXuatBUS;
 import quanlysieuthimini.BUS.LoaiSanPhamBUS;
+import quanlysieuthimini.BUS.NhaCungCapBUS;
+import quanlysieuthimini.BUS.PhieuNhapBUS;
+import quanlysieuthimini.DAO.PhieuChiDAO;
 import quanlysieuthimini.DTO.ChiTietHoaDonDTO;
 import quanlysieuthimini.DTO.ChiTietPhieuNhapDTO;
+import quanlysieuthimini.DTO.PhieuChiDTO;
 
 public class writePDF {
 
@@ -62,6 +66,8 @@ public class writePDF {
     Font fontBoldItalic15;
     
     KhachHangThanThietBUS khachhangBUS = new KhachHangThanThietBUS();
+    NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+    PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
     KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
     DonViBUS donviBUS = new DonViBUS();
     HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
@@ -288,7 +294,7 @@ public void writePN(int maphieu) {
             HoaDonDTO hd = HoaDonDAO.getInstance().getById(maphieu);
             // Thêm dòng Paragraph vào file PDF
 
-            Paragraph paragraph1 = new Paragraph("Mã phiếu: HD-" + hd.getMaHD(), fontNormal10);
+            Paragraph paragraph1 = new Paragraph("Mã phiếu: HD" + hd.getMaHD(), fontNormal10);
             String hoten = khachhangBUS.getTenKhachHang(hd.getMaKH());
             Paragraph paragraph2 = new Paragraph("khách hàng: " + hoten, fontNormal10);
             paragraph2.add(new Chunk(createWhiteSpace(5)));
@@ -385,7 +391,96 @@ public void writePN(int maphieu) {
 
     
     public void WritePhieuChi(int mapc) {
-        
+        String url = "";
+        try {
+            fd.setTitle("In phiếu chi");
+            fd.setLocationRelativeTo(null);
+            url = getFile(mapc+"");
+            if (url.equals("nullnull")) {
+                return;
+            }
+            url = url + ".pdf";
+            file = new FileOutputStream(url);
+            document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, file);
+            document.open();
+
+            Paragraph company = new Paragraph("Hệ thống quản lý siêu thị mini", fontBold15);
+            company.add(new Chunk(createWhiteSpace(20)));
+            company.setAlignment(Element.ALIGN_LEFT);
+            document.add(company);
+            // Thêm tên công ty vào file PDF
+            document.add(Chunk.NEWLINE);
+            
+            PhieuChiDTO hd = PhieuChiDAO.getInstance().getById(mapc);
+            
+            Paragraph header = new Paragraph("PHIẾU CHI", fontBold25);
+            Paragraph paragraph1 = new Paragraph("Mã phiếu: PC" + hd.getMaPC(), fontNormal10);
+            Date today = new Date(System.currentTimeMillis());
+            Paragraph paragraph10 = new Paragraph("Ngày: " + Formater.FormatDate(today), fontNormal10);
+            header.setAlignment(Element.ALIGN_CENTER);
+            paragraph1.setAlignment(Element.ALIGN_CENTER);
+            paragraph10.setAlignment(Element.ALIGN_CENTER);
+            document.add(header);
+            document.add(paragraph1);
+            document.add(paragraph10);
+            document.add(Chunk.NEWLINE);
+            
+            // Thêm dòng Paragraph vào file PDF
+            String ngtao = NhanVienDAO.getInstance().getById(hd.getMaNV()).getTenNV();
+            Paragraph paragraph3 = new Paragraph("Người tạo phiếu:      " + ngtao, fontNormal10);
+            paragraph3.add(new Chunk(createWhiteSpace(3)));
+            paragraph3.add(new Chunk("-"));
+            paragraph3.add(new Chunk(createWhiteSpace(3)));
+            paragraph3.add(new Chunk("Mã số: NV" + hd.getMaNV(), fontNormal10));
+            
+            String hotenNguoiNhan = nccBUS.getTenNhaCungCap(phieunhapBUS.getById(hd.getMaPN()).getMaNCC());
+            Paragraph paragraph2 = new Paragraph("Họ tên người nhận:      " + hotenNguoiNhan, fontNormal10);
+            
+            Paragraph paragraph4 = new Paragraph("Thời gian nhập:      " + formatDate.format(hd.getNgayChi()), fontNormal10);
+            
+            Paragraph paragraph5 = new Paragraph("Lí do chi:      " + hd.getLyDoChi(), fontNormal10);
+            paragraph5.add(new Chunk(createWhiteSpace(20)));
+            paragraph5.add(new Chunk("Số tiền chi:      " + Formater.FormatVND(hd.getSoTienChi()), fontNormal10));
+            
+            Paragraph paragraph6 = new Paragraph("Số tiền bằng chữ: " , fontNormal10);
+            
+            Paragraph paragraph7 = new Paragraph("Ghi chú: " + hd.getGhiChu(), fontNormal10);
+            
+            document.add(paragraph3);
+            document.add(Chunk.NEWLINE);
+            document.add(paragraph2);
+            document.add(Chunk.NEWLINE);
+            document.add(paragraph4);
+            document.add(Chunk.NEWLINE);
+            document.add(paragraph5);
+            document.add(Chunk.NEWLINE);
+            document.add(paragraph6);
+            document.add(Chunk.NEWLINE);
+            document.add(paragraph7);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            
+            Paragraph paragraph = new Paragraph();
+            paragraph.setIndentationLeft(22);
+            paragraph.add(new Chunk("Người nhận", fontBoldItalic15));
+            paragraph.add(new Chunk(createWhiteSpace(90)));
+            paragraph.add(new Chunk("Người chi", fontBoldItalic15));
+
+            Paragraph sign = new Paragraph();
+            sign.setIndentationLeft(20);
+            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
+            sign.add(new Chunk(createWhiteSpace(85)));
+            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
+            document.add(paragraph);
+            document.add(sign);
+            document.close();
+            writer.close();
+            openFile(url);
+
+        } catch (DocumentException | FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Lỗi khi ghi file " + url);
+        }
     }
 }
 

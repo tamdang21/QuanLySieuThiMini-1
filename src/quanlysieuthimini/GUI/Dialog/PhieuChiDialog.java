@@ -46,17 +46,14 @@ import quanlysieuthimini.GUI.Panel.PhieuNhap;
 public final class PhieuChiDialog extends JDialog implements ActionListener {
 
     HeaderTitle titlePage;
-    JPanel pnmain, pnmain_top, pnmain_bottom, pnmain_btn;
-    InputForm txtMaPhieu, txtNhanVien, txtNhaCungCap, txtThoiGian, txtSoTienChi;
-    DefaultTableModel tblModel, tblModelImei;
-    JTable table, tblImei;
-    JScrollPane scrollTable, scrollTableImei;
+    JPanel pnmain, pnmain_top, pnmain_btn;
+    InputForm txtMaPhieu, txtNhanVien, txtNhaCungCap, txtThoiGian, txtSoTienChi, txtLiDoChi, txtGhiChu;
 
     PhieuChiDTO phieuchi;
     PhieuChiBUS phieuchiBUS;
     PhieuNhap phieunhap;
 
-    ButtonCustom btnPdf, btnHuyBo, btnChinhSua;
+    ButtonCustom btnPdf, btnHuyBo;
 
     ArrayList<PhieuChiDTO> listPC;
     PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
@@ -81,7 +78,6 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
             manv = phieunhapBUS.getById(mapn).getMaNV();
             initComponent(phieunhap, title);
             initPhieuChi();
-            loadDataTablePhieuChi(listPC);
             this.setVisible(true);
         }
     }
@@ -93,6 +89,8 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
             txtNhanVien.setText(nvBUS.getById(manv).getTenNV());
             txtThoiGian.setText(Formater.FormatDate(phieuchi.getNgayChi()));
             txtSoTienChi.setText(Formater.FormatVND(phieuchi.getSoTienChi()));
+            txtLiDoChi.setText(phieuchi.getLyDoChi());
+            txtGhiChu.setText("");
         }
     }
     
@@ -104,16 +102,6 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
         return true;
     }
 
-    public void loadDataTablePhieuChi(ArrayList<PhieuChiDTO> arrPC) {
-        tblModel.setRowCount(0);
-        for (PhieuChiDTO phieuchi : arrPC) {
-            tblModel.addRow(new Object[]{
-                phieuchi.getLyDoChi(),
-                phieuchi.getGhiChu()
-            });
-        }
-    }
-
     public void initComponent(PhieuNhap phieunhap, String title) {
         this.setSize(new Dimension(1100, 500));
         this.setLayout(new BorderLayout(0, 0));
@@ -121,44 +109,30 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
 
         pnmain = new JPanel(new BorderLayout());
 
-        pnmain_top = new JPanel(new GridLayout(1, 5));
+        pnmain_top = new JPanel(new GridLayout(3, 3));
         txtMaPhieu = new InputForm("Mã phiếu");
         txtNhanVien = new InputForm("Tên người chi");
         txtNhaCungCap = new InputForm("Tên người nhận");
         txtSoTienChi = new InputForm("Số tiền chi");
         txtThoiGian = new InputForm("Ngày chi");
+        txtLiDoChi = new InputForm("Lí do chi");
+        txtGhiChu = new InputForm("Ghi chú");
 
         txtMaPhieu.setEditable(false);
         txtNhanVien.setEditable(false);
         txtNhaCungCap.setEditable(false);
         txtSoTienChi.setEditable(false);
         txtThoiGian.setEditable(false);
+        txtLiDoChi.setEditable(false);
+        txtGhiChu.setEditable(false);
 
         pnmain_top.add(txtMaPhieu);
         pnmain_top.add(txtNhanVien);
         pnmain_top.add(txtNhaCungCap);
         pnmain_top.add(txtSoTienChi);
         pnmain_top.add(txtThoiGian);
-
-        //pnmain_bottom = new JPanel(new BorderLayout(5, 5));
-        pnmain_bottom = new JPanel(new GridLayout(1, 1));
-        pnmain_bottom.setBorder(new EmptyBorder(5, 5, 5, 5));
-        pnmain_bottom.setBackground(Color.WHITE);
-
-        table = new JTable();
-        scrollTable = new JScrollPane();
-        tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã phiếu chi", "Lý do chi", "Ghi chú"};
-        tblModel.setColumnIdentifiers(header);
-        table.setModel(tblModel);
-        table.setFocusable(false);
-        scrollTable.setViewportView(table);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.setDefaultRenderer(Object.class, centerRenderer);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        
-        pnmain_bottom.add(scrollTable);
+        pnmain_top.add(txtLiDoChi);
+        pnmain_top.add(txtGhiChu);
 
         pnmain_btn = new JPanel(new FlowLayout());
         pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -166,29 +140,14 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
         
         btnPdf = new ButtonCustom("Xuất file PDF", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        //btnDuyetPhieuNhap = new ButtonCustom("Phê duyệt", "return", 14);
-        btnChinhSua = new ButtonCustom("Chỉnh sửa", "success", 14);
-        
-//        if(maquyen == 1) {
-//            btnChinhSua.setVisible(true);
-//            //btnDuyetPhieuNhap.setVisible(true);
-//        }
-//        else {
-//            btnChinhSua.setVisible(false);
-//        }
         
         btnPdf.addActionListener(this);
         btnHuyBo.addActionListener(this);
-        //btnDuyetPhieuNhap.addActionListener(this);
-        btnChinhSua.addActionListener(this);
         
-        pnmain_btn.add(btnChinhSua);
-        //pnmain_btn.add(btnDuyetPhieuNhap);
         pnmain_btn.add(btnPdf);
         pnmain_btn.add(btnHuyBo);
 
-        pnmain.add(pnmain_top, BorderLayout.NORTH);
-        pnmain.add(pnmain_bottom, BorderLayout.CENTER);
+        pnmain.add(pnmain_top, BorderLayout.CENTER);
         pnmain.add(pnmain_btn, BorderLayout.SOUTH);
 
         this.add(titlePage, BorderLayout.NORTH);
@@ -207,13 +166,6 @@ public final class PhieuChiDialog extends JDialog implements ActionListener {
             if (this.phieuchi != null) {
                 w.WritePhieuChi(phieuchi.getMaPC());
             }
-        }
-//        if (source == btnDuyetPhieuNhap) {
-//            PhieuNhapDAO.getInstance().getById(Integer.parseInt(txtMaPhieu.getText())).setTrangThai(2);
-//            phieunhap.loadDataTalbe(phieunhapBUS.getAll());
-//        }
-        if (source == btnChinhSua) {
-            
         }
     }
 }
