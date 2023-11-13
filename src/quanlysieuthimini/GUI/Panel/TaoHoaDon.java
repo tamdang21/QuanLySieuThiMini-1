@@ -91,7 +91,6 @@ public final class TaoHoaDon extends JPanel {
     int manv;
     int makh = -1, makm = -1;
     String type;
-    double phantramgiam = 0;
 
     SanPhamBUS spBUS = new SanPhamBUS();
     HoaDonBUS hoadonBUS = new HoaDonBUS();
@@ -122,6 +121,7 @@ public final class TaoHoaDon extends JPanel {
     private Main mainChinh;
     private ButtonCustom btnQuayLai;
     private InputForm txtGiaBan;
+    private ButtonCustom btnKh;
 
     public TaoHoaDon(Main mainChinh, TaiKhoanDTO tk, String type) {
         this.mainChinh = mainChinh;
@@ -297,13 +297,14 @@ public final class TaoHoaDon extends JPanel {
         jpanelMaVach.add(jPanelChonMaVach, BorderLayout.EAST);
 
         txtMaVach = new JTextField();
+        txtMaVach.setEditable(true);
         txtMaVach.setSize(new Dimension(0, 0));
         txtMaVach.setBorder(BorderFactory.createLineBorder(new Color(204, 204, 204)));
-        this.txtMaVach.setEditable(false);
+        //this.txtMaVach.setEditable(false);
         
         scanMaVach.addActionListener((ActionEvent e) -> {
 //            new QRCode_Dialog(owner, "Scan", true, txtMaVach);
-              txtMaVach.setEditable(true);
+              //txtMaVach.setEditable(true);
               txtMaVach.requestFocus();
         });
         
@@ -363,7 +364,37 @@ public final class TaoHoaDon extends JPanel {
                     loadDataTableChiTietHoaDon(arrListCTHD);
                 }
                 actionbtn("add");
+                resetForm();
             }
+        });
+        
+        btnEditSP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = tableHoaDon.getSelectedRow();
+            if (index < 0)
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn dòng cần sửa");
+            else{
+                 ChiTietHoaDonDTO arrCTHDDel = arrListCTHD.get(index);
+                 SanPhamDTO spTon = listSP.get(index);
+                 int masp = arrCTHDDel.getMaSP();
+                 int soluongton = spTon.getSoLuong();
+                 ArrayList<ChiTietHoaDonDTO> listCthd = new ArrayList<>();
+                 for (ChiTietHoaDonDTO cthd : arrListCTHD) {
+                     if (cthd.getMaSP() == masp) {
+                        if (Integer.valueOf(txtSoLuongBan.getText()) >= soluongton)
+                            cthd.setSoLuong(Integer.valueOf(txtSoLuongBan.getText()));
+                        else
+                            JOptionPane.showMessageDialog(null, "Số lượng tồn không đủ. Vui lòng nhập lại");
+                     }
+                     listCthd.add(cthd);
+                 }
+                 arrListCTHD = listCthd;
+                 loadDataTableChiTietHoaDon(arrListCTHD);
+                 actionbtn("add");
+            }
+            }
+            
         });
         
 
@@ -420,7 +451,7 @@ public final class TaoHoaDon extends JPanel {
         kJPanelLeft.setOpaque(false);
         kJPanelLeft.setPreferredSize(new Dimension(40, 0));
         
-        ButtonCustom btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
+        btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
         btnKh.addActionListener((ActionEvent e) -> {
             new ListKhachHang(TaoHoaDon.this, owner, "Chọn khách hàng", true);
         });
@@ -654,6 +685,14 @@ public final class TaoHoaDon extends JPanel {
             tblModelSP.addRow(new Object[]{sp.getMaSP(), sp.getTenSP(), sp.getSoLuong()});
         }
     }
+    
+    public void resetForm() {
+        this.txtMaSp.setText("");
+        this.txtTenSp.setText("");
+        this.txtGiaBan.setText("");
+        this.txtSoLuongBan.setText("");
+        this.txtMaVach.setText("");
+    }
 
     public void setInfoSanPham(SanPhamDTO sp) {
         if(sp != null) {
@@ -791,39 +830,20 @@ public final class TaoHoaDon extends JPanel {
     public void setKhachHang(int index) {
         makh = index;
         KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
-        phantramgiam += khachhang.getChietKhauTheoDiem();
-        sum -= (phantramgiam * sum);
+        float phantramgiamKH = (float) khachhang.getChietKhauTheoDiem();
+        sum -= (phantramgiamKH * sum);
         lbltongtien.setText(Formater.FormatVND(sum));
+        txtKH.setText(khachhang.getTenKH());
+        txtKH.setEditable(false);
+        btnKh.setEnabled(false);
     }
     
     public void setKhuyenMai(int index) {
         makm = index;
         KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
         txtKM.setText(khuyenmai.getTenKM());
-        phantramgiam += khuyenmai.getPhanTramKM();
-        sum -= (phantramgiam * sum);
-        lbltongtien.setText(Formater.FormatVND(sum));
-    }
-    
-    public void loadDataTableSanPhamBottom (ArrayList<SanPhamDTO> arrSP){
-        tblModel.setRowCount(0);
-        int size = arrSP.size();
-        sum = 0;
-        for (int i = 0; i < size; i++) {
-            //PhienBanSanPhamDTO phienban = sanphamBUS.getByMaPhienBan(arrCTHD.get(i).getMaphienbansp());
-            SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrSP.get(i).getMaSP());
-            sum += arrSP.get(i).getDonGia();
-            tblModel.addRow(new Object[]{
-                i + 1, 
-                sanpham.getMaSP(), 
-                loaispBUS.getTenLoai(sanpham.getMaLoai()),
-                hangsxBUS.getTenHang(sanpham.getMaHang()),
-                sanpham.getDungTich() + " " + donviBUS.getTenDonVi(sanpham.getMaDV()),
-                Formater.FormatVND(arrSP.get(i).getDonGia()),
-                1,
-                Formater.FormatVND((arrSP.get(i).getDonGia())*(arrSP.get(i).getSoLuong()))
-            });
-        }
+        float phantramgiamKM = (float) khuyenmai.getPhanTramKM();
+        sum -= (phantramgiamKM * sum);
         lbltongtien.setText(Formater.FormatVND(sum));
     }
 
@@ -876,7 +896,6 @@ public final class TaoHoaDon extends JPanel {
                     this.txtGiaBan.setText("");
                     this.txtSoLuongBan.setText("");
                     txtMaVach.setText("");
-                    txtMaVach.setEditable(false);
                     return;
                 }
                 getInfo();
@@ -903,7 +922,6 @@ public final class TaoHoaDon extends JPanel {
                 this.txtGiaBan.setText("");
                 this.txtSoLuongBan.setText("");
                 txtMaVach.setText("");
-                txtMaVach.setEditable(false);
             }
     }
 
