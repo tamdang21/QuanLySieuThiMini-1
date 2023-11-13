@@ -62,6 +62,7 @@ public class NhanVienDAO implements DAOInterface<NhanVienDTO>{
             pst.setDouble(7, t.getLuong());
             pst.setString(8, t.getHinhAnh());
             pst.setInt(9, t.getTrangThai());
+            pst.setInt(10,t.getMaNV());
             
             result = pst.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);

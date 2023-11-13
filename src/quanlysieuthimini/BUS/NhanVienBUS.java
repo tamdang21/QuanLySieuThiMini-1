@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
@@ -117,7 +118,13 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                 if (nv.getRow() < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
                 } else {
-                    deleteNv(nv.getNhanVien());
+                    int input = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc chắn muốn xóa nhân viên này!", "Xóa nhân viên",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if (input == 0) {
+                        deleteNv(nv.getNhanVien());
+
+                    }
                 }
             }
             case "CHI TIẾT" -> {
@@ -205,10 +212,16 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         try {
             if (!list.isEmpty()) {
                 JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setDialogTitle("Chọn đường dẫn lưu file Excel");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("XLSX files", "xlsx");
+                jFileChooser.setFileFilter(filter);
+                jFileChooser.setAcceptAllFileFilterUsed(false);
                 jFileChooser.showSaveDialog(nv.owner);
                 File saveFile = jFileChooser.getSelectedFile();
                 if (saveFile != null) {
-                    saveFile = new File(saveFile.toString() + ".xlsx");
+                    if (!saveFile.toString().toLowerCase().endsWith(".xlsx")) {
+                        saveFile = new File(saveFile.toString() + ".xlsx");
+                    }
                     Workbook wb = new XSSFWorkbook();
                     Sheet sheet = wb.createSheet("Nhân viên");
 
