@@ -70,6 +70,7 @@ import quanlysieuthimini.DTO.ChiTietThanhToanDTO;
 import quanlysieuthimini.DTO.KhuyenMaiDTO;
 import quanlysieuthimini.GUI.Dialog.ChonMaVach;
 import quanlysieuthimini.GUI.Dialog.ListKhuyenMai;
+import quanlysieuthimini.helper.writePDF;
 
 public final class TaoHoaDon extends JPanel {
 
@@ -90,6 +91,7 @@ public final class TaoHoaDon extends JPanel {
     int maHD;
     int manv;
     int makh = -1, makm = -1;
+    double tienGiam = 0;
     String type;
 
     SanPhamBUS spBUS = new SanPhamBUS();
@@ -101,6 +103,7 @@ public final class TaoHoaDon extends JPanel {
     HinhThucThanhToanBUS htttBUS = new HinhThucThanhToanBUS();
     KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
     ChiTietThanhToanBUS ctttBUS = new ChiTietThanhToanBUS();
+    
     
     //public JTextArea textAreaMaVach;
     private JLabel labelMaVach;
@@ -595,6 +598,11 @@ public final class TaoHoaDon extends JPanel {
                         spBUS.updateQuantity(maSP, soLuong);
                     }
                     khachHangBUS.upDiemTichLuy(makh, 1);
+                    int selectPrint = JOptionPane.showConfirmDialog(null, "Bạn có muốn in bóa đơn không !", "Xác nhận in hóa đơn", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if (selectPrint == 0){
+                        writePDF pdf = new writePDF();
+                        pdf.writeHoaDon(maHD, tienGiam);
+                    }
                     JOptionPane.showMessageDialog(null, "Thanh toán thành công !");
                     mainChinh.setPanel(new HoaDon(mainChinh, tk));
                 }
@@ -831,6 +839,7 @@ public final class TaoHoaDon extends JPanel {
         KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
         float phantramgiamKH = (float) khachhang.getChietKhauTheoDiem();
         sum -= (phantramgiamKH * sum);
+        tienGiam += sum;
         lbltongtien.setText(Formater.FormatVND(sum));
         txtKH.setText(khachhang.getTenKH());
         txtKH.setEditable(false);
@@ -843,6 +852,7 @@ public final class TaoHoaDon extends JPanel {
         txtKM.setText(khuyenmai.getTenKM());
         float phantramgiamKM = (float) khuyenmai.getPhanTramKM();
         sum -= (phantramgiamKM * sum);
+        tienGiam += sum;
         lbltongtien.setText(Formater.FormatVND(sum));
     }
 
