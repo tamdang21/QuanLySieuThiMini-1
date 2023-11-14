@@ -85,6 +85,7 @@ public class CaLamViecBUS implements ActionListener, DocumentListener {
         switch (btn) {
             case "THÊM" -> {
                 CaLamViecDialog clvthem = new CaLamViecDialog(this, clv.owner, true, "Thêm ca mới", "create");
+
             }
             case "SỬA" -> {
                 int index = clv.getRow();
