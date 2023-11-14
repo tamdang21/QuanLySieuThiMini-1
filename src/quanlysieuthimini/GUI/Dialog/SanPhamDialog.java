@@ -62,7 +62,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
    SanPhamDTO sp;
    private HeaderTitle titlePage;
    private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
-   private ButtonCustom btnThemCHMS, btnHuyBo, btnAddSanPham, btnViewCauHinh, btnQuetMa;
+   private ButtonCustom btnThemCHMS, btnHuyBo, btnAddSanPham, btnViewCauHinh;
    InputForm tenSP, dongia, soluong, dungtich, mavach;
    InputDate ngaySX, hanSD;
    SelectForm hangsx, loaisp, donvi;
@@ -82,7 +82,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
    int masp;
    int mach;
    private ButtonCustom btnEditCT;
-   private ButtonCustom btnSaveCH;
+   private ButtonCustom btnEditSP;
 
    public void init(SanPham jpSP) {
        this.jpSP = jpSP;
@@ -150,19 +150,14 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
        pnbottom.setBackground(Color.white);
        switch (type){
             case "update" -> {
-                btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
-                btnSaveCH.addActionListener(this);
-                pnbottom.add(btnSaveCH);
+                btnEditSP = new ButtonCustom("Lưu thông tin", "success", 14);
+                btnEditSP.addActionListener(this);
+                pnbottom.add(btnEditSP);
             }
             case "create" -> {
                 btnAddSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
                 btnAddSanPham.addActionListener(this);
-                
-                btnQuetMa = new ButtonCustom("Quét mã", "excel", 14);
-                btnQuetMa.addActionListener(this);
-                
                 pnbottom.add(btnAddSanPham);
-                pnbottom.add(btnQuetMa);
             }
         }
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
@@ -233,16 +228,16 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                Logger.getLogger(SanPhamDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else if(source == btnQuetMa) {
-            System.out.println("Quét mã");
-        }
+//        else if(source == btnQuetMa) {
+//            System.out.println("Quét mã");
+//        }
         else if (source == btnViewCauHinh) {
             CardLayout c = (CardLayout) pnmain.getLayout();
             c.next(pnmain);
         } else if (source == btnEditCT){
             CardLayout c = (CardLayout) pnmain.getLayout();
             c.next(pnmain); 
-        } else if(source == btnSaveCH){
+        } else if(source == btnEditSP){
 
             SanPhamDTO snNew = new SanPhamDTO();
             try{
