@@ -256,7 +256,7 @@ public class MenuTaskbar extends JPanel {
         listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                calamviec = new CaLamViec(main);
+                calamviec = new CaLamViec(main, user);
                 main.setPanel(calamviec);
             }
         });

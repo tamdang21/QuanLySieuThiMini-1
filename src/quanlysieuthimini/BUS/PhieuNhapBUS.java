@@ -144,8 +144,8 @@ public class PhieuNhapBUS {
         return result;
     }
     
-    public boolean checkHuyPhieuNhap(int maphieu) {
-        if(maphieu == 1)
+    public boolean checkHuyPhieuNhap(PhieuNhapDTO pn) {
+        if(pn.getTrangThai() == 1)
             return true;
         return false;
     }

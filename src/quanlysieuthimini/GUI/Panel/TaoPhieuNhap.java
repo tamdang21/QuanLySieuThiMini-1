@@ -18,6 +18,11 @@ import quanlysieuthimini.GUI.Component.SelectForm;
 import quanlysieuthimini.GUI.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import quanlysieuthimini.helper.Formater;
 import quanlysieuthimini.helper.Validation;
 import java.awt.event.ActionEvent;
@@ -25,6 +30,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -36,6 +43,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -68,6 +76,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     SelectForm cbxNhaCungCap, cbxHinhThucThanhToan;
     JTextField txtTimKiem;
     JLabel lbltongtien;
+    double sum;
     Main m;
     Color BackgroundColor = new Color(240, 247, 250);
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -269,12 +278,20 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
         btnDelete = new ButtonCustom("Xoá sản phẩm", "danger", 14);
         btnQuetMa = new ButtonCustom("Quét mã", "excel", 14);
+        
+        btnQuetMa.addActionListener((ActionEvent e) -> {
+              txtMaVach.requestFocus();
+              System.err.println("btnQuetMa");
+        });
+        
+        
+        
         btnAddSp.addActionListener(this);
         btnEditSP.addActionListener(this);
         btnDelete.addActionListener(this);
-        btnQuetMa.addActionListener(this);
         btnEditSP.setEnabled(false);
         btnDelete.setEnabled(false);
+        
         content_btn.add(btnAddSp);
         content_btn.add(btnQuetMa);
         content_btn.add(btnEditSP);
@@ -319,6 +336,32 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         right_center.setPreferredSize(new Dimension(100, 100));
         right_center.setOpaque(false);
         
+        txtMaVach.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+                    setInfoSanPham(sp);
+                    addCtPhieu();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            
+        });
+        
+        if(txtMaVach.getText().length() >= 13) {
+            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+            setInfoSanPham(sp);
+            addCtPhieu();
+        }
+        
         JLabel qrThanhToan = new JLabel();
         
         cbxHinhThucThanhToan.getCbb().addItemListener(new ItemListener() {
@@ -328,8 +371,16 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
                     if(!cbxHinhThucThanhToan.getValue().equals("Tiền mặt")) {
                         try {
                             if(cbxHinhThucThanhToan.getValue().equals("Momo")) {
-                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_momo.jpg"));
-                                qrThanhToan.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+//                                BufferedImage image = ImageIO.read(this.getClass().getResource("/images/product/qr_momo.jpg"));
+//                                qrThanhToan.setIcon(new ImageIcon(scale(new ImageIcon(image))));
+                                
+                                String qrCodeText = String.format("2|99|%s|%s|%s|0|0|%s", 
+                                                                    "0858212963", 
+                                                                    "Koong Chấn Phong", 
+                                                                    "koongchanphong0712@gmail.com", 
+                                                                    String.valueOf(sum));
+                                BufferedImage qrImg = generateQRCodeImage(qrCodeText, 300, 280);
+                                qrThanhToan.setIcon(new ImageIcon(scale(new ImageIcon(qrImg))));
 
                             }
                             else if(cbxHinhThucThanhToan.getValue().equals("MB Bank")) {
@@ -411,6 +462,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
                 Formater.FormatVND(ctPhieu.get(i).getThanhTien())
             });
         }
+        sum = (double) phieunhapBus.getTongTien(ctPhieu);
         lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTongTien(ctPhieu)));
     }
 
@@ -454,8 +506,15 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     }
 
     public boolean validateNhap() {
-        if (Validation.isEmpty(txtMaSp.getText())) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm", "Chọn sản phẩm", JOptionPane.WARNING_MESSAGE);
+        if(spBUS.getByMaVach(txtMaVach.getText()) == null && txtMaVach.getText().length() == 13 && txtMaSp.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Mã vạch này không tồn tại !!!");
+            System.err.println("Mã vạch này không tồn tại !!!");
+            return false;
+        }
+        
+        else if (txtMaSp.getText().equals("") || txtMaVach.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
+            System.err.println("Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
             return false;
         } 
         else if (Validation.isEmpty(txtSoLuong.getText())) {
@@ -463,6 +522,25 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
             return false;
         }
         return true;
+    }
+    
+    public BufferedImage generateQRCodeImage(String text, int width, int height) {
+        try {
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height, hints);
+            BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int rgbColor = bitMatrix.get(x, y) ? Color.BLACK.getRGB() : Color.WHITE.getRGB();
+                    bufferedImage.setRGB(x, y, rgbColor);
+                }
+            }
+            return bufferedImage;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void addCtPhieu() {
@@ -493,7 +571,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
                 this.txtDongia.setText("");
                 this.txtSoLuong.setText("");
                 txtMaVach.setText("");
-                txtMaVach.setEditable(false);
+                //txtMaVach.setEditable(false);
             
             
 //            if(listCTPN.isEmpty()) {
@@ -611,9 +689,6 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         else if (source == btnNhapHang) {
             eventBtnNhapHang();
         }
-        else if(source == btnQuetMa) {
-            JOptionPane.showMessageDialog(this, "Chức năng không khả dụng !", "Thông báo", JOptionPane.WARNING_MESSAGE);
-        }
     }
 
     public void eventBtnNhapHang() {
@@ -639,15 +714,6 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
                             int mapc = PhieuChiDAO.getInstance().getAutoIncrement();
                             String lidochi = "Nhập hàng";
                             String ghichu = "";
-                            
-                            System.err.println("Ma PC: " + mapc);
-                            System.err.println("Ma PN: " + maphieunhap);
-                            System.err.println("Ma NV: " + nvDto.getMaNV());
-                            System.err.println("Ten nguoi chi: " + nvDto.getTenNV());
-                            System.err.println("Li do chi" + lidochi);
-                            System.err.println("Ghi chu" + ghichu);
-                            System.err.println("Ngay chi" + currenTime);
-                            System.err.println("So tien chi" + phieunhapBus.getTongTien(listCTPN));
 
                             PhieuChiDTO pc = new PhieuChiDTO(mapc, maphieunhap, nvDto.getMaNV(), nvDto.getTenNV(), lidochi, ghichu, currenTime, phieunhapBus.getTongTien(listCTPN));
                             boolean result2 = phieuchiBUS.add(pc);

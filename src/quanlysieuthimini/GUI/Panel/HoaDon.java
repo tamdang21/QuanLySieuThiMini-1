@@ -230,19 +230,7 @@ public final class HoaDon extends JPanel implements ActionListener, KeyListener,
             }
         } 
         else if (source == mainFunction.btn.get("cancel")) {
-//            if (tableHoaDon.getSelectedRow() < 0) {
-//                JOptionPane.showMessageDialog(null, "Vui lòng chọn phiếu!");
-//            } else {
-//                int n = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa phiếu này?", "Xóa phiếu", JOptionPane.YES_NO_OPTION);
-//                if (n == JOptionPane.YES_OPTION) {
-//                    HoaDonDTO px = pxBUS.getSelect(tableHoaDon.getSelectedRow());
-//                    pxBUS.cancel(px.getMaphieu());
-//                    pxBUS.remove(tableHoaDon.getSelectedRow());
-//                    loadDataTalbe(pxBUS.getAll());
-//                    Notification notification = new Notification(m, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Hủy phiếu thành công");
-//                    notification.showNotification();
-//                }
-//            }
+            JOptionPane.showMessageDialog(this, "Chức năng không khả dụng !", "Thông báo", JOptionPane.WARNING_MESSAGE);
         } 
         else if (source == search.btnReset) {
             resetForm();

@@ -87,50 +87,11 @@ public class CaLamViecDialog extends JDialog {
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.setBackground(Color.white);
         String[] tenca = {"Sáng", "Chiều", "Tối", "Khuya"};
+        
         name = new JComboBox<>(tenca);
-//        sdt = new InputForm("Số điện thoại");
-//        PlainDocument phonex = (PlainDocument) sdt.getTxtForm().getDocument();
-//        phonex.setDocumentFilter((new NumericDocumentFilter()));
         gioBD = new InputForm("Giờ bắt đầu");
         gioKT = new InputForm("Giờ kết thúc");
         luongtheoca = new InputForm("Lương theo ca");
-//        JPanel jpanelG = new JPanel(new GridLayout(2, 1, 0, 2));
-//        jpanelG.setBackground(Color.white);
-//        jpanelG.setBorder(new EmptyBorder(10, 10, 10, 10));
-//        JPanel jgender = new JPanel(new GridLayout(1, 2));
-//        jgender.setSize(new Dimension(500, 80));
-//        jgender.setBackground(Color.white);
-//        jgender.add(male);
-//        jgender.add(female);
-//        JLabel labelGender = new JLabel("Giới tính");
-//        jpanelG.add(labelGender);
-//        jpanelG.add(jgender);
-        // batdau
-//        JPanel jpanelBD = new JPanel();
-//        jpanelBD.setBorder(new EmptyBorder(10, 10, 10, 10));
-//        JLabel lbBd = new JLabel("Ngày bắt đầu");
-//        lbBd.setSize(new Dimension(100, 100));
-//        jpanelBD.setSize(new Dimension(500, 100));
-//        jpanelBD.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        jpanelBD.setBackground(Color.white);
-//        ngayBD.setSize(new Dimension(100, 100));
-//        jpanelBD.add(lbBd);
-//        jpanelBD.add(ngayBD);
-        // ketthuc
-//        JPanel jpanelKT = new JPanel();
-//        jpanelKT.setBorder(new EmptyBorder(10, 10, 10, 10));
-//        JLabel lbKt = new JLabel("Ngày kết thúc");
-//        lbKt.setSize(new Dimension(100, 100));
-//        jpanelKT.setSize(new Dimension(500, 100));
-//        jpanelKT.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        jpanelKT.setBackground(Color.white);
-//        ngayKT.setSize(new Dimension(100, 100));
-
-//        jpanelBD.add(lbBd);
-//        jpanelBD.add(ngayBD);
-//
-//        jpanelKT.add(lbKt);
-//        jpanelKT.add(ngayKT);
 
         main.add(name);
         main.add(gioBD);

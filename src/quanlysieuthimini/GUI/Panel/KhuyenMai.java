@@ -130,7 +130,7 @@ public final class KhuyenMai extends JPanel {
             tblModel.addRow(new Object[]{
                 khuyenMai.getMaKM(), 
                 khuyenMai.getTenKM(), 
-                "≥ "+ decimalFormat.format(khuyenMai.getDieuKienKM()*1000) + " đ", 
+                "≥ "+ decimalFormat.format(khuyenMai.getDieuKienKM()) + " đ", 
                 ((double) Math.floor(khuyenMai.getPhanTramKM() * 10) / 10)*100 + " %", 
                 khuyenMai.getNgayBatDau(), 
                 khuyenMai.getNgayKetThuc(),

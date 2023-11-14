@@ -25,20 +25,22 @@ public class PhieuChiDAO implements DAOInterface<PhieuChiDTO>{
         try {
             Connection con = (Connection) ConnectionDB.openConnection();
             String sql = "INSERT into phieuchi "
-                        + "(MaPC,MaNV,TenNguoiChi,NgayChi,LyDoChi,SoTienChi,GhiChu) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        + "(MaPC,MaPN,MaNV,TenNguoiChi,NgayChi,LyDoChi,SoTienChi,GhiChu) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             
             pst.setInt(1,t.getMaPC());
-            pst.setInt(2,t.getMaNV());
-            pst.setString(3,t.getTenNguoiChi());
-            pst.setTimestamp(4, t.getNgayChi());
-            pst.setString(5,t.getLyDoChi());
-            pst.setDouble(6,t.getSoTienChi());
-            pst.setString(7,t.getGhiChu());
+            pst.setInt(2,t.getMaPN());
+            pst.setInt(3,t.getMaNV());
+            pst.setString(4,t.getTenNguoiChi());
+            pst.setTimestamp(5, t.getNgayChi());
+            pst.setString(6,t.getLyDoChi());
+            pst.setDouble(7,t.getSoTienChi());
+            pst.setString(8,t.getGhiChu());
             
             result = pst.executeUpdate()>=1;
+            
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {
             Logger.getLogger(LoaiSanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,12 +57,12 @@ public class PhieuChiDAO implements DAOInterface<PhieuChiDTO>{
         if (connect != null) {
             try {
                 String sql = "UPDATE phieuchi SET "
-                        + "MaPC=? , MaNV=? ,TenNguoiChi = ?,NgayChi =?,LyDoChi =?,SoTienChi =?, GhiChu =?"
+                        + "MaPN=? , MaNV=? ,TenNguoiChi = ?,NgayChi =?,LyDoChi =?,SoTienChi =?, GhiChu =?"
                         + "WHERE MaPC=?";
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement pst = connect.prepareStatement(sql);
                 
-                pst.setInt(1,t.getMaPC());
+                pst.setInt(1,t.getMaPN());
                 pst.setInt(2,t.getMaNV());
                 pst.setString(3,t.getTenNguoiChi());
                 pst.setTimestamp(4, t.getNgayChi());

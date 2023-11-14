@@ -3,11 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Log_In.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoHoaDon.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DTO/KhachHangThanThietDTO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/BeginForm.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/database/quanlysieuthimini.sql</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/CaLamViecDialog.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/HoaDon.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListNhanVienPCC.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListKhachHang.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/CaLamViecDAO.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/LoaiSanPhamDialog.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/PhanCongCa.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/CaLamViec.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaiKhoan.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListNhanVien.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListCaLamViecPCC.java</file>
         </group>
     </open-files>
 </project-private>

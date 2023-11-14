@@ -14,8 +14,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import quanlysieuthimini.DTO.TaiKhoanDTO;
 
 public class CaLamViec extends JPanel {
     public JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -31,8 +33,11 @@ public class CaLamViec extends JPanel {
     MainFunction mainFunction;
     ArrayList<CaLamViecDTO> listclv = clvBUS.getAll();
     DecimalFormat decimalFormat;
-    public CaLamViec(Main m){
+    TaiKhoanDTO tk;
+    
+    public CaLamViec(Main m, TaiKhoanDTO tk){
         this.m = m;
+        this.tk = tk;
         initComponent();
         tableCaLamViec.setDefaultEditor(Object.class, null);
         loadDataTalbe(listclv);
@@ -79,8 +84,8 @@ public class CaLamViec extends JPanel {
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
-        String[] action = {"create", "update", "delete", "detail"};
-        mainFunction = new MainFunction(m.user.getMaQuyen(), "khuyenmai", action);
+        String[] action = {"create", "update", "delete", "detail", "phancongca"};
+        mainFunction = new MainFunction(m.user.getMaQuyen(), "banhang", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(clvBUS);
         }
@@ -124,7 +129,7 @@ public class CaLamViec extends JPanel {
         tblModel.setRowCount(0);
         for (CaLamViecDTO caLamViec : listclv) {
             tblModel.addRow(new Object[]{
-                    caLamViec.getMaCa(), caLamViec.getTenCa(), caLamViec.getGioBatDau(), caLamViec.getGioKetThuc(), decimalFormat.format(caLamViec.getLuongTheoCa()*1000) + " đ"
+                    caLamViec.getMaCa(), caLamViec.getTenCa(), caLamViec.getGioBatDau(), caLamViec.getGioKetThuc(), decimalFormat.format(caLamViec.getLuongTheoCa()) + " đ"
             });
             System.out.println(caLamViec.getGioBatDau());
         }
@@ -135,4 +140,13 @@ public class CaLamViec extends JPanel {
     public CaLamViecDTO getCaLamViec() {
         return listclv.get(tableCaLamViec.getSelectedRow());
     }
+    
+    public TaiKhoanDTO getTaiKhoan() {
+        return this.tk;
+    }
+    
+    public Main getMain() {
+        return this.m;
+    }
+    
 }

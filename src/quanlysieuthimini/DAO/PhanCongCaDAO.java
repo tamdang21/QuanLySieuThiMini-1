@@ -28,7 +28,7 @@ public class PhanCongCaDAO implements ChiTietInterface<PhanCongCaDTO>{
         boolean result = false;
         try {
             Connection con = ConnectionDB.openConnection();
-            String sql = "DELETE FROM phancongca WHERE MaCa = ?";
+            String sql = "Update phancongca set `TrangThai` = 0 WHERE MaCa = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             
             pst.setInt(1, id);
@@ -70,6 +70,27 @@ public class PhanCongCaDAO implements ChiTietInterface<PhanCongCaDTO>{
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             
             pst.setInt(1, id);
+            
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int MaCa = rs.getInt("MaCa");
+                int MaNV = rs.getInt("MaNV");
+                String Thu = rs.getString("Thu");
+                PhanCongCaDTO dvt = new PhanCongCaDTO(MaCa, MaNV, Thu);
+                result.add(dvt);
+            }
+            ConnectionDB.closeConnection(con);
+        } catch (SQLException e) {
+        }
+        return result;
+    }
+    
+    public ArrayList<PhanCongCaDTO> getAllNotId() {
+        ArrayList<PhanCongCaDTO> result = new ArrayList<PhanCongCaDTO>();
+        try {
+            Connection con = ConnectionDB.openConnection();
+            String sql = "SELECT * FROM phancongca WHERE TrangThai = 1";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             
             ResultSet rs = (ResultSet) pst.executeQuery();
             while (rs.next()) {

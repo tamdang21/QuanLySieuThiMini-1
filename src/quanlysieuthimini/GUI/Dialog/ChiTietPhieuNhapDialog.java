@@ -227,6 +227,21 @@ public final class ChiTietPhieuNhapDialog extends JDialog implements ActionListe
                 phieunhapPanel.loadDataTalbe(phieunhapBus.getAll());
 
                 JOptionPane.showMessageDialog(this, "Duyệt phiếu nhập thành công");
+                
+                ArrayList<HashMap> listCTPN = new ArrayList<>();
+                    for (ChiTietPhieuNhapDTO ctpn : chitietphieu){
+                        HashMap<String,Integer> map = new HashMap<>();
+                        map.put("maSP",ctpn.getMaSP());
+                        map.put("soLuong",ctpn.getSoLuong());
+                        listCTPN.add(map);
+                    }
+                    for (HashMap<Integer,Integer> map : listCTPN){
+                        int maSP = map.get("maSP");
+                        int soLuong = sanPhamBUS.getById(maSP).getSoLuong() + map.get("soLuong");
+                        sanPhamBUS.updateQuantity(maSP, soLuong);
+                    }
+                JOptionPane.showMessageDialog(this, "Đã cập nhật tồn kho");
+                
                 dispose();
             }
             

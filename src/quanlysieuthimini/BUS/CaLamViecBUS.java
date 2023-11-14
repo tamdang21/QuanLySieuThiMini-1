@@ -1,25 +1,29 @@
 package quanlysieuthimini.BUS;
 
 import quanlysieuthimini.DAO.CaLamViecDAO;
-import quanlysieuthimini.DAO.KhuyenMaiDAO;
 import quanlysieuthimini.DTO.CaLamViecDTO;
-import quanlysieuthimini.DTO.KhuyenMaiDTO;
 import quanlysieuthimini.GUI.Dialog.CaLamViecDialog;
-import quanlysieuthimini.GUI.Dialog.KhuyenMaiDialog;
 import quanlysieuthimini.GUI.Panel.CaLamViec;
-import quanlysieuthimini.GUI.Panel.KhuyenMai;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import quanlysieuthimini.DAO.PhanCongCaDAO;
+import quanlysieuthimini.DTO.PhanCongCaDTO;
+import quanlysieuthimini.GUI.Panel.PhanCongCa;
 
 public class CaLamViecBUS implements ActionListener, DocumentListener {
     public CaLamViec clv;
     private JTextField textField;
     public ArrayList<CaLamViecDTO> listClv = CaLamViecDAO.getInstance().getAll();
+    public PhanCongCaDAO phancongcaDAO = PhanCongCaDAO.getInstance();
+    public NhanVienBUS nvBUS = new NhanVienBUS();
     
     public CaLamViecBUS() {
         
@@ -33,8 +37,46 @@ public class CaLamViecBUS implements ActionListener, DocumentListener {
         this.textField = textField;
         this.clv = clv;
     }
+    
     public ArrayList<CaLamViecDTO> getAll() {
         return this.listClv;
+    }
+    
+    public ArrayList<PhanCongCaDTO> getAllNotId() {
+        return phancongcaDAO.getAllNotId();
+    }
+    
+    public CaLamViecDTO getById(int maca) {
+        return CaLamViecDAO.getInstance().getById(maca);
+    }
+    
+    public ArrayList<PhanCongCaDTO> selectPCC(int maca) {
+        return phancongcaDAO.getAll(maca);
+    }
+    
+    public String getTenCa(int maca) {
+        String name = "";
+        for (CaLamViecDTO clv : listClv) {
+            if (clv.getMaCa()== maca) {
+                name = clv.getTenCa();
+            }
+        }
+        return name;
+    }
+    
+    public void insertPCC(PhanCongCaDTO pcc) {
+        ArrayList<PhanCongCaDTO> arrPCC = new ArrayList<>();
+        arrPCC.add(pcc);
+        phancongcaDAO.insert(arrPCC);
+    }
+    
+    public String[] getArrTenCa() {
+        int size = listClv.size();
+        String[] result = new String[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = listClv.get(i).getTenCa();
+        }
+        return result;
     }
 
     @Override
@@ -66,13 +108,15 @@ public class CaLamViecBUS implements ActionListener, DocumentListener {
                     CaLamViecDialog clvctiet = new CaLamViecDialog(this, clv.owner, true, "Xem ca làm việc", "detail", clv.getCaLamViec());
                 }
             }
-//            case "NHẬP EXCEL" -> {
-////                importExcel();
-//            }
-//            case "XUẤT EXCEL" -> {
-//                String[] header = new String[]{"MãKM", "Tên khuyến mãi", "Điều kiện", "Phần trăm KM", "Ngày BĐ", "Ngày KT"};
-//                exportExcel(listKm, header);
-//            }
+            case "PHÂN CÔNG" -> {
+                if (clv.getTaiKhoan().getMaQuyen() != 1) {
+                    JOptionPane.showMessageDialog(null, "Bạn không có quyền truy cập vào chức năng này");
+                } else {
+                    PhanCongCa phancong = new PhanCongCa(clv.getMain(), clv.getTaiKhoan());
+                    clv.getMain().setPanel(phancong);
+                }
+                
+            }
         }
         clv.loadDataTalbe(listClv);
     }
@@ -122,6 +166,45 @@ public class CaLamViecBUS implements ActionListener, DocumentListener {
     public void searchLoadTable(ArrayList<CaLamViecDTO> list) {
         clv.loadDataTalbe(list);
     }
+    
+    public CaLamViecDTO getByIndex(int index) {
+        return this.listClv.get(index);
+    }
+    
+    public ArrayList<PhanCongCaDTO> fillerPCC(int type, String input, int maca, int manv, String thu) {
+        ArrayList<PhanCongCaDTO> result = new ArrayList<>();
+        for (PhanCongCaDTO pcc : getAllNotId()) {
+            boolean match = false;
+            switch (type) {
+                case 0 -> {
+                    if (getTenCa(pcc.getMaCa()).toLowerCase().contains(input)
+                        || nvBUS.getNameById(pcc.getMaNV()).toLowerCase().contains(input)) {
+                        
+                        match = true;
+                    }
+                }
+                case 1 -> {
+                    if (getTenCa(pcc.getMaCa()).toLowerCase().contains(input)) {
+                        match = true;
+                    }
+                }
+                case 2 -> {
+                    if (nvBUS.getNameById(pcc.getMaNV()).toLowerCase().contains(input)) {
+                        match = true;
+                    }
+                }
+            }
+
+            if (match && (manv == 0 || pcc.getMaNV() == manv) 
+                      && (maca == 0 || pcc.getMaCa()== maca)) {
+                
+                result.add(pcc);
+            }
+        }
+
+        return result;
+    }
+    
     public ArrayList<CaLamViecDTO> search(String text) {
         String luachon = (String) clv.search.cbxChoose.getSelectedItem();
         text = text.toLowerCase();

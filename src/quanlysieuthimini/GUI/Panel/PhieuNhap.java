@@ -303,11 +303,11 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !", "Huỷ phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     PhieuNhapDTO pn = listPhieu.get(index);
-                    System.out.println(pn);
-                    if (!phieunhapBUS.checkHuyPhieuNhap(pn.getMaPN())) {
+                    if (!phieunhapBUS.checkHuyPhieuNhap(pn)) {
                         JOptionPane.showMessageDialog(null, "Sản phẩm đã được nhập vào nên không thể hủy!!");
                     } 
                     else {
+                        // Xử lý hủy phiếu
                         int c = phieunhapBUS.cancelPhieuNhap(pn.getMaPN());
                         if (c == 0) {
                             JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");

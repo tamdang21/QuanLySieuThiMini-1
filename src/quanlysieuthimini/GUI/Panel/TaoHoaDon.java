@@ -382,7 +382,7 @@ public final class TaoHoaDon extends JPanel {
                  ArrayList<ChiTietHoaDonDTO> listCthd = new ArrayList<>();
                  for (ChiTietHoaDonDTO cthd : arrListCTHD) {
                      if (cthd.getMaSP() == masp) {
-                        if (Integer.valueOf(txtSoLuongBan.getText()) >= soluongton)
+                        if (Integer.valueOf(txtSoLuongBan.getText()) <= soluongton)
                             cthd.setSoLuong(Integer.valueOf(txtSoLuongBan.getText()));
                         else
                             JOptionPane.showMessageDialog(null, "Số lượng tồn không đủ. Vui lòng nhập lại");
@@ -396,10 +396,9 @@ public final class TaoHoaDon extends JPanel {
             }
             
         });
-        
 
         btnIExcel.addActionListener((ActionEvent e) -> {
-            
+            JOptionPane.showMessageDialog(this, "Chức năng không khả dụng !", "Thông báo", JOptionPane.WARNING_MESSAGE);
         });
 
         left_top.add(content_top, BorderLayout.CENTER);
@@ -647,7 +646,7 @@ public final class TaoHoaDon extends JPanel {
                                                                     "0858212963", 
                                                                     "Koong Chấn Phong", 
                                                                     "koongchanphong0712@gmail.com", 
-                                                                    String.valueOf(sum*1000));
+                                                                    String.valueOf(sum));
                                 BufferedImage qrImg = generateQRCodeImage(qrCodeText, 300, 280);
                                 qrCodeLabel.setIcon(new ImageIcon(scale(new ImageIcon(qrImg))));
                             }

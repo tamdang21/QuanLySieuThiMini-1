@@ -470,7 +470,7 @@ public void writePN(int maphieu) {
             Paragraph sign = new Paragraph();
             sign.setIndentationLeft(20);
             sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            sign.add(new Chunk(createWhiteSpace(85)));
+            sign.add(new Chunk(createWhiteSpace(80)));
             sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
             document.add(paragraph);
             document.add(sign);
