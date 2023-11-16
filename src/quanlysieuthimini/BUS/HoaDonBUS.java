@@ -40,6 +40,11 @@ public class HoaDonBUS {
         hoadonDAO.insert(hd);
         chiTietHoaDonDAO.insert(ct);
     }
+    
+    public void insertNotKH(HoaDonDTO hd, ArrayList<ChiTietHoaDonDTO> ct) {
+        hoadonDAO.insertNotKH(hd);
+        chiTietHoaDonDAO.insert(ct);
+    }
 
     public double getTongThanhTien(int maHD){
         double tong = 0;

@@ -96,7 +96,7 @@ public class ThongKeTongQuan extends JPanel {
         pnlChart.setOpaque(false);
         pnlChart.setLayout(new BorderLayout(0, 0));
         chart = new CurveChart();
-        chart.addLegend("Vốn", new Color(12, 84, 175), new Color(0, 108, 247));
+        chart.addLegend("Chi phí", new Color(12, 84, 175), new Color(0, 108, 247));
         chart.addLegend("Doanh thu", new Color(54, 4, 143), new Color(104, 49, 200));
         chart.addLegend("Lợi nhuận", new Color(211, 84, 0), new Color(230, 126, 34));
 

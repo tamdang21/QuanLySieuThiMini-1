@@ -578,10 +578,19 @@ public final class TaoHoaDon extends JPanel {
                     long now = System.currentTimeMillis();
                     int maHTTT = htttBUS.getByIndex(cbxPTTT.getSelectedIndex()).getMaHTTT();
                     Timestamp currenTime = new Timestamp(now);
-                    if(makh == -1)
-                        makh = 2;
-                    HoaDonDTO HoaDon = new HoaDonDTO(maHD, makh, makm, tk.getMaNV(), currenTime, sum, 1);
-                    hoadonBUS.insert(HoaDon, arrListCTHD);
+                    
+                    HoaDonDTO HoaDon;
+                    if(makh == -1) {
+                        HoaDon = new HoaDonDTO(maHD, makm, tk.getMaNV(), currenTime, sum, 1);
+                        hoadonBUS.insertNotKH(HoaDon, arrListCTHD);
+                    }
+                    else {
+                        HoaDon = new HoaDonDTO(maHD, makh, makm, tk.getMaNV(), currenTime, sum, 1);
+                        hoadonBUS.insert(HoaDon, arrListCTHD);
+                        khachHangBUS.upDiemTichLuy(makh, 1);
+                    }
+                    
+                    
                     ChiTietThanhToanDTO cttt = new ChiTietThanhToanDTO(maHD,maHTTT,sum,currenTime);
                     arrListCTTT.add(cttt);
                     ctttBUS.add(arrListCTTT);
@@ -597,7 +606,7 @@ public final class TaoHoaDon extends JPanel {
                         int soLuong = spBUS.getById(maSP).getSoLuong() - map.get("soLuong");
                         spBUS.updateQuantity(maSP, soLuong);
                     }
-                    khachHangBUS.upDiemTichLuy(makh, 1);
+                    
                     int selectPrint = JOptionPane.showConfirmDialog(null, "Bạn có muốn in bóa đơn không !", "Xác nhận in hóa đơn", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     if (selectPrint == 0){
                         writePDF pdf = new writePDF();

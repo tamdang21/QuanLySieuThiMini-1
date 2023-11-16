@@ -130,23 +130,23 @@ public class ThongKeDAO {
             String sqlSetStartYear = "SET @start_year = ?;";
             String sqlSetEndYear = "SET @end_year = ?;";
             String sqlSelect = """
-                     WITH RECURSIVE years(year) AS (
-                       SELECT @start_year
-                       UNION ALL
-                       SELECT year + 1
-                       FROM years
-                       WHERE year < @end_year
-                     )
-                     SELECT 
-                       years.year AS nam,
-                       COALESCE(SUM(chitietphieunhap.DonGia), 0) AS chiphi, 
-                       COALESCE(SUM(chitiethoadon.DonGia), 0) AS doanhthu
-                     FROM years
-                     LEFT JOIN hoadon ON YEAR(hoadon.NgayLap) = years.year
-                     LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD
-                     LEFT JOIN chitietphieunhap ON chitiethoadon.DonGia = chitietphieunhap.DonGia
-                     GROUP BY years.year
-                     ORDER BY years.year;""";
+                     WITH RECURSIVE years(year) AS ( 
+                                                    SELECT @start_year 
+                                                    UNION ALL 
+                                                    SELECT year + 1 
+                                                    FROM years 
+                                                    WHERE year < @end_year 
+                     				) 
+                                                 SELECT years.year AS nam, 
+                                                 COALESCE(SUM(chitietphieunhap.SoLuong * chitietphieunhap.DonGia), 0) AS chiphi, 
+                                                 COALESCE(SUM(chitiethoadon.SoLuong * chitiethoadon.DonGia), 0) AS doanhthu 
+                                                 FROM years 
+                                                 LEFT JOIN phieunhap ON YEAR(phieunhap.NgayNhap) = years.year AND phieunhap.TrangThai = 2
+                                                 LEFT JOIN chitietphieunhap ON phieunhap.MaPN = chitietphieunhap.MaPN 
+                                                 LEFT JOIN hoadon ON YEAR(hoadon.NgayLap) = years.year 
+                                                 LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD 
+                                                 GROUP BY years.year 
+                                                 ORDER BY years.year;""";
             PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);
             PreparedStatement pstEndYear = con.prepareStatement(sqlSetEndYear);
             PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
@@ -257,9 +257,10 @@ public class ThongKeDAO {
         ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();
         try {
             Connection con = ConnectionDB.openConnection();
+            
             String sql = "SELECT months.month AS thang, \n"
-                    + "       COALESCE(SUM(chitietphieunhap.DonGia), 0) AS chiphi,\n"
-                    + "       COALESCE(SUM(chitiethoadon.DonGia), 0) AS doanhthu\n"
+                    + " COALESCE(SUM(chitietphieunhap.SoLuong * chitietphieunhap.DonGia), 0) AS chiphi,\n" 
+                    + " COALESCE(SUM(chitiethoadon.SoLuong * chitiethoadon.DonGia), 0) AS doanhthu\n"
                     + "FROM (\n"
                     + "       SELECT 1 AS month\n"
                     + "       UNION ALL SELECT 2\n"
@@ -274,14 +275,16 @@ public class ThongKeDAO {
                     + "       UNION ALL SELECT 11\n"
                     + "       UNION ALL SELECT 12\n"
                     + "     ) AS months\n"
-                    + "LEFT JOIN hoadon ON MONTH(hoadon.NgayLap) = months.month AND YEAR(hoadon.NgayLap) = ? \n"
+                    + "LEFT JOIN phieunhap ON MONTH(phieunhap.NgayNhap) = months.month AND YEAR(phieunhap.NgayNhap) = ? AND phieunhap.TrangThai = 2\n" 
+                    + "LEFT JOIN chitietphieunhap ON phieunhap.MaPN = chitietphieunhap.MaPN\n" 
+                    + "LEFT JOIN hoadon ON MONTH(hoadon.NgayLap) = months.month AND YEAR(hoadon.NgayLap) = ? \n" 
                     + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n"
-                    + "LEFT JOIN sanpham ON sanpham.MaSP = chitiethoadon.MaSP\n"
-                    + "LEFT JOIN chitietphieunhap ON sanpham.MaSP = chitietphieunhap.MaSP\n"
                     + "GROUP BY months.month\n"
                     + "ORDER BY months.month;";
+            
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, nam);
+            pst.setInt(2, nam);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int thang = rs.getInt("thang");
@@ -302,10 +305,11 @@ public class ThongKeDAO {
         try {
             String ngayString = nam + "-" + thang + "-" + "01";
             Connection con = ConnectionDB.openConnection();
-            String sql = "SELECT \n"
+            
+             String sql = "SELECT \n"
                     + "  dates.date AS ngay, \n"
-                    + "  COALESCE(SUM(chitietphieunhap.DonGia), 0) AS chiphi, \n"
-                    + "  COALESCE(SUM(chitiethoadon.DonGia), 0) AS doanhthu\n"
+                    + " COALESCE(SUM(chitietphieunhap.SoLuong * chitietphieunhap.DonGia), 0) AS chiphi, \n" 
+                    + " COALESCE(SUM(chitiethoadon.SoLuong * chitiethoadon.DonGia), 0) AS doanhthu\n" 
                     + "FROM (\n"
                     + "  SELECT DATE('" + ngayString + "') + INTERVAL c.number DAY AS date\n"
                     + "  FROM (\n"
@@ -343,12 +347,13 @@ public class ThongKeDAO {
                     + "  ) AS c\n"
                     + "  WHERE DATE('" + ngayString + "') + INTERVAL c.number DAY <= LAST_DAY('" + ngayString + "')\n"
                     + ") AS dates\n"
-                    + "LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date\n"
-                    + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n"
-                    + "LEFT JOIN sanpham ON sanpham.MaSP = chitiethoadon.MaSP\n"
-                    + "LEFT JOIN chitietphieunhap ON sanpham.MaSP = chitietphieunhap.MaSP\n"
+                    + "LEFT JOIN phieunhap ON DATE(phieunhap.NgayNhap) = dates.date AND phieunhap.TrangThai = 2\n" 
+                    + "LEFT JOIN chitietphieunhap ON phieunhap.MaPN = chitietphieunhap.MaPN\n" 
+                    + "LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date\n" 
+                    + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n" 
                     + "GROUP BY dates.date\n"
                     + "ORDER BY dates.date;";
+            
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -372,24 +377,22 @@ public class ThongKeDAO {
             //LEFT JOIN ctsanpham ON ctsanpham.MaHD = chitiethoadon.MaHD AND ctsanpham.maphienbansp = chitiethoadon.maphienbansp
             //LEFT JOIN chitietphieunhap ON ctsanpham.MaPN = chitietphieunhap.MaPN AND ctsanpham.maphienbansp = chitietphieunhap.maphienbansp
             String sql = """
-                         WITH RECURSIVE dates(date) AS (
-                           SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                           UNION ALL
-                           SELECT DATE_ADD(date, INTERVAL 1 DAY)
-                           FROM dates
-                           WHERE date < CURDATE()
-                         )
-                         SELECT 
-                           dates.date AS ngay,
-                           COALESCE(SUM(chitiethoadon.DonGia), 0) AS doanhthu,
-                           COALESCE(SUM(chitietphieunhap.DonGia), 0) AS chiphi
-                         FROM dates
-                         LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date
-                         LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD
-                         LEFT JOIN sanpham ON sanpham.MaSP = chitiethoadon.MaSP
-                         LEFT JOIN chitietphieunhap ON chitietphieunhap.MaSP = sanpham.MaSP
-                         GROUP BY dates.date
-                         ORDER BY dates.date;""";
+                         WITH RECURSIVE dates(date) AS ( 
+                                                     SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) 
+                                                     UNION ALL 
+                                                     SELECT DATE_ADD(date, INTERVAL 1 DAY) 
+                                                     FROM dates WHERE date < CURDATE() 
+                         						) 
+                                                 SELECT dates.date AS ngay, 
+                                                 COALESCE(SUM(chitiethoadon.SoLuong * chitiethoadon.DonGia), 0) AS doanhthu, 
+                                                 COALESCE(SUM(chitietphieunhap.SoLuong * chitietphieunhap.DonGia), 0) AS chiphi 
+                                                 FROM dates 
+                                                 LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date 
+                                                 LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD 
+                                                 LEFT JOIN phieunhap ON DATE(phieunhap.NgayNhap) = dates.date AND phieunhap.TrangThai = 2
+                                                 LEFT JOIN chitietphieunhap ON phieunhap.MaPN = chitietphieunhap.MaPN 
+                                                 GROUP BY dates.date 
+                                                 ORDER BY dates.date;""";
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -467,13 +470,13 @@ public class ThongKeDAO {
                     + "      UNION ALL SELECT 10\n"
                     + "    ) AS b\n"
                     + "  ) AS c\n"
-                    + "  WHERE DATE_ADD(@start_date, INTERVAL c.number DAY) <= @end_date\n"
-                    + ") AS dates\n"
-                    + "LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date\n"
-                    + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n"
-                    //+ "LEFT JOIN ctsanpham ON ctsanpham.MaHD = chitiethoadon.MaHD AND ctsanpham.maphienbansp = chitiethoadon.maphienbansp\n"
-                    //+ "LEFT JOIN chitietphieunhap ON ctsanpham.MaPN = chitietphieunhap.MaPN AND ctsanpham.maphienbansp = chitietphieunhap.maphienbansp\n"
-                    + "GROUP BY dates.date\n"
+                    + " WHERE DATE_ADD(@start_date, INTERVAL c.number DAY) <= @end_date\n" 
+                    + ") AS dates\n" 
+                    + "LEFT JOIN phieunhap ON DATE(phieunhap.NgayNhap) = dates.date AND phieunhap.TrangThai = 2\n" 
+                    + "LEFT JOIN chitietphieunhap ON phieunhap.MaPN = chitietphieunhap.MaPN\n" 
+                    + "LEFT JOIN hoadon ON DATE(hoadon.NgayLap) = dates.date\n" 
+                    + "LEFT JOIN chitiethoadon ON hoadon.MaHD = chitiethoadon.MaHD\n" 
+                    + "GROUP BY dates.date\n" 
                     + "ORDER BY dates.date;";
 
             PreparedStatement pstStart = con.prepareStatement(setStar);

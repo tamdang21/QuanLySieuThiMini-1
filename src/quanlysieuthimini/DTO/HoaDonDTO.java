@@ -22,6 +22,15 @@ public class HoaDonDTO {
         this.TongTien = TongTien;
         this.TrangThai = TrangThai;
     }
+    
+    public HoaDonDTO(int MaHD, int MaKM, int MaNV, Timestamp NgayLap, double TongTien, int TrangThai) {
+        this.MaHD = MaHD;
+        this.MaKM = MaKM;
+        this.MaNV = MaNV;
+        this.NgayLap = NgayLap;
+        this.TongTien = TongTien;
+        this.TrangThai = TrangThai;
+    }
 
     public int getTrangThai() {
         return TrangThai;
