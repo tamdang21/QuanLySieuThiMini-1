@@ -35,6 +35,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import quanlysieuthimini.BUS.SanPhamBUS;
+import quanlysieuthimini.DTO.SanPhamDTO;
 
 /**
  *
@@ -55,6 +57,8 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
     JTable table;
     JScrollPane scrollTable;
     ButtonCustom add, del, update;
+    SanPhamBUS spBUS = new SanPhamBUS();
+    ArrayList<SanPhamDTO> arrSP = spBUS.getAll();
     HangSanXuatBUS msBUS = new HangSanXuatBUS();
     ArrayList<HangSanXuatDTO> list = msBUS.getAll();
     
@@ -102,8 +106,6 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         ms = new InputForm("Tên Hãng");
         ms.setPreferredSize(new Dimension(250, 70));
         
-        main.setBackground(Color.WHITE);
-        main.setPreferredSize(new Dimension(420, 200));
         ms1 = new InputForm("Trụ Sở");
         ms1.setPreferredSize(new Dimension(250, 70));
         
@@ -117,7 +119,7 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         table.setModel(tblModel);
         table.setFocusable(false);
         scrollTable.setViewportView(table);
-        scrollTable.setPreferredSize(new Dimension(420, 250));
+        scrollTable.setPreferredSize(new Dimension(420, 200));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel columnModel = table.getColumnModel();
@@ -177,11 +179,19 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
+            boolean check = true;
             if (index != -1) {
-                msBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
-                ms1.setText("");
+                for(SanPhamDTO sp : arrSP){
+                    if(sp.getMaHang() == list.get(index).getMaHang())
+                        check = false;
+                }
+                if(check){
+                    msBUS.delete(list.get(index),index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    ms1.setText("");
+                }else
+                    JOptionPane.showMessageDialog(this, "Vi phạm ràng buộc!! (Có sản phẩm thuộc loại này không thể xóa)");
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();

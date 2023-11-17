@@ -256,7 +256,7 @@ public class NhanVienDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        else if (Validation.isEmpty(sdt.getText()) && !Validation.isNumber(sdt.getText()) && sdt.getText().length() != 10) {
+        else if (Validation.isEmpty(sdt.getText()) || !Validation.isNumber(sdt.getText()) || sdt.getText().length() != 10) {
             JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
         } else if(jcBd.getDate()==null){
@@ -276,5 +276,19 @@ public class NhanVienDialog extends JDialog {
           return false;
         }
         return true;
+    }
+    public static boolean isPhoneNumber(String str) {
+        // Loại bỏ khoảng trắng và dấu ngoặc đơn nếu có
+        str = str.replaceAll("\\s+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");
+
+        // Kiểm tra xem chuỗi có phải là một số điện thoại hợp lệ hay không
+        if (str.matches("\\d{10}")) { // Kiểm tra số điện thoại 10 chữ số
+            return true;
+        } else if (str.matches("\\d{3}-\\d{3}-\\d{4}")) { // Kiểm tra số điện thoại có dấu gạch ngang
+            return true;
+        } else {
+            return str.matches("\\(\\d{3}\\)\\d{3}-\\d{4}"); // Kiểm tra số điện thoại có dấu ngoặc đơn
+        }        // Trả về false nếu chuỗi không phải là số điện thoại hợp lệ
+
     }
 }
