@@ -29,6 +29,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
+import quanlysieuthimini.BUS.SanPhamBUS;
+import quanlysieuthimini.DTO.SanPhamDTO;
 
 public class DonViDialog extends JDialog implements MouseListener {
 
@@ -45,6 +47,8 @@ public class DonViDialog extends JDialog implements MouseListener {
     JTable table;
     JScrollPane scrollTable;
     ButtonCustom add, del, update;
+    SanPhamBUS spBUS = new SanPhamBUS();
+    ArrayList<SanPhamDTO> arrSP = spBUS.getAll();
     DonViBUS dlrBUS = new DonViBUS();
     ArrayList<DonViDTO> list = dlrBUS.getAll();
     QuanLyThanhPhanSP qltt;
@@ -100,7 +104,7 @@ public class DonViDialog extends JDialog implements MouseListener {
         table.setModel(tblModel);
         table.setFocusable(false);
         scrollTable.setViewportView(table);
-        scrollTable.setPreferredSize(new Dimension(420, 250));
+        scrollTable.setPreferredSize(new Dimension(420, 200));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel columnModel = table.getColumnModel();
@@ -155,10 +159,18 @@ public class DonViDialog extends JDialog implements MouseListener {
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
+            boolean check = true;
             if (index != -1) {
-                dlrBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                for(SanPhamDTO sp : arrSP){
+                    if(sp.getMaDV()== list.get(index).getMaDV())
+                        check = false;
+                }
+                if(check){
+                    dlrBUS.delete(list.get(index),index);
+                    loadDataTable(list);
+                    ms.setText("");
+                }else
+                    JOptionPane.showMessageDialog(this, "Vi phạm ràng buộc!! (Có sản phẩm thuộc loại này không thể xóa)");
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();

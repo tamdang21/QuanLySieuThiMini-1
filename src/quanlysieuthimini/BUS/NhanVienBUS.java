@@ -18,6 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -135,7 +138,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                 }
             }
             case "NHẬP EXCEL" -> {
-                //importExcel();
+                importExcel();
             }
             case "XUẤT EXCEL" -> {
                 String[] header = new String[]{"MãNV", "Tên nhân viên", "Email nhân viên", "Số điên thoại", "Giới tính", "Ngày sinh"};
@@ -143,6 +146,78 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
             }
         }
         nv.loadDataTalbe(listNv);
+    }
+public void importExcel(){
+        DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+        File excelFile;
+        FileInputStream excelFIS = null;
+        BufferedInputStream excelBIS = null;
+        XSSFWorkbook excelJTableImport = null;
+        JFileChooser jf = new JFileChooser();
+        int result = jf.showOpenDialog(null);
+        jf.setDialogTitle("Open file");
+        Workbook workbook = null;
+        int k = 0;
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelFile = jf.getSelectedFile();
+                excelFIS = new FileInputStream(excelFile);
+                excelBIS = new BufferedInputStream(excelFIS);
+                excelJTableImport = new XSSFWorkbook(excelBIS);
+                XSSFSheet excelSheet = excelJTableImport.getSheetAt(0);
+
+                for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
+                    int check = 1;
+                    int gt;
+                    XSSFRow excelRow = excelSheet.getRow(row);
+                    int id = NhanVienDAO.getInstance().getAutoIncrement();
+                    String tennv = excelRow.getCell(1).getStringCellValue();
+                    String email = excelRow.getCell(2).getStringCellValue();
+                    String sdt = excelRow.getCell(3).getStringCellValue();
+                    String gioitinh = excelRow.getCell(4).getStringCellValue();
+                    if (gioitinh.equals("Nam") || gioitinh.equals("nam")) {
+                        gt = 1;
+                    } else {
+                        gt = 0;
+                    }
+                    String strNgaySinh = excelRow.getCell(5).getStringCellValue();
+                    Date ngaysinh = (Date) formatter.parse(strNgaySinh);
+                    java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
+                    System.out.println(id);
+                    System.out.println(tennv);
+                    System.out.println(email);
+                    System.out.println(sdt);
+                    System.out.println(gioitinh);
+                    System.out.println(birth);
+                    if (Validation.isEmpty(tennv) || Validation.isEmpty(email)
+                            || !Validation.isEmail(email) || Validation.isEmpty(sdt)
+                            || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
+                            || sdt.length() != 10 || Validation.isEmpty(gioitinh)) {
+                        check = 0;
+                    }
+                    if (check == 0) {
+                        k += 1;
+                    } else {
+                        NhanVienDTO nvDTO = new NhanVienDTO(id, tennv, "", sdt, email, birth, gt, 0.2, "" , 1);
+                        NhanVienDAO.getInstance().insert(nvDTO);
+                        listNv.add(nvDTO);
+                    }
+                }
+
+            } catch (FileNotFoundException ex) {
+                System.out.println("Lỗi đọc file");
+            } catch (IOException ex) {
+                System.out.println("Lỗi đọc file");
+            } catch (ParseException ex){
+                System.out.println(ex);
+            }
+        if (k != 0) {
+            JOptionPane.showMessageDialog(null, "Những dữ liệu không chuẩn không được thêm vào");
+        } else {
+            JOptionPane.showMessageDialog(null, "Nhập dữ liệu thành công");            
+        }
+        
+        }
     }
 
     @Override
