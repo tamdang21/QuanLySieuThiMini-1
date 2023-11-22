@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
@@ -38,6 +40,8 @@ import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
@@ -68,7 +72,7 @@ import quanlysieuthimini.helper.Formater;
 import quanlysieuthimini.helper.JTableExporter;
 import quanlysieuthimini.helper.Validation;
 
-public final class SanPham extends JPanel implements ActionListener{
+public final class SanPham extends JPanel implements ActionListener, ItemListener{
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
     public SanPhamBUS spBUS = new SanPhamBUS(this);
     PanelBorderRadius main, functionBar;
@@ -135,13 +139,18 @@ public final class SanPham extends JPanel implements ActionListener{
         // search.cbxChoose.addActionListener(spBUS);
         // search.txtSearchForm.getDocument().addDocumentListener(new SanPhamBUS(search.txtSearchForm,this));
 
-        search = new IntegratedSearch(new String[] {"Tất cả"});
+        search = new IntegratedSearch(new String[] {"Tất cả", "Mã sản phẩm", "Tên sản phẩm", "Loại sản phẩm", "Hãng sản xuất"});
+        search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                String type = (String) search.cbxChoose.getSelectedItem();
                 String txt = search.txtSearchForm.getText();
-                listsp = spBUS.search(txt);
-                loadDataTalbe(listsp);
+                loadDataTable(search(txt,type));
+                if(txt.equals("")){
+                    loadDataTable(listsp);
+                }
+                    
             }
 
         });
@@ -149,7 +158,7 @@ public final class SanPham extends JPanel implements ActionListener{
         search.btnReset.addActionListener((ActionEvent e) -> {
             search.txtSearchForm.setText("");
             listsp = spBUS.getAll();
-            loadDataTalbe(listsp);
+            loadDataTable(listsp);
         });
         functionBar.add(search);
 
@@ -189,7 +198,7 @@ public final class SanPham extends JPanel implements ActionListener{
         this.m = m;
         initComponent();
         tableSanPham.setDefaultEditor(Object.class, null);
-        loadDataTalbe(listsp);
+        loadDataTable(listsp);
     }
 
     public int getRow(){
@@ -199,11 +208,54 @@ public final class SanPham extends JPanel implements ActionListener{
     public SanPhamDTO getSanPham(){
         return listsp.get(tableSanPham.getSelectedRow());
     }
+    public ArrayList<SanPhamDTO> search(String text, String type) {
+        text = text.toLowerCase();
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        switch (type) {
+            case "Tất cả" -> {
+                for (SanPhamDTO i : listsp) {
+                    if (Integer.toString(i.getMaSP()).toLowerCase().contains(text) || i.getTenSP().toLowerCase().contains(text) 
+                       || hangsxBUS.getTenHang(i.getMaHang()).toLowerCase().contains(text) 
+                       || loaispBUS.getTenLoai(i.getMaLoai()).toLowerCase().contains(text))  {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Mã sản phẩm" -> {
+                for (SanPhamDTO i : listsp) {
+                    if (Integer.toString(i.getMaSP()).toLowerCase().contains(text) ) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Tên sản phẩm" -> {
+                for (SanPhamDTO i : listsp) {
+                    if (i.getTenSP().toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Loại sản phẩm" -> {
+                for (SanPhamDTO i : listsp) {
+                    if (loaispBUS.getTenLoai(i.getMaLoai()).toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Hãng sản xuất" -> {
+                for (SanPhamDTO i : listsp) {
+                    if (hangsxBUS.getTenHang(i.getMaHang()).toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
-    public void loadDataTalbe(ArrayList<SanPhamDTO> list){
-        listsp = list;
+    public void loadDataTable(ArrayList<SanPhamDTO> list){
         tblModel.setRowCount(0);
-        for(SanPhamDTO sanpham : listsp){
+        for(SanPhamDTO sanpham : list){
             tblModel.addRow(new Object[]{
                 sanpham.getMaSP(), 
                 sanpham.getTenSP(),
@@ -229,7 +281,7 @@ public final class SanPham extends JPanel implements ActionListener{
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     spBUS.delete(listsp.get(index));
-                    loadDataTalbe(listsp);
+                    loadDataTable(listsp);
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
@@ -248,7 +300,13 @@ public final class SanPham extends JPanel implements ActionListener{
 //            importExcel();
         }
     }
-    
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        String type = (String) search.cbxChoose.getSelectedItem();
+        String txt = search.txtSearchForm.getText();
+        loadDataTable(search(txt, type));
+                
+    }
     public int getRowSelected(){
         int index = tableSanPham.getSelectedRow();
         if(index == -1){
