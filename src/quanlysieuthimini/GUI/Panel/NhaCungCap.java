@@ -29,15 +29,22 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import quanlysieuthimini.DTO.NhanVienDTO;
 
 public final class NhaCungCap extends JPanel implements ActionListener, ItemListener {
 
@@ -195,6 +202,14 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     String diachi = excelRow.getCell(2).getStringCellValue();
                     String email = excelRow.getCell(3).getStringCellValue();
                     String sdt = excelRow.getCell(4).getStringCellValue();
+<<<<<<< HEAD
+=======
+                    System.out.println(tenNCC);
+                    System.out.println(diachi);
+                    System.out.println(email);
+                    System.out.println(sdt);
+                    System.out.println(id);
+>>>>>>> a68109db0a5f1b9a234a5d5791d58165ffe7fb72
                     if (Validation.isEmpty(tenNCC) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
                             || sdt.length() != 10 || Validation.isEmpty(diachi)) {
@@ -220,7 +235,41 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
 
         loadDataTable(listncc);
     }
+    
+    public void exportExcel(ArrayList<NhaCungCapDTO> list, String[] header) {
+        try {
+            if (!list.isEmpty()) {
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setDialogTitle("Chọn đường dẫn lưu file Excel");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("XLSX files", "xlsx");
+                jFileChooser.setFileFilter(filter);
+                jFileChooser.setAcceptAllFileFilterUsed(false);
+                jFileChooser.showSaveDialog(owner);
+                File saveFile = jFileChooser.getSelectedFile();
+                if (saveFile != null) {
+                    if (!saveFile.toString().toLowerCase().endsWith(".xlsx")) {
+                        saveFile = new File(saveFile.toString() + ".xlsx");
+                    }
+                    Workbook wb = new XSSFWorkbook();
+                    Sheet sheet = wb.createSheet("Nhà Cung Cấp");
 
+                    writeHeader(header, sheet, 0);
+                    int rowIndex = 1;
+                    for (NhaCungCapDTO ncc : list) {
+                        Row row = sheet.createRow(rowIndex++);
+                        writeNhaCungCap(ncc, row);
+                    }
+                    FileOutputStream out = new FileOutputStream(new File(saveFile.toString()));
+                    wb.write(out);
+                    wb.close();
+                    out.close();
+                    openFile(saveFile.toString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public int getRowSelected() {
         int index = tableNhaCungCap.getSelectedRow();
         if (index == -1) {
@@ -228,7 +277,64 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         }
         return index;
     }
+    private static void writeHeader(String[] list, Sheet sheet, int rowIndex) {
+        CellStyle cellStyle = createStyleForHeader(sheet);
+        Row row = sheet.createRow(rowIndex);
+        Cell cell;
+        for (int i = 0; i < list.length; i++) {
+            cell = row.createCell(i);
+            cell.setCellStyle(cellStyle);
+            cell.setCellValue(list[i]);
+            sheet.autoSizeColumn(i);
+        }
+    }
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman");
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.WHITE.getIndex()); // text color
 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+    private static void writeNhaCungCap(NhaCungCapDTO ncc, Row row) {
+        CellStyle cellStyleFormatNumber = null;
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short) BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+        Cell cell = row.createCell(0);
+        cell.setCellValue(ncc.getMaNCC());
+
+        cell = row.createCell(1);
+        cell.setCellValue(ncc.getTenNCC());
+
+        cell = row.createCell(2);
+        cell.setCellValue(ncc.getEmail());
+
+        cell = row.createCell(3);
+        cell.setCellValue(ncc.getDiaChi());
+
+        cell = row.createCell(4);
+        cell.setCellValue(ncc.getEmail());
+
+        cell = row.createCell(5);
+        cell.setCellValue("" + ncc.getSDT());
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainFunction.btn.get("create")) {
@@ -268,7 +374,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
             }
         }
     }
-
+    
     public static boolean isPhoneNumber(String str) {
         // Loại bỏ khoảng trắng và dấu ngoặc đơn nếu có
         str = str.replaceAll("\\s+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");

@@ -189,7 +189,6 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         }catch(Exception ex){
         
         }
-
         this.add(titlePage, BorderLayout.NORTH);
         this.add(pnmain, BorderLayout.CENTER);
         this.setLocationRelativeTo(null);
@@ -305,11 +304,26 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     public void eventAddSanPham() throws Exception{
         SanPhamDTO sp = getInfo();
         sp.setHinhAnh(addImage(sp.getHinhAnh()));
-        SanPhamDAO.getInstance().insert(sp);
         if (jpSP.spBUS.add(sp)) {
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
             jpSP.loadDataTalbe(jpSP.listsp);
         }
+    }
+    public SanPhamDTO getInfo() throws Exception{
+        String vhinhanh = this.hinhanh.getUrl_img();
+        System.out.print(vhinhanh);
+        String vtensp = tenSP.getText();
+        int mahangsx = hangsxBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaHang();
+        int maloaisp = loaispBUS.getAll().get(this.loaisp.getSelectedIndex()).getMaLoai();
+        int madonvi  = donviBUS.getAll().get(this.donvi.getSelectedIndex()).getMaDV();
+        double vdongia = Double.parseDouble(dongia.getText());
+        int vsoluong = Integer.parseInt(soluong.getText());
+        String vmavach = mavach.getText();
+        int vdungtich = Integer.parseInt(dungtich.getText());
+        Date vngaySX = ngaySX.getDate();
+        Date vhanSD = hanSD.getDate();
+        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,vhinhanh,1);
+        return result;
     }
     public void setInfo(SanPhamDTO sp) throws Exception{
         hinhanh.setUrl_img(sp.getHinhAnh());
@@ -326,22 +340,5 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         hanSD.setDate(sp.getHanSuDung());
         
     }
-    public SanPhamDTO getInfo() throws Exception{
-                System.out.print(this.hinhanh.getUrl_img());
-
-        String vhinhanh = this.hinhanh.getUrl_img();
-        System.out.print(vhinhanh);
-        String vtensp = tenSP.getText();
-        int mahangsx = hangsxBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaHang();
-        int maloaisp = loaispBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaLoai();
-        int madonvi  = donviBUS.getAll().get(this.hangsx.getSelectedIndex()).getMaDV();
-        double vdongia = Double.parseDouble(dongia.getText());
-        int vsoluong = Integer.parseInt(soluong.getText());
-        String vmavach = mavach.getText();
-        int vdungtich = Integer.parseInt(dungtich.getText());
-        Date vngaySX = ngaySX.getDate();
-        Date vhanSD = hanSD.getDate();
-        SanPhamDTO result = new SanPhamDTO(masp,maloaisp,mahangsx,madonvi,vtensp,vmavach,vsoluong,vdungtich,vdongia,vngaySX, vhanSD,vhinhanh,1);
-        return result;
-    }
+    
 }

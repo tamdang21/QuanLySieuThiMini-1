@@ -27,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -153,10 +154,19 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnAddQuyen) {
-            ctQuyen = this.getListChiTietQuyen(QuyenDAO.getInstance().getAutoIncrement());
-            nhomquyenBUS.add(txtTennhomquyen.getText(),ctQuyen);
-            this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
-            dispose();
+            int id = QuyenDAO.getInstance().getAutoIncrement();
+            ctQuyen = this.getListChiTietQuyen(id);
+            System.out.println(ctQuyen);
+            if(txtTennhomquyen.getText().equals("")){
+                JOptionPane.showMessageDialog(this,"Tên nhóm quyền không được bỏ trống");
+                return;
+            }
+            if(!ctQuyen.isEmpty()){
+                nhomquyenBUS.add(txtTennhomquyen.getText(),ctQuyen);
+                this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
+                dispose();
+            }else
+                JOptionPane.showMessageDialog(this,"Vui lòng chọn ít nhất 1 quyền");
         } else if(e.getSource() == btnUpdateQuyen){
             ctQuyen = this.getListChiTietQuyen(this.nhomquyenDTO.getMaQuyen());
             QuyenDTO nhomquyen = new QuyenDTO(this.nhomquyenDTO.getMaQuyen(),txtTennhomquyen.getText());
@@ -179,7 +189,7 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
         }
         return result;
     }
-
+    
     public void initUpdate() {
         this.txtTennhomquyen.setText(nhomquyenDTO.getTenQuyen());
         System.out.println(ctQuyen);

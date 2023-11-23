@@ -28,6 +28,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import quanlysieuthimini.BUS.SanPhamBUS;
+import quanlysieuthimini.DTO.SanPhamDTO;
 
 public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
 
@@ -41,9 +43,10 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         }
         
     };
-    JScrollPane scrollTable;
     JTable table;
     ButtonCustom add, del, update;
+    SanPhamBUS spBUS = new SanPhamBUS();
+    ArrayList<SanPhamDTO> arrSP = spBUS.getAll();
     LoaiSanPhamBUS thBUS = new LoaiSanPhamBUS();
     ArrayList<LoaiSanPhamDTO> list = thBUS.getAll();
     QuanLyThanhPhanSP qltt;
@@ -89,13 +92,9 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         ms = new InputForm("Tên Loại");
         ms.setPreferredSize(new Dimension(250, 70));
         
-        main.setBackground(Color.WHITE);
-        main.setPreferredSize(new Dimension(420, 200));
         ms1 = new InputForm("Cách Bảo Quản");
         ms1.setPreferredSize(new Dimension(250, 70));
         
-        main.setBackground(Color.WHITE);
-        main.setPreferredSize(new Dimension(420, 200));
         ms2 = new InputForm("Mô Tả Chi Tiết");
         ms2.setPreferredSize(new Dimension(250, 70));
         
@@ -103,7 +102,6 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         table = new JTable();
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
-        scrollTable = new JScrollPane(table);
 
         table.setFocusable(false);
         String[] header = new String[]{"Mã Loại", "Tên Loại","Bảo Quản", "Mô Tả"};
@@ -117,13 +115,15 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
         columnModel.getColumn(2).setCellRenderer(centerRenderer);
         columnModel.getColumn(3).setCellRenderer(centerRenderer);
         
-        //scrollTable.setBorder(new EmptyBorder(0, 0, 0, 0));
-        scrollTable.setViewportView(table);
-        scrollTable.setPreferredSize(new Dimension(420, 250));
+        
         
         main.add(ms);
         main.add(ms1);
         main.add(ms2);
+        JScrollPane scrollTable = new JScrollPane(table);
+        scrollTable.setBorder(new EmptyBorder(0, 0, 0, 0));
+        scrollTable.setViewportView(table);
+        scrollTable.setPreferredSize(new Dimension(420, 200));
         main.add(scrollTable);
 
         add = new ButtonCustom("Thêm", "excel", 15, 100, 40);
@@ -160,7 +160,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == add) {
-            if (Validation.isEmpty(ms.getText())) {
+            if (Validation.isEmpty(ms.getText()) || Validation.isEmpty(ms1.getText()) || Validation.isEmpty(ms2.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thương hiệu mới");
             } else {
                 String tenLoai = ms.getText();
@@ -182,12 +182,20 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
+            boolean check = true;
             if (index != -1) {
-                thBUS.delete(list.get(index),index);
-                loadDataTable(list);
-                ms.setText("");
-                ms1.setText("");
-                ms2.setText("");
+                for(SanPhamDTO sp : arrSP){
+                    if(sp.getMaLoai() == list.get(index).getMaLoai())
+                        check = false;
+                }
+                if(check){
+                    thBUS.delete(list.get(index),index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    ms1.setText("");
+                    ms2.setText("");
+                }else
+                    JOptionPane.showMessageDialog(this, "Vi phạm ràng buộc!! (Có sản phẩm thuộc loại này không thể xóa)");
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
