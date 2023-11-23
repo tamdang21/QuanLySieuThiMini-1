@@ -160,7 +160,7 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == add) {
-            if (Validation.isEmpty(ms.getText())) {
+            if (Validation.isEmpty(ms.getText()) || Validation.isEmpty(ms1.getText()) || Validation.isEmpty(ms2.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thương hiệu mới");
             } else {
                 String tenLoai = ms.getText();
