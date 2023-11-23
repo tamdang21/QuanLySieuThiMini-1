@@ -77,7 +77,7 @@ public class ListCaLamViecPCC extends JDialog {
         pnbottom = new JPanel(new FlowLayout());
         pnbottom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnbottom.setBackground(Color.white);
-        btnThem = new ButtonCustom("Thêm tài khoản", "success", 14);
+        btnThem = new ButtonCustom("Thêm lịch làm việc", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
         btnThem.addActionListener(new ActionListener() {

@@ -84,7 +84,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         tblModel.setRowCount(0);
         int size = cthd.size();
         for (int i = 0; i < size; i++) {
-            SanPhamDTO sanpham = sanPhamBUS.getByMaSP(cthd.get(i).getMaSP());
+            SanPhamDTO sanpham = sanPhamBUS.getById(cthd.get(i).getMaSP());
             tblModel.addRow(new Object[]{
                 i + 1,
                 sanpham.getMaSP(),

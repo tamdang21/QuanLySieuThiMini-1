@@ -191,10 +191,10 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     int check = 1;
                     XSSFRow excelRow = excelSheet.getRow(row);
                     int id = NhaCungCapDAO.getInstance().getAutoIncrement();
-                    String tenNCC = excelRow.getCell(0).getStringCellValue();
-                    String diachi = excelRow.getCell(1).getStringCellValue();
-                    String email = excelRow.getCell(2).getStringCellValue();
-                    String sdt = excelRow.getCell(3).getStringCellValue();
+                    String tenNCC = excelRow.getCell(1).getStringCellValue();
+                    String diachi = excelRow.getCell(2).getStringCellValue();
+                    String email = excelRow.getCell(3).getStringCellValue();
+                    String sdt = excelRow.getCell(4).getStringCellValue();
                     if (Validation.isEmpty(tenNCC) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
                             || sdt.length() != 10 || Validation.isEmpty(diachi)) {

@@ -72,7 +72,8 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     JScrollPane scrollTablePhieuNhap, scrollTableSanPham;
     DefaultTableModel tblModel, tblModelSP;
     ButtonCustom btnAddSp, btnEditSP, btnDelete, btnQuetMa, btnNhapHang;
-    InputForm txtMaphieu, txtNhanVien, txtMaSp, txtTenSp, txtDongia, txtMaVach, txtSoLuong;
+    InputForm txtMaphieu, txtNhanVien, txtMaSp, txtTenSp, txtDongia, txtSoLuong, txtMaVach;
+    //JTextField txtMaVach;
     SelectForm cbxNhaCungCap, cbxHinhThucThanhToan;
     JTextField txtTimKiem;
     JLabel lbltongtien;
@@ -280,8 +281,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         btnQuetMa = new ButtonCustom("Quét mã", "excel", 14);
         
         btnQuetMa.addActionListener((ActionEvent e) -> {
-              txtMaVach.requestFocus();
-              System.err.println("btnQuetMa");
+              txtMaVach.getTxtForm().requestFocus();
         });
         
         
@@ -336,7 +336,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         right_center.setPreferredSize(new Dimension(100, 100));
         right_center.setOpaque(false);
         
-        txtMaVach.addKeyListener(new KeyListener() {
+        txtMaVach.getTxtForm().addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
@@ -344,7 +344,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+                    SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getTxtForm().getText());
                     setInfoSanPham(sp);
                     addCtPhieu();
                 }
@@ -356,8 +356,8 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
             
         });
         
-        if(txtMaVach.getText().length() >= 13) {
-            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getText());
+        if(txtMaVach.getTxtForm().getText().length() >= 13) {
+            SanPhamDTO sp = spBUS.getByMaVach(txtMaVach.getTxtForm().getText());
             setInfoSanPham(sp);
             addCtPhieu();
         }
@@ -450,7 +450,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         tblModel.setRowCount(0);
         int size = ctPhieu.size();
         for (int i = 0; i < size; i++) {
-            SanPhamDTO sanpham = spBUS.getByMaSP(ctPhieu.get(i).getMaSP());
+            SanPhamDTO sanpham = spBUS.getById(ctPhieu.get(i).getMaSP());
             tblModel.addRow(new Object[]{
                 i + 1, 
                 sanpham.getMaSP(), 
@@ -467,11 +467,14 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     }
 
     public void setInfoSanPham(SanPhamDTO sp) {
-        this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
-        this.txtTenSp.setText(sp.getTenSP());
-        this.txtMaVach.setText(sp.getMaVach());
-        this.txtDongia.setText(Double.toString(sp.getDonGia()));
-        this.txtSoLuong.setText("1");
+        if(sp != null) {
+            this.txtMaSp.setText(Integer.toString(sp.getMaSP()));
+            this.txtTenSp.setText(sp.getTenSP());
+            this.txtMaVach.getTxtForm().setText(sp.getMaVach());
+            this.txtDongia.setText(Double.toString(sp.getDonGia()));
+            this.txtSoLuong.setText("1");
+        }
+        
         //listSP = spBUS.getAll();
         
 //        int size = listSP.size();
@@ -506,15 +509,13 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     }
 
     public boolean validateNhap() {
-        if(spBUS.getByMaVach(txtMaVach.getText()) == null && txtMaVach.getText().length() == 13 && txtMaSp.getText().equals("")) {
+        if(spBUS.getByMaVach(txtMaVach.getTxtForm().getText()) == null && txtMaVach.getTxtForm().getText().length() == 13 && txtMaSp.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Mã vạch này không tồn tại !!!");
-            System.err.println("Mã vạch này không tồn tại !!!");
             return false;
         }
         
-        else if (txtMaSp.getText().equals("") || txtMaVach.getText().equals("")) {
+        else if (txtMaSp.getText().equals("") || txtMaVach.getTxtForm().getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
-            System.err.println("Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
             return false;
         } 
         else if (Validation.isEmpty(txtSoLuong.getText())) {
@@ -570,7 +571,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
                 this.txtTenSp.setText("");
                 this.txtDongia.setText("");
                 this.txtSoLuong.setText("");
-                txtMaVach.setText("");
+                txtMaVach.getTxtForm().setText("");
                 //txtMaVach.setEditable(false);
             
             
@@ -613,11 +614,11 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
     }
 
     public void setFormChiTietPhieu(ChiTietPhieuNhapDTO phieu) {
-        SanPhamDTO sanpham = spBUS.getByMaSP(phieu.getMaSP());
+        SanPhamDTO sanpham = spBUS.getById(phieu.getMaSP());
         this.txtMaSp.setText(Integer.toString(sanpham.getMaSP()));
-        this.txtTenSp.setText(spBUS.getByMaSP(sanpham.getMaSP()).getTenSP());
+        this.txtTenSp.setText(spBUS.getById(sanpham.getMaSP()).getTenSP());
         this.txtDongia.setText(Double.toString(phieu.getDonGia()));
-        this.txtMaVach.setText(spBUS.getByMaSP(sanpham.getMaSP()).getMaVach());
+        this.txtMaVach.getTxtForm().setText(spBUS.getById(sanpham.getMaSP()).getMaVach());
         this.txtSoLuong.setText(String.valueOf(listCTPN.get(tablePhieuNhap.getSelectedRow()).getSoLuong()));
     }
 
@@ -626,7 +627,7 @@ public final class TaoPhieuNhap extends JPanel implements ActionListener {
         this.txtTenSp.setText("");
         this.txtDongia.setText("");
         this.txtSoLuong.setText("");
-        this.txtMaVach.setText("");
+        this.txtMaVach.getTxtForm().setText("");
     }
     
     public Image scale(ImageIcon x) {

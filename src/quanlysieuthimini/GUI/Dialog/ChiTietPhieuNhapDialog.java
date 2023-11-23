@@ -86,7 +86,7 @@ public final class ChiTietPhieuNhapDialog extends JDialog implements ActionListe
         tblModel.setRowCount(0);
         int size = ctPhieu.size();
         for (int i = 0; i < size; i++) {
-            SanPhamDTO sanpham = sanPhamBUS.getByMaSP(ctPhieu.get(i).getMaSP());
+            SanPhamDTO sanpham = sanPhamBUS.getById(ctPhieu.get(i).getMaSP());
             tblModel.addRow(new Object[]{
                 i + 1,
                 sanpham.getMaSP(),
@@ -98,16 +98,6 @@ public final class ChiTietPhieuNhapDialog extends JDialog implements ActionListe
             });
         }
     }
-
-//    public void loadDataTableImei(ArrayList<ChiTietSanPhamDTO> dssp) {
-//        tblModelImei.setRowCount(0);
-//        int size = dssp.size();
-//        for (int i = 0; i < size; i++) {
-//            tblModelImei.addRow(new Object[]{
-//                i + 1, dssp.get(i).getImei()
-//            });
-//        }
-//    }
 
     public void initComponent(String title) {
         this.setSize(new Dimension(1100, 500));

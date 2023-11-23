@@ -165,7 +165,7 @@ public void writePN(int maphieu) {
             PdfWriter writer = PdfWriter.getInstance(document, file);
             document.open();
 
-            Paragraph company = new Paragraph("Hệ thống quản lý điện thoại AnBaoChSi", fontBold15);
+            Paragraph company = new Paragraph("Hệ thống quản lý siêu thị mini", fontBold15);
             company.add(new Chunk(createWhiteSpace(20)));
             Date today = new Date(System.currentTimeMillis());
             company.add(new Chunk("Thời gian in phiếu: " + formatDate.format(today), fontNormal10));
@@ -179,7 +179,7 @@ public void writePN(int maphieu) {
             PhieuNhapDTO pn = PhieuNhapDAO.getInstance().getById(maphieu);
             // Thêm dòng Paragraph vào file PDF
 
-            Paragraph paragraph1 = new Paragraph("Mã phiếu: PN-" + pn.getMaPN(), fontNormal10);
+            Paragraph paragraph1 = new Paragraph("Mã phiếu: PN" + pn.getMaPN(), fontNormal10);
             String ncc = NhaCungCapDAO.getInstance().getById(pn.getMaNCC()).getTenNCC();
             Paragraph paragraph2 = new Paragraph("Nhà cung cấp: " + ncc, fontNormal10);
             paragraph2.add(new Chunk(createWhiteSpace(5)));

@@ -45,19 +45,6 @@ public class SanPhamBUS{
         return SanPhamDAO.getInstance().getById(masp);
     }
 
-    public SanPhamDTO getByMaSP(int masp) {
-        int vitri = -1;
-        int i = 0;
-        while (i <= this.listSP.size() && vitri == -1) {
-            if (this.listSP.get(i).getMaSP() == masp) {
-                vitri = i;
-            } else {
-                i++;
-            }
-        }
-        return this.listSP.get(vitri);
-    }
-
     public int getIndexByMaSP(int masanpham) {
         int i = 0;
         int vitri = -1;

@@ -717,18 +717,6 @@ public final class TaoHoaDon extends JPanel {
             this.txtGiaBan.setText(String.valueOf(sp.getDonGia()));
             this.txtSoLuongBan.setText("1");
         }
-        
-//        listSP = sanphamBUS.getAll();
-//        int size = listSP.size();
-//        String[] arr = new String[size];
-//        for (int i = 0; i < size; i++) {
-//            arr[i] = loaispBUS.getTenLoai(listSP.get(i).getMaLoai())
-//                    + hangsxBUS.getTenHang(listSP.get(i).getMaHang())
-//                    + (listSP.get(i).getDungTich() + " " + donviBUS.getTenDonVi(listSP.get(i).getMaDV()));
-//        }
-        //this.cbxSanPham.setArr(arr);
-//        mapb = ch.get(0).getMaphienbansp();
-//        setMaVachByPb(mapb);
     }
 
     public boolean checkInfo() {
@@ -736,13 +724,11 @@ public final class TaoHoaDon extends JPanel {
         
         if(spBUS.getByMaVach(txtMaVach.getText()) == null && txtMaVach.getText().length() == 13 && txtMaSp.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Mã vạch này không tồn tại !!!");
-            System.err.println("Mã vạch này không tồn tại !!!");
             check = false;
         }
         
         else if (txtMaSp.getText().equals("") || txtMaVach.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
-            System.err.println("Vui lòng chọn sản phẩm hoặc quét mã vạch để kiểm tra");
             check = false;
         }
         
@@ -812,7 +798,7 @@ public final class TaoHoaDon extends JPanel {
         int size = arrCTHD.size();
         sum = 0;
         for (int i = 0; i < size; i++) {
-            SanPhamDTO sanpham = sanphamBUS.getByMaSP(arrCTHD.get(i).getMaSP());
+            SanPhamDTO sanpham = sanphamBUS.getById(arrCTHD.get(i).getMaSP());
             sum += arrCTHD.get(i).getThanhTien();
             tblModel.addRow(new Object[]{
                 i + 1, 
@@ -867,7 +853,7 @@ public final class TaoHoaDon extends JPanel {
 
     public void setPhieuSelected() {
         ChiTietHoaDonDTO cthd = arrListCTHD.get(tableHoaDon.getSelectedRow());
-        SanPhamDTO spSel = spBUS.getByMaSP(cthd.getMaSP());
+        SanPhamDTO spSel = spBUS.getById(cthd.getMaSP());
         this.txtMaSp.setText(Integer.toString(spSel.getMaSP()));
         this.txtTenSp.setText(spSel.getTenSP());
         this.txtGiaBan.setText(String.valueOf(spSel.getDonGia()));
@@ -906,7 +892,7 @@ public final class TaoHoaDon extends JPanel {
     
     public void addHandle() {
         if (checkInfo()) {
-                if (spBUS.getByMaSP(Integer.valueOf(txtMaSp.getText())).getSoLuong()
+                if (spBUS.getById(Integer.valueOf(txtMaSp.getText())).getSoLuong()
                         < Integer.valueOf(txtSoLuongBan.getText())){
                     JOptionPane.showMessageDialog(null, "Xin lỗi sản phẩm tồn kho không đủ!!!");
                     this.txtMaSp.setText("");
