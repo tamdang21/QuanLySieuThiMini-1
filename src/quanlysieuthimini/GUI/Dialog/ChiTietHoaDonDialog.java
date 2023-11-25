@@ -71,7 +71,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
     }
 
     public void initHoaDon() {
-        txtMaHD.setText("HD-" + Integer.toString(this.hoadon.getMaHD()));
+        txtMaHD.setText("HD" + Integer.toString(this.hoadon.getMaHD()));
         txtKhachHang.setTitle("Khách hàng");
         txtKhachHang.setText(khachhangBUS.getTenKhachHang(hoadon.getMaKH()));
         txtNhanVien.setText(NhanVienDAO.getInstance().getById(hoadon.getMaNV()).getTenNV());

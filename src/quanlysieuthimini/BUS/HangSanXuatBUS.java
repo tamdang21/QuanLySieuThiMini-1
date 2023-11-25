@@ -130,13 +130,14 @@ public class HangSanXuatBUS {
 //    }
     
         
-    public boolean checkDup(String name) {
+    public boolean checkDup(String tenhang, String truso) {
 //        boolean check = false;
         for (HangSanXuatDTO mau : listHangSX) {
-        if (mau.getTenHang().equalsIgnoreCase(name)) {
+        if (mau.getTenHang().equalsIgnoreCase(tenhang) && mau.getTruSo().equalsIgnoreCase(truso)) {
             return true; // Trùng tên màu
         }
     }
         return false;
     }
+  
 }

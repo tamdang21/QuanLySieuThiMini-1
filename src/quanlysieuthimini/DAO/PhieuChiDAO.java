@@ -152,7 +152,7 @@ public class PhieuChiDAO implements DAOInterface<PhieuChiDTO>{
         Connection connect = ConnectionDB.openConnection();
         if (connect != null) {
             try {
-                String sql = "SELECT * FROM phieuchi WHERE TrangThai=1 AND MaPC=" + id;
+                String sql = "SELECT * FROM phieuchi WHERE MaPC=" + id;
 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connect.prepareStatement(sql);

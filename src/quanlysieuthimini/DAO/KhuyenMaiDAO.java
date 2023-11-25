@@ -182,7 +182,7 @@ public class KhuyenMaiDAO implements DAOInterface<KhuyenMaiDTO> {
         Connection connect = ConnectionDB.openConnection();
         if (connect != null) {
             try {
-                String sql = "SELECT * FROM khuyenmai WHERE TrangThai=1 AND MaKM= " + id  ;
+                String sql = "SELECT * FROM khuyenmai WHERE MaKM= " + id  ;
 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connect.prepareStatement(sql);

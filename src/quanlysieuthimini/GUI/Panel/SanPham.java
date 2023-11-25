@@ -297,7 +297,8 @@ public final class SanPham extends JPanel implements ActionListener, ItemListene
                 Logger.getLogger(SanPham.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if(e.getSource() == mainFunction.btn.get("import")) {
-//            importExcel();
+            //importExcel();
+            JOptionPane.showMessageDialog(this, "Chức năng không khả dụng !", "Thông báo", JOptionPane.WARNING_MESSAGE);
         }
     }
     @Override

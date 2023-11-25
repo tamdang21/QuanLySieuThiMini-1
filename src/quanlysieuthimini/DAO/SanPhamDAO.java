@@ -161,49 +161,6 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
 
         return result;
     }
-    
-    public ArrayList<SanPhamDTO> getAllAll() {
-        ArrayList<SanPhamDTO> result = new ArrayList<>();
-
-        Connection connect = ConnectionDB.openConnection();
-        if (connect != null) {
-
-            try {
-                String sql = "SELECT * FROM sanpham";
-
-                //Bước 2: tạo đối tượng preparedStatement
-                PreparedStatement stmt = connect.prepareStatement(sql);
-
-                ResultSet rs = stmt.executeQuery();
-
-                //Bước 3: lấy dữ liệu
-                while(rs.next()) {
-                    SanPhamDTO s = new SanPhamDTO();
-                    s.setMaSP(rs.getInt("MaSP"));
-                    s.setMaLoai(rs.getInt("MaLoai"));
-                    s.setMaHang(rs.getInt("MaHang"));
-                    s.setMaDV(rs.getInt("MaDV"));
-                    s.setTenSP(rs.getString("TenSP"));
-                    s.setMaVach(rs.getString("MaVach"));
-                    s.setDonGia(rs.getDouble("DonGia"));
-                    s.setSoLuong(rs.getInt("SoLuong"));
-                    s.setDungTich(rs.getInt("DungTich"));
-                    s.setNgaySanXuat(rs.getDate("NgaySanXuat"));
-                    s.setHanSuDung(rs.getDate("HanSuDung"));
-                    s.setHinhAnh(rs.getString("HinhAnh"));
-                    s.setTrangThai(rs.getInt("TrangThai"));
-
-                    result.add(s);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                ConnectionDB.closeConnection(connect);
-            }
-        }
-
-        return result;
-    }
 
     @Override
     public SanPhamDTO getById(int id) {
@@ -212,7 +169,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         Connection connect = ConnectionDB.openConnection();
         if (connect != null) {
             try {
-                String sql = "SELECT * FROM sanpham WHERE TrangThai = 1 AND MaSP= " + id  ;
+                String sql = "SELECT * FROM sanpham WHERE MaSP= " + id  ;
 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connect.prepareStatement(sql);

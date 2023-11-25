@@ -165,7 +165,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         Connection connect = ConnectionDB.openConnection();
         if (connect != null) {
             try {
-                String sql = "SELECT * FROM hoadon WHERE TrangThai=1 AND MaHD=" + id;
+                String sql = "SELECT * FROM hoadon WHERE MaHD=" + id;
 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connect.prepareStatement(sql);

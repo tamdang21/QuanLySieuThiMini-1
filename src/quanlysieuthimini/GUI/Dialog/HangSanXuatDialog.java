@@ -87,7 +87,7 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
     public void initComponent(QuanLyThanhPhanSP qltt) {
 
         this.qltt = qltt;
-        this.setSize(new Dimension(425, 500));
+        this.setSize(new Dimension(425, 700));
         this.setLayout(new BorderLayout(0, 0));
         this.setResizable(false);
         headTite = new HeaderTitle("HÃNG SẢN XUẤT SẢN PHẨM");
@@ -119,7 +119,7 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
         table.setModel(tblModel);
         table.setFocusable(false);
         scrollTable.setViewportView(table);
-        scrollTable.setPreferredSize(new Dimension(420, 200));
+        scrollTable.setPreferredSize(new Dimension(420, 350));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         TableColumnModel columnModel = table.getColumnModel();
@@ -162,17 +162,20 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == add) {
-            if (Validation.isEmpty(ms.getText())) {
+            if (Validation.isEmpty(ms.getText()) || Validation.isEmpty(ms1.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin Hãng Sản Xuất mới");
             } else {
                 String tenHang = ms.getText();
                 String TruSo = ms1.getText();
-                if (!msBUS.checkDup(tenHang)) {
-                    int id = HangSanXuatDAO.getInstance().getAutoIncrement();
-                    msBUS.add(new HangSanXuatDTO(id, tenHang,TruSo));
-                    loadDataTable(list);
-                    ms.setText("");
-                    ms1.setText("");
+                    if(!msBUS.checkDup(tenHang, TruSo)){
+                        int id = HangSanXuatDAO.getInstance().getAutoIncrement();
+                        if(id != -1 ){
+                        msBUS.add(new HangSanXuatDTO(id, tenHang,TruSo));
+                        loadDataTable(list);
+                        ms.setText("");
+                        ms1.setText("");
+                    }
+                    
                 } else {
                     JOptionPane.showMessageDialog(this, "Hãng Sản Xuất đã tồn tại !");
                 }
@@ -208,14 +211,14 @@ public class HangSanXuatDialog extends JDialog implements MouseListener {
 //                        ms1.setText("");
 //                        dispose();
                     
-//                    if (!msBUS.checkDup(tenHang)) {
+                    if (!msBUS.checkDup(tenHang, TruSo)) {
                         msBUS.update(new HangSanXuatDTO(list.get(index).getMaHang(), tenHang, TruSo));
                         loadDataTable(list);
                         ms.setText("");
                         ms1.setText("");
-//                    } else {
-//                        JOptionPane.showMessageDialog(this, "Hãng Sản Xuất đã tồn tại !");
-//                    }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Hãng Sản Xuất đã tồn tại !");
+                    }
                 }
             }
         } else if (e.getSource() == table) {

@@ -249,7 +249,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                         snNew.setMaSP(this.sp.getMaSP());
                         SanPhamDAO.getInstance().update(sp);
                         this.jpSP.spBUS.update(snNew);
-                        this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
+                        this.jpSP.loadDataTable(this.jpSP.spBUS.getAll());
                         dispose();
                     }
             }catch(Exception ex){
@@ -306,7 +306,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         sp.setHinhAnh(addImage(sp.getHinhAnh()));
         if (jpSP.spBUS.add(sp)) {
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
-            jpSP.loadDataTalbe(jpSP.listsp);
+            jpSP.loadDataTable(jpSP.listsp);
         }
     }
     public SanPhamDTO getInfo() throws Exception{

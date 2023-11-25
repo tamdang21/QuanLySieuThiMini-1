@@ -206,15 +206,15 @@ public final class LoaiSanPhamDialog extends JDialog implements MouseListener {
                     String tenLoai = ms.getText();
                     String CachBQ = ms1.getText();
                     String MoTa = ms2.getText();
-//                    if (!thBUS.checkDup(tenLoai)) {
+                    if (!thBUS.checkDup(tenLoai)) {
                         thBUS.update(new LoaiSanPhamDTO(list.get(index).getMaLoai(),tenLoai, CachBQ, MoTa));
                         loadDataTable(list);
                         ms.setText("");
                         ms1.setText("");
                         ms2.setText("");
-//                    } else {
-//                        JOptionPane.showMessageDialog(this, "Loại Sản Phẩm đã tồn tại !");
-//                    }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Loại Sản Phẩm đã tồn tại !");
+                    }
                 }
             }
         } else if (e.getSource() == table) {

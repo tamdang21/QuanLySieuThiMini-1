@@ -138,7 +138,7 @@ public class HinhThucThanhToanDAO implements DAOInterface<HinhThucThanhToanDTO>{
         Connection connect = ConnectionDB.openConnection();
         if (connect != null) {
             try {
-                String sql = "SELECT * FROM hinhthucthanhtoan WHERE TrangThai = 1 AND MaHTTT= " + id  ;
+                String sql = "SELECT * FROM hinhthucthanhtoan WHERE MaHTTT= " + id  ;
 
                 //Bước 2: tạo đối tượng preparedStatement
                 PreparedStatement stmt = connect.prepareStatement(sql); 
