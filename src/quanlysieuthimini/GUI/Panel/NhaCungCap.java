@@ -203,16 +203,16 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     String email = excelRow.getCell(3).getStringCellValue();
                     String sdt = excelRow.getCell(4).getStringCellValue();
                     
-//                    NhaCungCapDTO nccDTO = new NhaCungCapDTO(id, tenNCC, diachi, email, sdt);
+                    NhaCungCapDTO nccDTO = new NhaCungCapDTO(id, tenNCC, diachi, email, sdt);
                     
                     if (Validation.isEmpty(tenNCC) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
                             || sdt.length() != 10 || Validation.isEmpty(diachi)) {
                         check = 0;
                     }
-//                    else if(nccBUS.checkDup(nccDTO)) {
-//                        check = 0;
-//                    }
+                    else if(nccBUS.checkDup(nccDTO)) {
+                        check = 0;
+                    }
                     
                     if (check == 0) {
                         k += 1;

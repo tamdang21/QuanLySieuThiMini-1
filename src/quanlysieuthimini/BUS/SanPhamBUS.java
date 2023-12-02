@@ -125,4 +125,13 @@ public class SanPhamBUS{
     public boolean updateQuantity(int masp, int soluong) {
         return spDAO.updateQuantity(masp, soluong);
     }
+    
+//    public boolean checkTrungMaVach(String mavach) {
+//        for (SanPhamDTO spDTO : listSP) {
+//            if (spDTO.getMaVach().equalsIgnoreCase(mavach)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

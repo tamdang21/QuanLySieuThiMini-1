@@ -37,13 +37,18 @@ public class HoaDonBUS {
     }
 
     public void insert(HoaDonDTO hd, ArrayList<ChiTietHoaDonDTO> ct) {
-        hoadonDAO.insert(hd);
-        chiTietHoaDonDAO.insert(ct);
+        boolean check = hoadonDAO.insert(hd);
+        if (check) {
+            check = chiTietHoaDonDAO.insert(ct);
+        }
+        
     }
     
     public void insertNotKH(HoaDonDTO hd, ArrayList<ChiTietHoaDonDTO> ct) {
-        hoadonDAO.insertNotKH(hd);
-        chiTietHoaDonDAO.insert(ct);
+        boolean check = hoadonDAO.insertNotKH(hd);
+        if (check) {
+            check = chiTietHoaDonDAO.insert(ct);
+        }
     }
 
     public double getTongThanhTien(int maHD){

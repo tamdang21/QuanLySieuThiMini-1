@@ -38,7 +38,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
             result = pst.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {
-            Logger.getLogger(LoaiSanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HoaDonDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
@@ -60,7 +60,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
             result = pst.executeUpdate()>=1;
             ConnectionDB.closeConnection(con);
         } catch (SQLException ex) {
-            Logger.getLogger(LoaiSanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HoaDonDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
@@ -208,7 +208,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoaiSanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HoaDonDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

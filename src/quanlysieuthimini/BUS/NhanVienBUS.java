@@ -21,6 +21,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -43,6 +44,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import quanlysieuthimini.DAO.NhanVienDAO;
 import quanlysieuthimini.DAO.TaiKhoanDAO;
 import quanlysieuthimini.DTO.NhanVienDTO;
+import quanlysieuthimini.helper.Formater;
 
 public class NhanVienBUS implements ActionListener, DocumentListener {
 
@@ -175,32 +177,31 @@ public void importExcel(){
                     String email = excelRow.getCell(2).getStringCellValue();
                     String sdt = excelRow.getCell(3).getStringCellValue();
                     String gioitinh = excelRow.getCell(4).getStringCellValue();
+                    
                     if (gioitinh.equals("Nam") || gioitinh.equals("nam")) {
                         gt = 1;
                     } else {
                         gt = 0;
                     }
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
                     String strNgaySinh = excelRow.getCell(5).getStringCellValue();
-                    Date ngaysinh = (Date) formatter.parse(strNgaySinh);
+                    Date ngaysinh = format.parse(strNgaySinh);
                     java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
-                    System.out.println(id);
-                    System.out.println(tennv);
-                    System.out.println(email);
-                    System.out.println(sdt);
-                    System.out.println(gioitinh);
-                    System.out.println(birth);
+                    System.err.println("Ngay sinh: " + birth);
+                    
                     if (Validation.isEmpty(tennv) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt)
-                            || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
-                            || sdt.length() != 10 || Validation.isEmpty(gioitinh)) {
+                            || Validation.isEmpty(sdt)
+                            || sdt.length() < 10 || Validation.isEmpty(gioitinh)) {
+                        k += 1;
+                    }
+                    else if(checkDup(tennv, email, sdt, gt)) {
                         check = 0;
                     }
-                    if (check == 0) {
-                        k += 1;
-                    } else {
-                        NhanVienDTO nvDTO = new NhanVienDTO(id, tennv, "", sdt, email, birth, gt, 0.2, "" , 1);
+                    
+                    if (check != 0)  {
+                        NhanVienDTO nvDTO = new NhanVienDTO(id, tennv, "", sdt, email, birth, gt, 0, "" , 1);
                         NhanVienDAO.getInstance().insert(nvDTO);
-                        listNv.add(nvDTO);
                     }
                 }
 
@@ -473,6 +474,18 @@ public void importExcel(){
 //            JOptionPane.showMessageDialog(null, "Những dữ liệu không chuẩn không được thêm vào");
 //        }
 //    }
+    
+    public boolean checkDup(String tennv, String email, String sdt, int gt) {
+        for (NhanVienDTO nvDTO : listNv) {
+            if (nvDTO.getTenNV().equalsIgnoreCase(tennv)
+                && nvDTO.getEmail().equalsIgnoreCase(email)
+                && nvDTO.getSDT().equalsIgnoreCase(sdt)
+                && nvDTO.getGioiTinh() == gt) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean isPhoneNumber(String str) {
         // Loại bỏ khoảng trắng và dấu ngoặc đơn nếu có
@@ -488,4 +501,9 @@ public void importExcel(){
         }        // Trả về false nếu chuỗi không phải là số điện thoại hợp lệ
 
     }
+    
+//    public static boolean isPhoneNumber(String str) {
+//        String regExp = "/((09|03|07|08|05)+([0-9]{8})\b)/g";
+//        
+//    }
 }

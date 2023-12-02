@@ -3,48 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/ChiTietPhieuNhapDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/KhuyenMaiDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/SanPham.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/CaLamViecDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/TaiKhoanDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/LoaiSanPhamDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/SanPhamDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/HangSanXuatBUS.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/PhanCongCa.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/HinhThucThanhToanDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/HoaDonDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/PhanCongCaDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/HangSanXuatDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/KhachHangThanThietDAO.java</file>
             <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/NhaCungCap.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/helper/JTableExporter.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/SanPhamBUS.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/NhanVienDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Main.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/HangSanXuatDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/ChucNangDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/PhieuNhapDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/SanPhamDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/DonViDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/NhanVien.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ListNhanVien.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/NhaCungCapDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/NhaCungCapDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/NhanVienDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/QuyenDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/TaoPhieuNhap.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/MyAccount.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/NhanVienBUS.java</file>
             <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Log_In.java</file>
             <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/NhaCungCapBUS.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Panel/PhieuNhap.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/ChiTietHoaDonDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ChiTietPhieuNhapDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/ThongKeDAO.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/helper/writePDF.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/LoaiSanPhamDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/ChiTietHoaDonDialog.java</file>
-            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/DAO/PhieuChiDAO.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/BUS/SanPhamBUS.java</file>
+            <file>file:/E:/MINHQUAN/Workspace/NetBeansProjects/QuanLySieuThiMini2/src/quanlysieuthimini/GUI/Dialog/SanPhamDialog.java</file>
         </group>
     </open-files>
 </project-private>

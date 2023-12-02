@@ -56,6 +56,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.PlainDocument;
+import quanlysieuthimini.BUS.SanPhamBUS;
 
 public final class SanPhamDialog extends JDialog implements ActionListener {
 
@@ -79,6 +80,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
    HangSanXuatBUS hangsxBUS = new HangSanXuatBUS();
    DonViBUS donviBUS = new DonViBUS();
    LoaiSanPhamBUS loaispBUS = new LoaiSanPhamBUS();
+   SanPhamBUS spBUS = new SanPhamBUS();
+   
    int masp;
    int mach;
    private ButtonCustom btnEditCT;
@@ -282,6 +285,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         }
         if(!Validation.isNumber(mavach.getText())){
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng kiểu dữ liệu cho mã vạch");
+            check = false;
+        }
+        if(spBUS.checkMaVachExists(mavach.getText())) {
+            JOptionPane.showMessageDialog(this, "Mã vạch đã tồn tại, vui lòng nhập mã khác!!");
             check = false;
         }
         return check;

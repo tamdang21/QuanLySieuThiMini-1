@@ -90,7 +90,7 @@ public final class TaoHoaDon extends JPanel {
     int sum;
     int maHD;
     int manv;
-    int makh = -1, makm = -1;
+    int makh = -1, makm = 1;
     double tienGiam = 0;
     String type;
 

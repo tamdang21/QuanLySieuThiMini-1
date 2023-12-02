@@ -144,11 +144,10 @@ public class NhaCungCapBUS {
     
     public boolean checkDup(NhaCungCapDTO ncc) {
         for (NhaCungCapDTO nccDTO : listNcc) {
-            if (nccDTO.getMaNCC() == ncc.getMaNCC() 
-                    && nccDTO.getTenNCC().equalsIgnoreCase(ncc.getTenNCC()) 
-                    && nccDTO.getDiaChi().equalsIgnoreCase(ncc.getDiaChi())
-                    && nccDTO.getEmail().equalsIgnoreCase(ncc.getEmail())
-                    && nccDTO.getSDT().equalsIgnoreCase(ncc.getSDT())) {
+            if (nccDTO.getTenNCC().equalsIgnoreCase(ncc.getTenNCC()) 
+                && nccDTO.getDiaChi().equalsIgnoreCase(ncc.getDiaChi())
+                && nccDTO.getEmail().equalsIgnoreCase(ncc.getEmail())
+                && nccDTO.getSDT().equalsIgnoreCase(ncc.getSDT())) {
                 return true;
             }
         }
