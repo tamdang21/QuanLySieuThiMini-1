@@ -347,7 +347,7 @@ public void writePN(int maphieu) {
             Paragraph paraKhuyenMai, paraTienGiam;
             if(hd.getMaKM() != 0 && tienGiam != 0){
                 paraKhuyenMai = new Paragraph(new Phrase("Mã khuyến mãi áp dụng: " + hd.getMaKM(), fontNormal15));
-                paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : " + tienGiam , fontNormal15));
+                paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : " + Formater.FormatVND(tienGiam) , fontNormal15));
             }else{
                 paraKhuyenMai = new Paragraph(new Phrase("Mã khuyến mãi áp dụng: " , fontNormal15));
                 paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : 0đ"  , fontNormal15));

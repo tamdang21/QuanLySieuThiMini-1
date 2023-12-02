@@ -52,6 +52,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
     KhuyenMaiBUS khuyenmaiBUS = new KhuyenMaiBUS();
     SanPhamBUS sanPhamBUS = new SanPhamBUS();
     DonViBUS donviBUS = new DonViBUS();
+    KhachHangThanThietBUS khttBUS = new KhachHangThanThietBUS();
     double tienGiam;
     ButtonCustom btnPdf, btnHuyBo;
 
@@ -62,7 +63,18 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         this.hoadon = hoadonDTO;
         hoadonBus = new HoaDonBUS();
         ctHoaDon = hoadonBus.selectCTP(hoadon.getMaHD());
-        tienGiam = hoadonBus.getTongThanhTien(hoadon.getMaHD()) * khuyenmaiBUS.getById(hoadon.getMaHD()).getPhanTramKM();
+        
+        double phantramtheoKH=0, phantramtheoKM=0;
+        
+        if(hoadonDTO.getMaKH() != 1) {
+            phantramtheoKH = khttBUS.selectKh(hoadon.getMaKH()).getChietKhauTheoDiem() * khttBUS.selectKh(hoadon.getMaKH()).getDiemTichLuy();
+        }
+        
+        if(hoadonDTO.getMaKM() != 1) {
+            phantramtheoKM = khuyenmaiBUS.getById(hoadon.getMaKM()).getPhanTramKM();
+        }
+        
+        tienGiam = hoadonBus.getTongThanhTien(hoadon.getMaHD()) * (phantramtheoKH + phantramtheoKM);
         
         initComponent(title);
         initHoaDon();
@@ -76,7 +88,6 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         txtKhachHang.setText(khachhangBUS.getTenKhachHang(hoadon.getMaKH()));
         txtNhanVien.setText(NhanVienDAO.getInstance().getById(hoadon.getMaNV()).getTenNV());
         txtKhuyenMai.setText(khuyenmaiBUS.getTenKhuyenMai(hoadon.getMaKM()));
-        System.out.println(hoadon.toString());
         txtNgayLap.setText(Formater.FormatTime(hoadon.getNgayLap()));
     }
 
@@ -195,7 +206,7 @@ public final class ChiTietHoaDonDialog extends JDialog implements ActionListener
         if (source == btnPdf) {
             writePDF w = new writePDF();
             if (this.hoadon != null) {
-                w.writeHoaDon(hoadon.getMaHD(),tienGiam);
+                w.writeHoaDon(hoadon.getMaHD(), tienGiam);
             }
         }
     }

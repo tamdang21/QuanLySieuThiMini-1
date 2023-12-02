@@ -43,27 +43,27 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
         return result;
     }
     
-    public boolean insertNotKH(HoaDonDTO t) {
-        boolean result = false;
-        try {
-            Connection con = (Connection) ConnectionDB.openConnection();
-            String sql = "INSERT into hoadon "
-                        + "(MaKM,MaNV,NgayLap,TongTien) "
-                        + "VALUES (?, ?, ?, ?)";
-            
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1,t.getMaKM());
-            pst.setInt(2,t.getMaNV());
-            pst.setTimestamp(3, t.getNgayLap());
-            pst.setDouble(4,t.getTongTien());
-            
-            result = pst.executeUpdate()>=1;
-            ConnectionDB.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(HoaDonDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+//    public boolean insertNotKH(HoaDonDTO t) {
+//        boolean result = false;
+//        try {
+//            Connection con = (Connection) ConnectionDB.openConnection();
+//            String sql = "INSERT into hoadon "
+//                        + "(MaKM,MaNV,NgayLap,TongTien) "
+//                        + "VALUES (?, ?, ?, ?)";
+//            
+//            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+//            pst.setInt(1,t.getMaKM());
+//            pst.setInt(2,t.getMaNV());
+//            pst.setTimestamp(3, t.getNgayLap());
+//            pst.setDouble(4,t.getTongTien());
+//            
+//            result = pst.executeUpdate()>=1;
+//            ConnectionDB.closeConnection(con);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(HoaDonDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return result;
+//    }
 
     @Override
     public boolean update(HoaDonDTO t) {
