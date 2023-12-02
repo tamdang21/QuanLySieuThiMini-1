@@ -44,12 +44,12 @@ public class HoaDonBUS {
         
     }
     
-    public void insertNotKH(HoaDonDTO hd, ArrayList<ChiTietHoaDonDTO> ct) {
-        boolean check = hoadonDAO.insertNotKH(hd);
-        if (check) {
-            check = chiTietHoaDonDAO.insert(ct);
-        }
-    }
+//    public void insertNotKH(HoaDonDTO hd, ArrayList<ChiTietHoaDonDTO> ct) {
+//        boolean check = hoadonDAO.insertNotKH(hd);
+//        if (check) {
+//            check = chiTietHoaDonDAO.insert(ct);
+//        }
+//    }
 
     public double getTongThanhTien(int maHD){
         double tong = 0;
@@ -62,6 +62,7 @@ public class HoaDonBUS {
     public ArrayList<ChiTietHoaDonDTO> selectCTP(int maphieu) {
         return chiTietHoaDonDAO.getAll(maphieu);
     }
+    
     
 
     public ArrayList<HoaDonDTO> fillerHoaDon(int type, String input, int makh, int manv, int makm, Date time_s, Date time_e, String price_minnn, String price_maxxx) {
