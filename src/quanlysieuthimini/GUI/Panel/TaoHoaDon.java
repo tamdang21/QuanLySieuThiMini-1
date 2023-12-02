@@ -90,8 +90,8 @@ public final class TaoHoaDon extends JPanel {
     int sum;
     int maHD;
     int manv;
-    int makh = 1, makm = 1;
-    int tienGiam = 0;
+    int makh = -1, makm = 1;
+    int tienGiam;
     String type;
 
     SanPhamBUS spBUS = new SanPhamBUS();
@@ -796,6 +796,7 @@ public final class TaoHoaDon extends JPanel {
     public void loadDataTableChiTietHoaDon(ArrayList<ChiTietHoaDonDTO> arrCTHD) {
         tblModel.setRowCount(0);
         int size = arrCTHD.size();
+        tienGiam = 0;
         sum = 0;
         tienGiam = 0;
         for (int i = 0; i < size; i++) {
@@ -834,8 +835,8 @@ public final class TaoHoaDon extends JPanel {
         makh = index;
         KhachHangThanThietDTO khachhang = khachHangBUS.selectKh(makh);
         float phantramgiamKH = (float) khachhang.getChietKhauTheoDiem();
+        tienGiam += (phantramgiamKH * sum);
         sum -= (phantramgiamKH * sum);
-        tienGiam += sum*phantramgiamKH;
         lbltongtien.setText(Formater.FormatVND(sum));
         txtKH.setText(khachhang.getTenKH());
         txtKH.setEditable(false);
@@ -847,8 +848,8 @@ public final class TaoHoaDon extends JPanel {
         KhuyenMaiDTO khuyenmai = kmBUS.getById(makm);
         txtKM.setText(khuyenmai.getTenKM());
         float phantramgiamKM = (float) khuyenmai.getPhanTramKM();
+        tienGiam += (phantramgiamKM * sum);
         sum -= (phantramgiamKM * sum);
-        tienGiam += sum*phantramgiamKM;
         lbltongtien.setText(Formater.FormatVND(sum));
     }
 

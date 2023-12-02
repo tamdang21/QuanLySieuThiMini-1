@@ -37,6 +37,8 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.BarcodeQRCode;
+import com.itextpdf.text.Image;
 import java.util.Date;
 
 import quanlysieuthimini.BUS.KhuyenMaiBUS;
@@ -312,6 +314,7 @@ public void writePN(int maphieu) {
             paragraph3.add(new Chunk(createWhiteSpace(5)));
             paragraph3.add(new Chunk("Mã nhân viên: " + hd.getMaNV(), fontNormal10));
             Paragraph paragraph4 = new Paragraph("Thời gian nhập: " + formatDate.format(hd.getNgayLap()), fontNormal10);
+            
             document.add(paragraph1);
             document.add(paragraph2);
             document.add(paragraph3);
@@ -345,11 +348,14 @@ public void writePN(int maphieu) {
             document.add(table);
             document.add(Chunk.NEWLINE);
             Paragraph paraKhuyenMai, paraTienGiam;
-            if(hd.getMaKM() != 0 && tienGiam != 0){
+            if(hd.getMaKM() != 0){
                 paraKhuyenMai = new Paragraph(new Phrase("Mã khuyến mãi áp dụng: " + hd.getMaKM(), fontNormal15));
-                paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : " + Formater.FormatVND(tienGiam) , fontNormal15));
             }else{
                 paraKhuyenMai = new Paragraph(new Phrase("Mã khuyến mãi áp dụng: " , fontNormal15));
+            }
+            if(tienGiam != 0){
+                paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : " + tienGiam , fontNormal15));
+            }else{
                 paraTienGiam = new Paragraph(new Phrase("Số tiền giảm   : 0đ"  , fontNormal15));
             }
             paraKhuyenMai.setIndentationLeft(275);
@@ -357,12 +363,11 @@ public void writePN(int maphieu) {
             Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thành tiền: " + formatter.format(hd.getTongTien()) + "đ", fontBold15));
             paraTongThanhToan.setIndentationLeft(275);
             
-            
             document.add(paraKhuyenMai);
             document.add(paraTienGiam);
             document.add(paraTongThanhToan);
             document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
+            
             Paragraph paragraph = new Paragraph();
             paragraph.setIndentationLeft(22);
             paragraph.add(new Chunk("Người lập phiếu", fontBoldItalic15));
@@ -380,6 +385,29 @@ public void writePN(int maphieu) {
             sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
             document.add(paragraph);
             document.add(sign);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+
+            Paragraph qr_code = new Paragraph();
+            qr_code.add(new Chunk("†††===================================================†††", fontBoldItalic15)); 
+            qr_code.add(Chunk.NEWLINE);
+            qr_code.setIndentationLeft(30);
+            BarcodeQRCode form_respone_qr = new BarcodeQRCode("https://docs.google.com/forms/d/e/1FAIpQLScBOAM-BapSjaN9Zag3H0R7XJznT2TBZpBnZ5yhc4D0kIA8Ww/viewform",1,1,null);
+            Image form_image = form_respone_qr.getImage();
+            form_image.scalePercent(300f);
+            qr_code.add(form_image);
+//            qr_code.add(new Chunk(createWhiteSpace()));
+            qr_code.add(new Chunk("(Quét qr để chia sẻ trải nghiệm của bạn với cửa hàng của chúng tôi nhé!♥♥♥)", fontBoldItalic15));            
+            document.add(qr_code);
+            
             document.close();
             writer.close();
             openFile(url);
