@@ -580,15 +580,15 @@ public final class TaoHoaDon extends JPanel {
                     Timestamp currenTime = new Timestamp(now);
                     
                     HoaDonDTO HoaDon;
-                    if(makh == -1) {
-                        HoaDon = new HoaDonDTO(maHD, makm, tk.getMaNV(), currenTime, sum, 1);
-                        hoadonBUS.insertNotKH(HoaDon, arrListCTHD);
-                    }
-                    else {
+//                    if(makh == -1) {
+//                        HoaDon = new HoaDonDTO(maHD, makm, tk.getMaNV(), currenTime, sum, 1);
+//                        hoadonBUS.insertNotKH(HoaDon, arrListCTHD);
+//                    }
+//                    else {
                         HoaDon = new HoaDonDTO(maHD, makh, makm, tk.getMaNV(), currenTime, sum, 1);
                         hoadonBUS.insert(HoaDon, arrListCTHD);
                         khachHangBUS.upDiemTichLuy(makh, 1);
-                    }
+//                    }
                     
                     
                     ChiTietThanhToanDTO cttt = new ChiTietThanhToanDTO(maHD,maHTTT,sum,currenTime);
@@ -798,6 +798,7 @@ public final class TaoHoaDon extends JPanel {
         int size = arrCTHD.size();
         tienGiam = 0;
         sum = 0;
+        tienGiam = 0;
         for (int i = 0; i < size; i++) {
             SanPhamDTO sanpham = sanphamBUS.getById(arrCTHD.get(i).getMaSP());
             sum += arrCTHD.get(i).getThanhTien();
